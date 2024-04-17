@@ -354,6 +354,14 @@ PhysiCell_geometry.o: ./modules/PhysiCell_geometry.cpp
 	$(COMPILE_COMMAND) -c ./modules/PhysiCell_geometry.cpp 
 
 # user-defined PhysiCell modules
+addon.o: ./custom_modules/addon.cpp
+	$(COMPILE_COMMAND) -c ./custom_modules/addon.cpp 
+addon_example.o: ./custom_modules/addon_example.cpp
+	$(COMPILE_COMMAND) -c ./custom_modules/addon_example.cpp 
+quaternion.o: ./custom_modules/quaternion.cpp
+	$(COMPILE_COMMAND) -c ./custom_modules/quaternion.cpp 
+quaternion_addon.o: ./custom_modules/quaternion_addon.cpp
+	$(COMPILE_COMMAND) -c ./custom_modules/quaternion_addon.cpp 
 
 # cleanup
 
