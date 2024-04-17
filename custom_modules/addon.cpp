@@ -1,10 +1,26 @@
 #include "./addon.h"
-//---- generic base class for addon
-Base_Addon_Class::Base_Addon_Class(Cell* pCell): is_updated{false},m_daughter{nullptr} {
+#include "debug_log.h"
+#include <string>
+bool DEBUG_MODE=true;
+auto DEBUG_LOG = Log::get_instance();
+void set_debug(){
+  auto log_file = "./debug_log.txt";
+  auto log_mode = Log_Destination::FILE;
+  DEBUG_LOG->set_destination(log_file, log_mode);
+}
+  //---- generic base class for addon
+void Base_Addon_Class::initialize(Cell* pCell)  {
   if(pCell->is_active && !pCell->is_out_of_domain)
   {
-    m_pCell=pCell;
-    pCell_is_safe=true;
+    this->is_updated=false;
+    this->m_daughter=nullptr;
+    this->m_pCell=pCell;
+    this->pCell_is_safe=true;
+
+    if(DEBUG_MODE){
+      DEBUG_LOG->Log_this("Base_Addon_Class initialized!");  
+  }
+
   }
   else
   {
@@ -15,6 +31,9 @@ Base_Addon_Class::Base_Addon_Class(Cell* pCell): is_updated{false},m_daughter{nu
 
 Base_Addon_Class::~Base_Addon_Class(){
   return;
+  if(DEBUG_MODE){
+    DEBUG_LOG->Log_this("Base_Addon_Class Created!");  
+  }
 }
 
 //------ factory method for creating instances
@@ -25,12 +44,19 @@ Base_Addon_Class* Addon_Factory::Create_Addon_Instance(Cell* pCell){
 
 //----- Addon class for managing a single addon class type
 Addon::Addon(Addon_Factory* custom_class_type):m_addon_factory{custom_class_type}{
+  if(DEBUG_MODE){
+    DEBUG_LOG->Log_this("Addon Created!");  
+  }
+
   return;
 }
 
 Addon::~Addon(){
   //delete all the instances located in map 
   // this could be very slow let the stack handle Addon instances at the end of simulations
+  if(DEBUG_MODE){
+    DEBUG_LOG->Log_this("Addon Destructed!");  
+  }
   
   for ( auto it = class_instances_by_pCell.begin(); it != class_instances_by_pCell.end(); ++it )
   {  delete it->second;}
@@ -97,6 +123,11 @@ void Addon::check_pCell_safety(Cell* pCell){
     }
   } 
   else{ instance->pCell_is_safe=true;}
+  if(DEBUG_MODE){
+    std::string message= "pCell safety checked and found to be: "+ std::to_string(instance->pCell_is_safe);
+    DEBUG_LOG->Log_this(message);  
+  }
+
   return;
 }
 
@@ -104,6 +135,9 @@ void Addon::update_custom_class(Cell* pCell){
   Base_Addon_Class* instance=class_instances_by_pCell[pCell->index];
   if(!(instance->is_updated) || instance->pCell_is_safe){
     instance->update_state();
+    if(DEBUG_MODE){
+      DEBUG_LOG->Log_this("Custom Class State Updated!");  
+    }
   }
   check_pCell_safety(instance->m_pCell);
   return;

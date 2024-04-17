@@ -67,6 +67,8 @@
 
 #include "./custom.h"
 #include "./addon_example.h"
+#include "addon.h"
+//#include <cmath>
 
 void create_cell_types( void )
 {
@@ -92,7 +94,8 @@ void create_cell_types( void )
 	cell_defaults.functions.contact_function = NULL; 
 	
 	cell_defaults.functions.add_cell_basement_membrane_interactions = NULL; 
-	cell_defaults.functions.calculate_distance_to_membrane = NULL; 
+	cell_defaults.functions.calculate_distance_to_membrane = NULL;
+  cell_defaults.custom_data.add_variable("initial_volume","um^3",0.0);
 	
 	/*
 	   This parses the cell definitions in the XML config file. 
@@ -193,7 +196,7 @@ void setup_tissue( void )
 	std::cout << std::endl; 
 	
 	// load cells from your CSV file (if enabled)
-	load_cells_from_pugixml(); 	
+	load_cells_from_pugixml(); 
   	
 	return; 
 }
@@ -202,7 +205,9 @@ std::vector<std::string> my_coloring_function( Cell* pCell )
 { return paint_by_number_cell_coloring(pCell); }
 
 void phenotype_function( Cell* pCell, Phenotype& phenotype, double dt )
-{ return; }
+{ 
+
+  return; }
 
 void custom_function( Cell* pCell, Phenotype& phenotype , double dt )
 { return; } 

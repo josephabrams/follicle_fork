@@ -7,7 +7,7 @@
 #include <stdexcept>
 #include "../core/PhysiCell.h"
 #include "../modules/PhysiCell_standard_modules.h"
-
+#include "./debug_log.h"
 using namespace BioFVM;
 using namespace PhysiCell;
 class Base_Addon_Class{
@@ -18,7 +18,9 @@ public:
   bool is_updated;
   bool divided;
   Cell* m_daughter;
-  Base_Addon_Class(Cell* pCell);
+  void initialize(Cell* pCell);
+  
+  //Base_Addon_Class(Cell* pCell);
   virtual ~Base_Addon_Class();
   Base_Addon_Class* get_instance();
   virtual void update_state()=0;
