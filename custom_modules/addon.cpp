@@ -1,6 +1,6 @@
 #include "./addon.h"
-
-Base_Addon_Class::Base_Addon_Class(Cell* pCell): m_pCell{pCell},pCell_is_safe{true},is_updated{false},m_daughter{nullptr} {
+//---- generic base class for addon
+Base_Addon_Class::Base_Addon_Class(Cell* pCell): is_updated{false},m_daughter{nullptr} {
   if(pCell->is_active && !pCell->is_out_of_domain)
   {
     m_pCell=pCell;
@@ -10,12 +10,22 @@ Base_Addon_Class::Base_Addon_Class(Cell* pCell): m_pCell{pCell},pCell_is_safe{tr
   {
    throw std::invalid_argument("assigning Addon to invalid pCell"); 
   }
+  return;
 }
+
+Base_Addon_Class::~Base_Addon_Class(){
+  return;
+}
+
+//------ factory method for creating instances
 Base_Addon_Class* Addon_Factory::Create_Addon_Instance(Cell* pCell){
   Base_Addon_Class* ptr = this->Factory_Method(pCell);
   return ptr;
 }
+
+//----- Addon class for managing a single addon class type
 Addon::Addon(Addon_Factory* custom_class_type):m_addon_factory{custom_class_type}{
+  return;
 }
 
 Addon::~Addon(){
@@ -26,13 +36,14 @@ Addon::~Addon(){
   {  delete it->second;}
   for ( auto it = detached_instances_by_pCell.begin(); it != detached_instances_by_pCell.end(); ++it )
   {  delete it->second;}
-  
+ return; 
 }
 
 void Addon::spawn_instance(Cell* pCell){
   Base_Addon_Class* ptr= m_addon_factory->Create_Addon_Instance(pCell);
   std::pair<int,Base_Addon_Class*> new_instance (pCell->index,ptr);
   class_instances_by_pCell.insert(new_instance);
+  return;
 }
 Base_Addon_Class* Addon::get_instance(Cell* pCell){//could overload [] if code gets really cludgey
   return class_instances_by_pCell[pCell->index];
@@ -40,9 +51,10 @@ Base_Addon_Class* Addon::get_instance(Cell* pCell){//could overload [] if code g
 }
 void Addon::copy_instance_to_daughter(Base_Addon_Class* instance){
   this->spawn_instance(instance->m_daughter);
-  class_instances_by_pCell[instance->m_pCell->index]->on_division();
-  class_instances_by_pCell[instance->m_daughter->index]->on_division();
+  this->class_instances_by_pCell[instance->m_pCell->index]->on_division();
+  this->class_instances_by_pCell[instance->m_daughter->index]->on_division();
   instance->m_daughter=nullptr; //reset 
+  return;
 }
 
 void Addon::detach_instance(Cell* pCell){
@@ -50,7 +62,7 @@ void Addon::detach_instance(Cell* pCell){
   std::pair<int,Base_Addon_Class*> detached_instance (pCell->index,detach_ptr);
   detached_instances_by_pCell.insert(detached_instance);
   class_instances_by_pCell.erase(pCell->index);
-
+  return;
 }
 
 void Addon::check_pCell_safety(Cell* pCell){
@@ -83,7 +95,8 @@ void Addon::check_pCell_safety(Cell* pCell){
         copy_instance_to_daughter(instance);// be sure addon has on_division specified if you want this to work correctly 
       }
     }
-  }  
+  } 
+  else{ instance->pCell_is_safe=true;}
   return;
 }
 
