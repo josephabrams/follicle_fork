@@ -1,7 +1,5 @@
 
 #include "./addon_example.h"
-#include "addon.h"
-
 Example_Addon_Class::Example_Addon_Class(Cell* pCell){
   this->initialize(pCell);//requires initialization of Base_Addon_Class
   this->example_int = pCell->index*2;

@@ -79,14 +79,14 @@
 // put custom code modules here! 
 
 #include "./custom_modules/custom.h" 
+#include "./custom_modules/addon_example.h"
 #include "./custom_modules/addon.h"
 using namespace BioFVM;
 using namespace PhysiCell;
 
 int main( int argc, char* argv[] )
 {
-  set_debug();
-	// load and parse settings file(s)
+  // load and parse settings file(s)
 	
 	bool XML_status = false; 
 	char copy_command [1024]; 
@@ -127,8 +127,7 @@ int main( int argc, char* argv[] )
 	create_cell_types();
 	
 	setup_tissue();
-
-	/* Users typically stop modifying here. END USERMODS */ 
+	/* Users typically stop modifying here. END USERMODS */
 	
 	// set MultiCellDS save options 
 
@@ -231,6 +230,7 @@ int main( int argc, char* argv[] )
 			log_output(PhysiCell_globals.current_time, PhysiCell_globals.full_output_index, microenvironment, report_file);
 			report_file.close();
 		}
+    clean_up_Addons();
 	}
 	catch( const std::exception& e )
 	{ // reference to the base of a polymorphic object

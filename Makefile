@@ -58,7 +58,10 @@ PhysiCell_pugixml.o PhysiCell_settings.o PhysiCell_geometry.o
 
 # put your custom objects here (they should be in the custom_modules directory)
 
-PhysiCell_custom_module_OBJECTS := custom.o addon.o addon_example.o quaternion.o quaternion_addon.o debug_log.o
+PhysiCell_custom_module_OBJECTS := custom.o addon_factory.o base_addon.o addon.o addon_example.o quaternion.o \
+quaternion_addon.o debug_log.o 
+
+
 pugixml_OBJECTS := pugixml.o
 
 PhysiCell_OBJECTS := $(BioFVM_OBJECTS)  $(pugixml_OBJECTS) $(PhysiCell_core_OBJECTS) $(PhysiCell_module_OBJECTS)
@@ -170,6 +173,12 @@ PhysiCell_geometry.o: ./modules/PhysiCell_geometry.cpp
 custom.o: ./custom_modules/custom.cpp 
 	$(COMPILE_COMMAND) -c ./custom_modules/custom.cpp
 
+base_addon.o: ./custom_modules/base_addon.cpp
+	$(COMPILE_COMMAND) -c ./custom_modules/base_addon.cpp 
+
+addon_factory.o: ./custom_modules/addon_factory.cpp
+	$(COMPILE_COMMAND) -c ./custom_modules/addon_factory.cpp
+
 addon.o: ./custom_modules/addon.cpp
 	$(COMPILE_COMMAND) -c ./custom_modules/addon.cpp 
 
@@ -180,13 +189,14 @@ quaternion.o: ./custom_modules/quaternion.cpp
 	$(COMPILE_COMMAND) -c ./custom_modules/quaternion.cpp 
 
 quaternion_addon.o: ./custom_modules/quaternion_addon.cpp
-	$(COMPILE_COMMAND) -c ./custom_modules/quaternion_addon.cpp 
+	$(COMPILE_COMMAND) -c ./custom_modules/quaternion_addon.cpp
+
 debug_log.o: ./custom_modules/debug_log.cpp
 	$(COMPILE_COMMAND) -c ./custom_modules/debug_log.cpp 
 
 # cleanup
 
-reset:
+reset-reset:
 	rm -f *.cpp 
 	cp ./sample_projects/Makefile-default Makefile 
 	rm -f ./custom_modules/*

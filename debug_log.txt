@@ -1,0 +1,17 @@
+./addon.cpp : 49 : Addon Created!
+./addon.cpp : 129 : pCell safety checked and found to be: 1
+./addon.cpp : 129 : pCell safety checked and found to be: 1
+./addon.cpp : 129 : pCell safety checked and found to be: 1
+./addon.cpp : 129 : pCell safety checked and found to be: 1
+./addon.cpp : 129 : pCell safety checked and found to be: 1
+./addon.cpp : 140 : Custom Class State Updated!
+./addon.cpp : 129 : pCell safety checked and found to be: 1
+./addon.cpp : 140 : Custom Class State Updated!
+./addon.cpp : 129 : pCell safety checked and found to be: 1
+./addon.cpp : 140 : Custom Class State Updated!
+./addon.cpp : 129 : pCell safety checked and found to be: 1
+./addon.cpp : 140 : Custom Class State Updated!
+./addon.cpp : 129 : pCell safety checked and found to be: 1
+./addon.cpp : 140 : Custom Class State Updated!
+./addon.cpp : 129 : pCell safety checked and found to be: 1
+./addon.cpp : 59 : Addon Destructed!

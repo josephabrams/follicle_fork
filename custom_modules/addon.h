@@ -1,5 +1,6 @@
 #ifndef __ADDON_H__
 #define __ADDON_H__
+#include <array>
 #include <cstdlib>
 #include <memory>
 #include <unordered_map>
@@ -8,35 +9,22 @@
 #include "../core/PhysiCell.h"
 #include "../modules/PhysiCell_standard_modules.h"
 #include "./debug_log.h"
+#include "addon_factory.h"
+#include "base_addon.h"
+#include <string>
+#include <vector>
 using namespace BioFVM;
 using namespace PhysiCell;
-class Base_Addon_Class{
-private:
-public:
-  Cell* m_pCell;
-  bool pCell_is_safe;
-  bool is_updated;
-  bool divided;
-  Cell* m_daughter;
-  void initialize(Cell* pCell);
-  
-  //Base_Addon_Class(Cell* pCell);
-  virtual ~Base_Addon_Class();
-  Base_Addon_Class* get_instance();
-  virtual void update_state()=0;
-  virtual void on_division()=0;
-};
+void set_debug();
 
-class Addon_Factory{
-  public:
-    virtual Base_Addon_Class* Factory_Method(Cell* pCell)=0;
-    Base_Addon_Class* Create_Addon_Instance(Cell* pCell);  
-};
+
 
 class Addon{
 private:
   
 public:
+  static int ADDON_COUNT;
+  static std::vector<Addon*> Addon_list;
   Addon(Addon const&) = delete; //cannot copy
   Addon& operator=(Addon const&) = delete; // cannot assign
   Addon_Factory* m_addon_factory;
@@ -52,6 +40,10 @@ public:
   void detach_instance(Cell* pCell);
   void check_pCell_safety(Cell* pCell);// if pCell goes out of domain or is destructed deal with addons, maybe an observer is needed
   void update_custom_class(Cell* pCell); //run the class
-     
 };
+
+Addon* create_Addon(Addon_Factory* custom_class_type);
+
+void clean_up_Addons();
+
 #endif

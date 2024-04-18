@@ -1,53 +1,25 @@
 #include "./addon.h"
+#include "addon_factory.h"
 #include "debug_log.h"
-#include <string>
+#include <array>
+#include <memory>
+#include <utility>
 bool DEBUG_MODE=true;
 auto DEBUG_LOG = Log::get_instance();
+auto code_file = "./addon.cpp";
 void set_debug(){
   auto log_file = "./debug_log.txt";
   auto log_mode = Log_Destination::FILE;
   DEBUG_LOG->set_destination(log_file, log_mode);
 }
-  //---- generic base class for addon
-void Base_Addon_Class::initialize(Cell* pCell)  {
-  if(pCell->is_active && !pCell->is_out_of_domain)
-  {
-    this->is_updated=false;
-    this->m_daughter=nullptr;
-    this->m_pCell=pCell;
-    this->pCell_is_safe=true;
 
-    if(DEBUG_MODE){
-      DEBUG_LOG->Log_this("Base_Addon_Class initialized!");  
-  }
-
-  }
-  else
-  {
-   throw std::invalid_argument("assigning Addon to invalid pCell"); 
-  }
-  return;
-}
-
-Base_Addon_Class::~Base_Addon_Class(){
-  return;
-  if(DEBUG_MODE){
-    DEBUG_LOG->Log_this("Base_Addon_Class Created!");  
-  }
-}
-
-//------ factory method for creating instances
-Base_Addon_Class* Addon_Factory::Create_Addon_Instance(Cell* pCell){
-  Base_Addon_Class* ptr = this->Factory_Method(pCell);
-  return ptr;
-}
-
+int Addon::ADDON_COUNT=0;
+std::vector<Addon*> Addon::Addon_list;
 //----- Addon class for managing a single addon class type
 Addon::Addon(Addon_Factory* custom_class_type):m_addon_factory{custom_class_type}{
   if(DEBUG_MODE){
-    DEBUG_LOG->Log_this("Addon Created!");  
+    DEBUG_LOG->Log_this(code_file, 49, "Addon Created!");  
   }
-
   return;
 }
 
@@ -55,13 +27,15 @@ Addon::~Addon(){
   //delete all the instances located in map 
   // this could be very slow let the stack handle Addon instances at the end of simulations
   if(DEBUG_MODE){
-    DEBUG_LOG->Log_this("Addon Destructed!");  
+    DEBUG_LOG->Log_this(code_file, 59, "Addon Destructed!");  
   }
   
   for ( auto it = class_instances_by_pCell.begin(); it != class_instances_by_pCell.end(); ++it )
   {  delete it->second;}
   for ( auto it = detached_instances_by_pCell.begin(); it != detached_instances_by_pCell.end(); ++it )
   {  delete it->second;}
+  
+  delete m_addon_factory;
  return; 
 }
 
@@ -71,6 +45,7 @@ void Addon::spawn_instance(Cell* pCell){
   class_instances_by_pCell.insert(new_instance);
   return;
 }
+
 Base_Addon_Class* Addon::get_instance(Cell* pCell){//could overload [] if code gets really cludgey
   return class_instances_by_pCell[pCell->index];
   
@@ -114,33 +89,53 @@ void Addon::check_pCell_safety(Cell* pCell){
      #pragma critical
     {
       instance->pCell_is_safe=false;
-      detach_instance(pCell);// maybe you want to detach, maybe not,
+      // detach_instance(pCell);// maybe you want to detach, maybe not,
       //instance->m_daughter should be set here need some way to get child if you want to attach new addon to it
-      if (instance->m_daughter!=nullptr)
-      {
-        copy_instance_to_daughter(instance);// be sure addon has on_division specified if you want this to work correctly 
-      }
+      // if (instance->m_daughter!=nullptr)
+      // {
+        // copy_instance_to_daughter(instance);// be sure addon has on_division specified if you want this to work correctly 
+      // }
     }
   } 
   else{ instance->pCell_is_safe=true;}
   if(DEBUG_MODE){
     std::string message= "pCell safety checked and found to be: "+ std::to_string(instance->pCell_is_safe);
-    DEBUG_LOG->Log_this(message);  
+    DEBUG_LOG->Log_this(code_file,129,message);  
   }
 
   return;
 }
 
 void Addon::update_custom_class(Cell* pCell){
+#pragma omp critical
+  {
   Base_Addon_Class* instance=class_instances_by_pCell[pCell->index];
+  std::cout<<"Instance: "<< instance<<"\n";
+  std::cout<<"Safety: "<< instance->pCell_is_safe<<"\n";
   if(!(instance->is_updated) || instance->pCell_is_safe){
     instance->update_state();
     if(DEBUG_MODE){
-      DEBUG_LOG->Log_this("Custom Class State Updated!");  
+      DEBUG_LOG->Log_this(code_file,140,"Custom Class State Updated!");  
     }
   }
   check_pCell_safety(instance->m_pCell);
+  }
   return;
 }
+Addon* create_Addon(Addon_Factory* custom_class_type ){
+    set_debug();
+    Addon* ptr=new Addon(custom_class_type);
+    Addon::Addon_list.push_back(ptr);
+    return ptr; 
+}
 
+void clean_up_Addons(){
+  std::cout<<"Cleanup Called! on " << Addon::Addon_list.size()<<" objects \n";
+  for(int i=0; i<Addon::Addon_list.size();i++){
+    Addon* ptr=std::move(Addon::Addon_list[i]);
+    delete ptr;
+  }
+  Addon::Addon_list.clear();
+}
+  
 
