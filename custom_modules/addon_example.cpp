@@ -2,7 +2,7 @@
 #include "./addon_example.h"
 Example_Addon_Class::Example_Addon_Class(Cell* pCell){
   this->initialize(pCell);//requires initialization of Base_Addon_Class
-  this->example_int = pCell->index*2;
+  this->example_int = 0;
   
   return;
 }
@@ -10,6 +10,7 @@ Example_Addon_Class::Example_Addon_Class(Cell* pCell){
 
 void Example_Addon_Class::update_state() {
     this->is_updated=true;
+    this->example_int=10;
   }
 
 void Example_Addon_Class::on_division() {

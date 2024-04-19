@@ -15,6 +15,8 @@
 #include <vector>
 using namespace BioFVM;
 using namespace PhysiCell;
+constexpr int NUMBER_OF_ADDONS=10;
+
 void set_debug();
 
 
@@ -23,8 +25,8 @@ class Addon{
 private:
   
 public:
-  static int ADDON_COUNT;
-  static std::vector<Addon*> Addon_list;
+  // static std::vector <Addon*>& Addon_list_ref;
+  // #pragma omp threadprivate(Addon_list_ref)
   Addon(Addon const&) = delete; //cannot copy
   Addon& operator=(Addon const&) = delete; // cannot assign
   Addon_Factory* m_addon_factory;
@@ -41,7 +43,7 @@ public:
   void check_pCell_safety(Cell* pCell);// if pCell goes out of domain or is destructed deal with addons, maybe an observer is needed
   void update_custom_class(Cell* pCell); //run the class
 };
-
+extern std::vector<Addon*> Addon_list;
 Addon* create_Addon(Addon_Factory* custom_class_type);
 
 void clean_up_Addons();

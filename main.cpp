@@ -183,12 +183,12 @@ int main( int argc, char* argv[] )
 			if( fabs( PhysiCell_globals.current_time - PhysiCell_globals.next_full_save_time ) < 0.01 * diffusion_dt )
 			{
 				display_simulation_status( std::cout ); 
-				if( PhysiCell_settings.enable_legacy_saves == true )
+				if( PhysiCell_settings.enable_legacy_saves == false )
 				{	
 					log_output( PhysiCell_globals.current_time , PhysiCell_globals.full_output_index, microenvironment, report_file);
 				}
 				
-				if( PhysiCell_settings.enable_full_saves == true )
+				if( PhysiCell_settings.enable_full_saves == false )
 				{	
 					sprintf( filename , "%s/output%08u" , PhysiCell_settings.folder.c_str(),  PhysiCell_globals.full_output_index ); 
 					
@@ -202,7 +202,7 @@ int main( int argc, char* argv[] )
 			// save SVG plot if it's time
 			if( fabs( PhysiCell_globals.current_time - PhysiCell_globals.next_SVG_save_time  ) < 0.01 * diffusion_dt )
 			{
-				if( PhysiCell_settings.enable_SVG_saves == true )
+				if( PhysiCell_settings.enable_SVG_saves == false )
 				{	
 					sprintf( filename , "%s/snapshot%08u.svg" , PhysiCell_settings.folder.c_str() , PhysiCell_globals.SVG_output_index ); 
 					SVG_plot( filename , microenvironment, 0.0 , PhysiCell_globals.current_time, cell_coloring_function );
@@ -225,7 +225,7 @@ int main( int argc, char* argv[] )
 			PhysiCell_globals.current_time += diffusion_dt;
 		}
 		
-		if( PhysiCell_settings.enable_legacy_saves == true )
+		if( PhysiCell_settings.enable_legacy_saves == false )
 		{			
 			log_output(PhysiCell_globals.current_time, PhysiCell_globals.full_output_index, microenvironment, report_file);
 			report_file.close();

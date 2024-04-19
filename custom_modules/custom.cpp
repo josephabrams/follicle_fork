@@ -72,6 +72,8 @@
 #include <cmath>
 
 Addon_Factory* example_class = new Example_Addon_Creator();
+// Addon_Factory* example_class2 = new Example_Addon_Creator();
+
 void create_cell_types( void )
 {
 	// set the random seed 
@@ -159,7 +161,7 @@ void setup_microenvironment( void )
 void setup_tissue( void )
 {
   Addon* example=create_Addon(example_class);
-	
+  // Addon* example2=create_Addon(example_class2);	
   double Xmin = microenvironment.mesh.bounding_box[0]; 
 	double Ymin = microenvironment.mesh.bounding_box[1]; 
 	double Zmin = microenvironment.mesh.bounding_box[2]; 
@@ -197,12 +199,14 @@ void setup_tissue( void )
 			pC->assign_position( position );
       example->spawn_instance(pC);
       example->check_pCell_safety(pC);
+      // example2->spawn_instance(pC);
+      // example2->check_pCell_safety(pC);
 		}
 	}
 	std::cout << std::endl; 
 	
 	// load cells from your CSV file (if enabled)
-	load_cells_from_pugixml(); 
+	// load_cells_from_pugixml(); 
   	
 	
   return; 
@@ -213,7 +217,11 @@ std::vector<std::string> my_coloring_function( Cell* pCell )
 
 void phenotype_function( Cell* pCell, Phenotype& phenotype, double dt )
 {
-  Addon::Addon_list[0]->update_custom_class(pCell);
+  // int index=pCell->custom_data.find_variable_index("initial_volume");
+  // pCell->custom_data.variables[index].value=10;
+  // pCell->custom_data.variables[index].conserved_quantity=true;
+  Addon_list[0]->update_custom_class(pCell);
+  // Addon::Addon_list[1]->update_custom_class(pCell);
   return; }
 
 void custom_function( Cell* pCell, Phenotype& phenotype , double dt )
