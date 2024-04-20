@@ -23,6 +23,7 @@ Addon::Addon(Addon_Factory* custom_class_type):m_addon_factory{custom_class_type
 }
 
 Addon::~Addon(){
+  std::cout<< "Addon Destructor Called!\n";
   //delete all the instances located in map 
   // this could be very slow let the stack handle Addon instances at the end of simulations
   if(DEBUG_MODE){
@@ -68,13 +69,16 @@ void Addon::copy_instance_to_daughter(Base_Addon_Class* instance){
 }
 
 void Addon::detach_instance(Cell* pCell){
+  #pragma omp critical
+  {
     Base_Addon_Class* detach_ptr=class_instances_by_pCell[pCell->index];
+    Base_Addon_Class* blank_ptr= detached_instances_by_pCell[pCell->index];
     if(!(detach_ptr->is_blank))
     {
-      class_instances_by_pCell[pCell->index]=detached_instances_by_pCell[pCell->index];//make blank
       detached_instances_by_pCell[pCell->index]=detach_ptr;
-
+      class_instances_by_pCell[pCell->index]->is_blank=true;
     }
+  }
   return;
 }
 

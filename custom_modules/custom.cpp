@@ -224,7 +224,10 @@ void phenotype_function( Cell* pCell, Phenotype& phenotype, double dt )
   // pCell->custom_data.variables[index].value=10;
   // pCell->custom_data.variables[index].conserved_quantity=true;
   Addon_list[0]->update_custom_class(pCell);
-  // Addon_list[0]->detach_instance(pCell);
+  if(PhysiCell_globals.current_time>0.5)
+  {
+  Addon_list[0]->detach_instance(pCell);
+  }
   // Addon::Addon_list[1]->update_custom_class(pCell);
   return; }
 
