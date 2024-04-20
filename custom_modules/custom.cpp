@@ -160,7 +160,6 @@ void setup_microenvironment( void )
 
 void setup_tissue( void )
 {
-  Addon* example=create_Addon(example_class);
   // Addon* example2=create_Addon(example_class2);	
   double Xmin = microenvironment.mesh.bounding_box[0]; 
 	double Ymin = microenvironment.mesh.bounding_box[1]; 
@@ -197,18 +196,22 @@ void setup_tissue( void )
 			
 			pC = create_cell( *pCD ); 
 			pC->assign_position( position );
-      example->spawn_instance(pC);
-      example->check_pCell_safety(pC);
+      // example->check_pCell_safety(pC);
       // example2->spawn_instance(pC);
       // example2->check_pCell_safety(pC);
 		}
 	}
 	std::cout << std::endl; 
 	
+  Addon* example=create_Addon(example_class);
 	// load cells from your CSV file (if enabled)
 	// load_cells_from_pugixml(); 
-  	
-	
+	for( int i = 0 ; i < (*all_cells).size(); i++ )
+	{	
+    Cell* pCell=(*all_cells)[i];
+    example->spawn_instance(pCell);
+    example->check_pCell_safety(pCell);
+  }
   return; 
 }
 
@@ -221,6 +224,7 @@ void phenotype_function( Cell* pCell, Phenotype& phenotype, double dt )
   // pCell->custom_data.variables[index].value=10;
   // pCell->custom_data.variables[index].conserved_quantity=true;
   Addon_list[0]->update_custom_class(pCell);
+  // Addon_list[0]->detach_instance(pCell);
   // Addon::Addon_list[1]->update_custom_class(pCell);
   return; }
 

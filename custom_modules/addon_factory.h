@@ -12,7 +12,9 @@ class Addon_Factory{
   public:
     Addon* m_addon;
     virtual Base_Addon_Class* Factory_Method(Cell* pCell)=0;
+    virtual Base_Addon_Class* blank_factory_method()=0;
     Base_Addon_Class* Create_Addon_Instance(Cell* pCell);
+    Base_Addon_Class* Create_blank();
     virtual ~Addon_Factory();
 };
 

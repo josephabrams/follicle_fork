@@ -2,8 +2,6 @@
 #include "addon_factory.h"
 #include "base_addon.h"
 #include "debug_log.h"
-#include <array>
-#include <memory>
 #include <utility>
 bool DEBUG_MODE=false;
 auto DEBUG_LOG = Log::get_instance();
@@ -18,8 +16,8 @@ std::vector <Addon*> Addon_list{};
 
 //----- Addon class for managing a single addon class type
 Addon::Addon(Addon_Factory* custom_class_type):m_addon_factory{custom_class_type}{
-  if(DEBUG_MODE){
-    DEBUG_LOG->Log_this(code_file, 49, "Addon Created!");  
+    if(DEBUG_MODE){
+      DEBUG_LOG->Log_this(code_file, 49, "Addon Created!");  
   }
   return;
 }
@@ -30,23 +28,30 @@ Addon::~Addon(){
   if(DEBUG_MODE){
     DEBUG_LOG->Log_this(code_file, 59, "Addon Destructed!");  
   }
-  
-  for ( auto it = class_instances_by_pCell.begin(); it != class_instances_by_pCell.end(); ++it )
-  {  delete it->second;}
-  for ( auto it = detached_instances_by_pCell.begin(); it != detached_instances_by_pCell.end(); ++it )
-  {  delete it->second;}
-  
-  delete m_addon_factory;
+  for (int i=0; i<class_instances_by_pCell.size();i++)
+  {  
+    Base_Addon_Class* destroy_ptr=class_instances_by_pCell[i];
+    if(!(destroy_ptr->is_blank)){
+      delete class_instances_by_pCell[i];
+    }
+  }
+  for (int i=0; i<detached_instances_by_pCell.size();i++)
+  {  
+    Base_Addon_Class* destroy_ptr=detached_instances_by_pCell[i];
+    if(!(destroy_ptr->is_blank)){
+      delete detached_instances_by_pCell[i];
+    }
+  }
+  delete m_blank_ptr; 
+  delete m_addon_factory;// cleanup addon factory 1 factory per Addon
  return; 
 }
 
 void Addon::spawn_instance(Cell* pCell){
-  #pragma omp critical
-  {
-    Base_Addon_Class* ptr= m_addon_factory->Create_Addon_Instance(pCell);
-    std::pair<int,Base_Addon_Class*> new_instance (pCell->index,ptr);
-    class_instances_by_pCell.insert(new_instance);
-  }
+  Base_Addon_Class* ptr= m_addon_factory->Create_Addon_Instance(pCell);
+  ptr->is_blank=false;
+  class_instances_by_pCell[pCell->index]=ptr;
+  
   return;
 }
 
@@ -63,19 +68,20 @@ void Addon::copy_instance_to_daughter(Base_Addon_Class* instance){
 }
 
 void Addon::detach_instance(Cell* pCell){
-  #pragma omp critical
-  {
     Base_Addon_Class* detach_ptr=class_instances_by_pCell[pCell->index];
-    std::pair<int,Base_Addon_Class*> detached_instance (pCell->index,detach_ptr);
-    detached_instances_by_pCell.insert(detached_instance);
-    class_instances_by_pCell.erase(pCell->index);
-  }
+    if(!(detach_ptr->is_blank))
+    {
+      class_instances_by_pCell[pCell->index]=detached_instances_by_pCell[pCell->index];//make blank
+      detached_instances_by_pCell[pCell->index]=detach_ptr;
+
+    }
   return;
 }
 
 void Addon::check_pCell_safety(Cell* pCell){
   Base_Addon_Class* instance=class_instances_by_pCell[pCell->index];
-  if(!pCell->is_active || pCell->is_out_of_domain){
+  if(!(instance->is_blank)){
+  if(!(pCell->is_active) || pCell->is_out_of_domain){
     
     instance->pCell_is_safe=false; 
     detach_instance(pCell);
@@ -109,28 +115,37 @@ void Addon::check_pCell_safety(Cell* pCell){
     std::string message= "pCell safety checked and found to be: "+ std::to_string(instance->pCell_is_safe);
     DEBUG_LOG->Log_this(code_file,129,message);  
   }
-
+    instance->is_updated=false;
+  }
   return;
 }
 
 void Addon::update_custom_class(Cell* pCell){
-  // Base_Addon_Class* instance;
-  // instance=class_instances_by_pCell[pCell->index];
+  Base_Addon_Class* instance=class_instances_by_pCell[pCell->index];
   // std::cout<<"Instance: "<< instance<<"\n";
   // std::cout<<"Safety: "<< instance->pCell_is_safe<<"\n";
-  // if(!(instance->is_updated) || instance->pCell_is_safe){
-    // instance->update_state();
+  if(!(instance->is_updated) && instance->pCell_is_safe && !(instance->is_blank)){
+    instance->update_state();
     if(DEBUG_MODE){
       DEBUG_LOG->Log_this(code_file,140,"Custom Class State Updated!");  
     }
-  // }
-  // check_pCell_safety(instance->m_pCell);
+  }
+  check_pCell_safety(instance->m_pCell);
   return;
 }
-Addon* create_Addon(Addon_Factory* custom_class_type ){
+Addon* create_Addon(Addon_Factory* custom_class_type ){//do not run in parrallel section
     set_debug();
     Addon* ptr=new Addon(custom_class_type);
+  #pragma omp critical
+  {
+    Base_Addon_Class* null_instance=ptr->m_addon_factory->Create_blank();
+    std::cout<< "all cells size: "<< (*all_cells).size()<<"\n";
+    ptr->class_instances_by_pCell.resize((*all_cells).size()*2,null_instance);
+    ptr->detached_instances_by_pCell.resize((*all_cells).size()*2,null_instance);
+    ptr->m_blank_ptr=null_instance;
+    std::cout<< "sizes: "<< ptr->class_instances_by_pCell.size()<< "\n";
     Addon_list.push_back(ptr);
+  }
     return ptr; 
 }
 

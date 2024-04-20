@@ -25,13 +25,14 @@ class Addon{
 private:
   
 public:
+  Base_Addon_Class* m_blank_ptr;
   // static std::vector <Addon*>& Addon_list_ref;
   // #pragma omp threadprivate(Addon_list_ref)
   Addon(Addon const&) = delete; //cannot copy
   Addon& operator=(Addon const&) = delete; // cannot assign
   Addon_Factory* m_addon_factory;
-  std::unordered_map< int, Base_Addon_Class* > class_instances_by_pCell;//store instance
-  std::unordered_map< int, Base_Addon_Class* > detached_instances_by_pCell;//store detached instance
+  std::vector <Base_Addon_Class*> class_instances_by_pCell;//store instance
+  std::vector <Base_Addon_Class*> detached_instances_by_pCell;//store detached instance
   Addon(Addon_Factory* custom_class_type);
   //Addon_factory* class_one = new Class_One_Creator();
   ~Addon();
