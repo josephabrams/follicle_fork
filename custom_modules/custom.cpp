@@ -71,8 +71,6 @@
 #include "./addon_factory.h"
 #include <cmath>
 
-Addon_Factory* example_class = new Example_Addon_Creator();
-// Addon_Factory* example_class2 = new Example_Addon_Creator();
 
 void create_cell_types( void )
 {
@@ -160,7 +158,6 @@ void setup_microenvironment( void )
 
 void setup_tissue( void )
 {
-  // Addon* example2=create_Addon(example_class2);	
   double Xmin = microenvironment.mesh.bounding_box[0]; 
 	double Ymin = microenvironment.mesh.bounding_box[1]; 
 	double Zmin = microenvironment.mesh.bounding_box[2]; 
@@ -203,18 +200,31 @@ void setup_tissue( void )
 	}
 	std::cout << std::endl; 
 	
-  Addon* example=create_Addon(example_class);
-	// load cells from your CSV file (if enabled)
-	// load_cells_from_pugixml(); 
+	// // load cells from your CSV file (if enabled)
+	// // load_cells_from_pugixml(); 
+  return; 
+}
+void setup_addons (void)
+{
+//Generator factory for each addon:
+  Addon_Factory* example_class = new Example_Addon_Creator();
+  // Addon_Factory* example_class2 = new Example_Addon_Creator();
+
+//Create a wrapper for each addon, they are created in order and added to Addon_list:
+  Addon* example=create_Addon(example_class);//assumes max number of agents will be (twice the curent number)
+// Best if you can reduce overhead and specify the max number of agents there will be
+  //max_agents= 100000;
+  //Addon* example=create_Addon(example_class, max_agents);
+  // Addon* example2=create_Addon(example_class2);
+  
+//Create and attach instance to cells:
 	for( int i = 0 ; i < (*all_cells).size(); i++ )
 	{	
     Cell* pCell=(*all_cells)[i];
     example->spawn_instance(pCell);
-    example->check_pCell_safety(pCell);
   }
-  return; 
+  return;
 }
-
 std::vector<std::string> my_coloring_function( Cell* pCell )
 { return paint_by_number_cell_coloring(pCell); }
 
@@ -223,12 +233,11 @@ void phenotype_function( Cell* pCell, Phenotype& phenotype, double dt )
   // int index=pCell->custom_data.find_variable_index("initial_volume");
   // pCell->custom_data.variables[index].value=10;
   // pCell->custom_data.variables[index].conserved_quantity=true;
-  Addon_list[0]->update_custom_class(pCell);
-  if(PhysiCell_globals.current_time>0.5)
-  {
-  Addon_list[0]->detach_instance(pCell);
-  }
-  // Addon::Addon_list[1]->update_custom_class(pCell);
+  Addon_list[0]->update_custom_class(pCell); //update the state of the first addon
+  // if(PhysiCell_globals.current_time>0.5)
+  // {
+  // Addon_list[0]->detach_instance(pCell); //addons can be detached and reattached but probably best to avoid 
+  // }
   return; }
 
 void custom_function( Cell* pCell, Phenotype& phenotype , double dt )

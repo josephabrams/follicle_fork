@@ -2,9 +2,8 @@
 #include "addon_factory.h"
 #include "base_addon.h"
 #include "debug_log.h"
-#include <utility>
 bool DEBUG_MODE=false;
-auto DEBUG_LOG = Log::get_instance();
+auto DEBUG_LOG = Log::get_instance("./debug_log.txt");
 auto code_file = "./addon.cpp";
 void set_debug(){
   auto log_file = "./debug_log.txt";
@@ -52,7 +51,7 @@ void Addon::spawn_instance(Cell* pCell){
   Base_Addon_Class* ptr= m_addon_factory->Create_Addon_Instance(pCell);
   ptr->is_blank=false;
   class_instances_by_pCell[pCell->index]=ptr;
-  
+  check_pCell_safety(pCell);
   return;
 }
 
@@ -77,6 +76,19 @@ void Addon::detach_instance(Cell* pCell){
     {
       detached_instances_by_pCell[pCell->index]=detach_ptr;
       class_instances_by_pCell[pCell->index]->is_blank=true;
+    }
+  }
+  return;
+}
+void Addon::reattach_instance(Cell* pCell){
+  #pragma omp critical
+  {
+    Base_Addon_Class* attach_ptr=class_instances_by_pCell[pCell->index];
+    Base_Addon_Class* detach_ptr= detached_instances_by_pCell[pCell->index];
+    if((attach_ptr->is_blank) && !detach_ptr->is_blank)
+    {
+      detach_ptr->is_blank=true;
+      attach_ptr->is_blank=false;
     }
   }
   return;
@@ -146,6 +158,21 @@ Addon* create_Addon(Addon_Factory* custom_class_type ){//do not run in parrallel
     std::cout<< "all cells size: "<< (*all_cells).size()<<"\n";
     ptr->class_instances_by_pCell.resize((*all_cells).size()*2,null_instance);
     ptr->detached_instances_by_pCell.resize((*all_cells).size()*2,null_instance);
+    ptr->m_blank_ptr=null_instance;
+    std::cout<< "sizes: "<< ptr->class_instances_by_pCell.size()<< "\n";
+    Addon_list.push_back(ptr);
+  }
+    return ptr; 
+}
+Addon* create_Addon(Addon_Factory* custom_class_type, int final_cell_count ){//do not run in parrallel section
+    set_debug();
+    Addon* ptr=new Addon(custom_class_type);
+  #pragma omp critical
+  {
+    Base_Addon_Class* null_instance=ptr->m_addon_factory->Create_blank();
+    std::cout<< "all cells size: "<< final_cell_count<<"\n";
+    ptr->class_instances_by_pCell.resize(final_cell_count,null_instance);
+    ptr->detached_instances_by_pCell.resize(final_cell_count,null_instance);
     ptr->m_blank_ptr=null_instance;
     std::cout<< "sizes: "<< ptr->class_instances_by_pCell.size()<< "\n";
     Addon_list.push_back(ptr);

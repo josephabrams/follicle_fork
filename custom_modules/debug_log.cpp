@@ -22,32 +22,48 @@ void Log::set_destination(std::string log_filename = "",
 	}
 }
 
-std::shared_ptr<Log> Log::get_instance() {
+std::shared_ptr<Log> Log::get_instance(std::string log_filename) {
 	if (m_instance == nullptr) {
     m_instance.reset(new Log());
 	}
+  m_instance->set_destination(log_filename, Log_Destination::FILE);
+	return m_instance;
+}
+std::shared_ptr<Log> Log::get_instance(std::string log_filename, std::string code_file) {
+	if (m_instance == nullptr) {
+    m_instance.reset(new Log());
+	}
+  m_instance->set_destination(log_filename, Log_Destination::FILE);
+  m_instance->m_code_file=code_file;
 	return m_instance;
 }
 
 void Log::Log_this(std::string code_file, int code_line, std::string message) {
-	
+  #pragma omp critical
+  {	
 		code_file += " : " + std::to_string(code_line) + " : ";
 		message = code_file + message;
 	  log_message(message);
+  }
 }
-void Log::Log_this(std::string message) {
-	  std::string code_file= static_cast<std::string>(__FILE__);
-	  std::string code_line= std::to_string(__LINE__);
-		code_file += " : before " + code_line + " : ";
+void Log::Log_this(std::string message, int code_line) {
+  #pragma omp critical
+  {
+	  std::string code_file= m_code_file;
+		code_file += " : before " + std::to_string(code_line) + " : ";
 		message = code_file + message;
 	  log_message(message);
+  }
 }
 
 void Log::log_message(const std::string& message) {
 	if (m_destination == Log_Destination::FILE) {
-    m_log_stream.open(m_log_filename, std::ios_base::app);
-		m_log_stream << message << std::endl;
-    m_log_stream.close();
+    #pragma omp critical
+    {
+      m_log_stream.open(m_log_filename, std::ios_base::app);
+      m_log_stream << message << std::endl;
+      m_log_stream.close();
+    }
 	}
 	else {
 		std::cout << message << std::endl;

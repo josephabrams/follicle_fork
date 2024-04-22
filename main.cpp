@@ -230,7 +230,7 @@ int main( int argc, char* argv[] )
 			log_output(PhysiCell_globals.current_time, PhysiCell_globals.full_output_index, microenvironment, report_file);
 			report_file.close();
 		}
-    clean_up_Addons();
+    // clean_up_Addons();
 	}
 	catch( const std::exception& e )
 	{ // reference to the base of a polymorphic object

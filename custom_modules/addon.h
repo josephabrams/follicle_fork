@@ -41,12 +41,13 @@ public:
   Base_Addon_Class* get_instance(Cell* pCell);
   void copy_instance_to_daughter(Base_Addon_Class* instance);
   void detach_instance(Cell* pCell);
+  void reattach_instance(Cell* pCell);
   void check_pCell_safety(Cell* pCell);// if pCell goes out of domain or is destructed deal with addons, maybe an observer is needed
   void update_custom_class(Cell* pCell); //run the class
 };
 extern std::vector<Addon*> Addon_list;
 Addon* create_Addon(Addon_Factory* custom_class_type);
-
+Addon* create_Addon(Addon_Factory* custom_class_type, int final_cell_count );
 void clean_up_Addons();
 
 #endif
