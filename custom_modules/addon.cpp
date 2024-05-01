@@ -1,23 +1,12 @@
 #include "./addon.h"
 #include "addon_factory.h"
 #include "base_addon.h"
-#include "debug_log.h"
-bool DEBUG_MODE=false;
-auto DEBUG_LOG = Log::get_instance("./debug_log.txt");
-auto code_file = "./addon.cpp";
-void set_debug(){
-  auto log_file = "./debug_log.txt";
-  auto log_mode = Log_Destination::FILE;
-  DEBUG_LOG->set_destination(log_file, log_mode);
-}
+// #include "debug_log.h"
 std::vector <Addon*> Addon_list{};
 // std::vector <Addon*>& Addon::Addon_list_ref=Addon_list;
 
 //----- Addon class for managing a single addon class type
 Addon::Addon(Addon_Factory* custom_class_type):m_addon_factory{custom_class_type}{
-    if(DEBUG_MODE){
-      DEBUG_LOG->Log_this(code_file, 49, "Addon Created!");  
-  }
   return;
 }
 
@@ -25,9 +14,6 @@ Addon::~Addon(){
   std::cout<< "Addon Destructor Called!\n";
   //delete all the instances located in map 
   // this could be very slow let the stack handle Addon instances at the end of simulations
-  if(DEBUG_MODE){
-    DEBUG_LOG->Log_this(code_file, 59, "Addon Destructed!");  
-  }
   for (int i=0; i<class_instances_by_pCell.size();i++)
   {  
     Base_Addon_Class* destroy_ptr=class_instances_by_pCell[i];
@@ -127,10 +113,6 @@ void Addon::check_pCell_safety(Cell* pCell){
     // }
   } 
   else{ instance->pCell_is_safe=true;}
-  if(DEBUG_MODE){
-    std::string message= "pCell safety checked and found to be: "+ std::to_string(instance->pCell_is_safe);
-    DEBUG_LOG->Log_this(code_file,129,message);  
-  }
     instance->is_updated=false;
   }
   return;
@@ -142,9 +124,6 @@ void Addon::update_custom_class(Cell* pCell){
   // std::cout<<"Safety: "<< instance->pCell_is_safe<<"\n";
   if(!(instance->is_updated) && instance->pCell_is_safe && !(instance->is_blank)){
     instance->update_state();
-    if(DEBUG_MODE){
-      DEBUG_LOG->Log_this(code_file,140,"Custom Class State Updated!");  
-    }
   }
   check_pCell_safety(instance->m_pCell);
   return;
