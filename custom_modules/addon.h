@@ -7,6 +7,8 @@
 #include "./quaternion.h"
 #include <stdexcept>
 #include "../core/PhysiCell.h"
+#include "../core/PhysiCell_cell.h"
+#include "../core/PhysiCell_cell_container.h"
 #include "../modules/PhysiCell_standard_modules.h"
 #include "./debug_log.h"
 #include "addon_factory.h"
@@ -17,7 +19,7 @@ using namespace BioFVM;
 using namespace PhysiCell;
 constexpr int NUMBER_OF_ADDONS=10;
 
-void set_debug();
+// void set_debug();
 
 
 

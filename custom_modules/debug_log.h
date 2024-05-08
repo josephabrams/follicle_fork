@@ -14,8 +14,8 @@ enum class Log_Destination {
 
 class Log {
 public:
-	static std::shared_ptr<Log> get_instance(std::string log_filename);
-  static std::shared_ptr<Log> get_instance(std::string log_filename, std::string code_file);
+	static std::shared_ptr<Log> get_Log(std::string log_filename);
+  static std::shared_ptr<Log> get_Log(std::string log_filename, std::string code_file);
 
 	void set_destination(std::string log_filename,
 						   Log_Destination destination);
@@ -35,5 +35,5 @@ private:
 
 };
 
-// extern std::vector<std::shared_ptr<Log>> debug_logs;
+extern std::vector<std::shared_ptr<Log>> debug_logs;
 #endif // !__DEBUG_LOG__

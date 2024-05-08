@@ -128,7 +128,7 @@ int main( int argc, char* argv[] )
 	
 	setup_tissue();
 	/* Users typically stop modifying here. END USERMODS */
-	
+  setup_addons();	
 	// set MultiCellDS save options 
 
 	set_save_biofvm_mesh_as_matlab( true ); 
@@ -219,8 +219,10 @@ int main( int argc, char* argv[] )
 			((Cell_Container *)microenvironment.agent_container)->update_all_cells( PhysiCell_globals.current_time );
 			
 			/*
-			  Custom add-ons could potentially go here. 
+			  Custom add-ons could potentially go here.
+        
 			*/
+      // attach_new_cells();
 			
 			PhysiCell_globals.current_time += diffusion_dt;
 		}
@@ -230,7 +232,7 @@ int main( int argc, char* argv[] )
 			log_output(PhysiCell_globals.current_time, PhysiCell_globals.full_output_index, microenvironment, report_file);
 			report_file.close();
 		}
-    // clean_up_Addons();
+    clean_up_Addons();
 	}
 	catch( const std::exception& e )
 	{ // reference to the base of a polymorphic object

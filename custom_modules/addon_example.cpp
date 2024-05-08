@@ -1,9 +1,17 @@
 
 #include "./addon_example.h"
-Example_Addon_Class::Example_Addon_Class(Cell* pCell){
-  this->initialize(pCell);//requires initialization of Base_Addon_Class
+#include <fstream>
+// #include <cstddef>
+Example_Addon_Class::Example_Addon_Class(Cell* pCell, Addon* wrapper){
+  this->initialize(pCell, wrapper);//requires initialization of Base_Addon_Class
   this->example_int = 0;
   this->is_blank=false;
+
+  // std::ofstream ofs ("test.txt", std::ofstream::app);
+
+  // ofs <<"Comparisons \n";
+
+  // ofs.close();
   
   return;
 }
@@ -24,8 +32,8 @@ void Example_Addon_Class::on_division() {
     return;
 }
 
-Base_Addon_Class* Example_Addon_Creator::Factory_Method(Cell* pCell) {
-  return new Example_Addon_Class(pCell);
+Base_Addon_Class* Example_Addon_Creator::Factory_Method(Cell* pCell, Addon* wrapper) {
+  return new Example_Addon_Class(pCell, wrapper);
 }
 
 Base_Addon_Class* Example_Addon_Creator::blank_factory_method() {

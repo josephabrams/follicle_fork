@@ -5,7 +5,7 @@
 #include "./debug_log.h"
 using namespace BioFVM;
 using namespace PhysiCell;
-
+class Addon;
 class Base_Addon_Class{
 private:
 public:
@@ -15,8 +15,9 @@ public:
   bool is_updated;
   bool divided;
   Cell* m_daughter;
-  void initialize(Cell* pCell);
+  void initialize(Cell* pCell, Addon* wrapper);
   void initialize_blank(); //empty place holder to fill class containers
+  Addon* m_wrapper;
   //Base_Addon_Class(Cell* pCell);
   virtual ~Base_Addon_Class();
   Base_Addon_Class* get_instance();

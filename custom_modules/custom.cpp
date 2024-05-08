@@ -69,6 +69,8 @@
 #include "./addon_example.h"
 #include "./addon.h"
 #include "./addon_factory.h"
+#include "addon_division_tracker.h"
+#include "base_addon.h"
 #include <cmath>
 
 
@@ -97,7 +99,7 @@ void create_cell_types( void )
 	
 	cell_defaults.functions.add_cell_basement_membrane_interactions = NULL; 
 	cell_defaults.functions.calculate_distance_to_membrane = NULL;
-  cell_defaults.custom_data.add_variable("initial_volume","um^3",0.0);
+  // cell_defaults.custom_data.add_variable("initial_volume","um^3",0.0);
 	
 	/*
 	   This parses the cell definitions in the XML config file. 
@@ -207,13 +209,14 @@ void setup_tissue( void )
 void setup_addons (void)
 {
 //Generator factory for each addon:
-  Addon_Factory* example_class = new Example_Addon_Creator();
-  // Addon_Factory* example_class2 = new Example_Addon_Creator();
+  // Addon_Factory* example_class = new Example_Addon_Creator();
+  Addon_Factory* tracker = new Division_Tracker_Creator();
 
 //Create a wrapper for each addon, they are created in order and added to Addon_list:
-  Addon* example=create_Addon(example_class);//assumes max number of agents will be (twice the curent number)
-// Best if you can reduce overhead and specify the max number of agents there will be
-  //max_agents= 100000;
+  int max_agents= 100000;
+  // Addon* example=create_Addon(example_class, max_agents);//assumes max number of agents will be (twice the curent number)
+  Addon* division_tracking=create_Addon(tracker, max_agents);
+  // Best if you can reduce overhead and specify the max number of agents there will be
   //Addon* example=create_Addon(example_class, max_agents);
   // Addon* example2=create_Addon(example_class2);
   
@@ -221,7 +224,8 @@ void setup_addons (void)
 	for( int i = 0 ; i < (*all_cells).size(); i++ )
 	{	
     Cell* pCell=(*all_cells)[i];
-    example->spawn_instance(pCell);
+    // example->spawn_instance(pCell);
+    division_tracking->spawn_instance(pCell);
   }
   return;
 }
@@ -234,12 +238,25 @@ void phenotype_function( Cell* pCell, Phenotype& phenotype, double dt )
   // pCell->custom_data.variables[index].value=10;
   // pCell->custom_data.variables[index].conserved_quantity=true;
   Addon_list[0]->update_custom_class(pCell); //update the state of the first addon
-  // if(PhysiCell_globals.current_time>0.5)
-  // {
-  // Addon_list[0]->detach_instance(pCell); //addons can be detached and reattached but probably best to avoid 
-  // }
-  return; }
+  // Addon_list[1]->update_custom_class(pCell);
+  if(PhysiCell_globals.current_time>3.0 && PhysiCell_globals.current_time<3.01)
+  {
+    pCell->flag_for_division(); 
+  }
 
+  std::ofstream ofs ("test2.txt", std::ofstream::app);
+
+  ofs <<pCell<<", "<< PhysiCell_globals.current_time <<", "<< Addon_list[0]->class_instances_by_pCell[pCell->index]->is_blank<<"\n";
+
+  ofs.close();
+  
+  return; }
+void attach_new_cells(){
+  // Cell* pCell=(*all_cells)[0]; //grab an already attached cell
+  // Addon_list[0]->get_instance(pCell)->on_division();//get the instance and run customized on_division function
+
+  return;
+}
 void custom_function( Cell* pCell, Phenotype& phenotype , double dt )
 { return; } 
 

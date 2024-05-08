@@ -1,8 +1,13 @@
 #include "./addon.h"
 #include "addon_factory.h"
 #include "base_addon.h"
-// #include "debug_log.h"
+//#include "debug_log.h" 
+#include <ios>
+#include <memory>
+// std::shared_ptr<Log> addon_log=Log::get_Log("../output/debug_log.txt", __FILE__);
 std::vector <Addon*> Addon_list{};
+
+
 // std::vector <Addon*>& Addon::Addon_list_ref=Addon_list;
 
 //----- Addon class for managing a single addon class type
@@ -11,6 +16,7 @@ Addon::Addon(Addon_Factory* custom_class_type):m_addon_factory{custom_class_type
 }
 
 Addon::~Addon(){
+  // addon_log->Log_this("Addon Destructor Called", __LINE__);
   std::cout<< "Addon Destructor Called!\n";
   //delete all the instances located in map 
   // this could be very slow let the stack handle Addon instances at the end of simulations
@@ -34,7 +40,8 @@ Addon::~Addon(){
 }
 
 void Addon::spawn_instance(Cell* pCell){
-  Base_Addon_Class* ptr= m_addon_factory->Create_Addon_Instance(pCell);
+  Addon* wrapper= this;
+  Base_Addon_Class* ptr= m_addon_factory->Create_Addon_Instance(pCell,wrapper);
   ptr->is_blank=false;
   class_instances_by_pCell[pCell->index]=ptr;
   check_pCell_safety(pCell);
@@ -82,54 +89,75 @@ void Addon::reattach_instance(Cell* pCell){
 
 void Addon::check_pCell_safety(Cell* pCell){
   Base_Addon_Class* instance=class_instances_by_pCell[pCell->index];
-  if(!(instance->is_blank)){
-  if(!(pCell->is_active) || pCell->is_out_of_domain){
-    
-    instance->pCell_is_safe=false; 
-    detach_instance(pCell);
-  }
-  else if(pCell->phenotype.death.dead){
-    instance->pCell_is_safe=false; 
-    detach_instance(pCell);
-    //do dead stuff if you've overwritten what PhysiCell will do by default
-  }
-  else if(pCell->phenotype.flagged_for_removal){
-    // #pragma critical
-    // {
-      instance->pCell_is_safe=false;
+    if(!(pCell->is_active) || pCell->is_out_of_domain){
+      
+      instance->pCell_is_safe=false; 
       detach_instance(pCell);
-    // }
-  }
-  else if(pCell->phenotype.flagged_for_division){
-     // #pragma critical
-    // {
-      instance->pCell_is_safe=false;
-      // detach_instance(pCell);// maybe you want to detach, maybe not,
-      //instance->m_daughter should be set here need some way to get child if you want to attach new addon to it
-      // if (instance->m_daughter!=nullptr)
+    std::cout<< "INACTIVE OR OUT OF DOMAIN!"<<"\n";
+    }
+    else if(pCell->phenotype.death.dead){
+      instance->pCell_is_safe=false; 
+      detach_instance(pCell);
+      std::cout<< "DEAD"<<"\n";
+      //do dead stuff if you've overwritten what PhysiCell will do by default
+    }
+    else if(pCell->phenotype.flagged_for_removal){
+      // #pragma critical
       // {
-        // copy_instance_to_daughter(instance);// be sure addon has on_division specified if you want this to work correctly 
+        instance->pCell_is_safe=false;
+        detach_instance(pCell);
+        std::cout<< "FLAGGED FOR REMOVAL"<<"\n";
       // }
-    // }
-  } 
-  else{ instance->pCell_is_safe=true;}
-    instance->is_updated=false;
-  }
+    }
+    else if(pCell->phenotype.flagged_for_division){
+    //    // #pragma critical
+    //   // {
+        instance->on_division();
+    //     instance->pCell_is_safe=false;
+    //     // detach_instance(pCell);// maybe you want to detach, maybe not,
+    //     //instance->m_daughter should be set here need some way to get child if you want to attach new addon to it
+    //     // if (instance->m_daughter!=nullptr)
+    //     // {
+    //       // copy_instance_to_daughter(instance);// be sure addon has on_division specified if you want this to work correctly 
+    //     // }
+    //   // }
+    } 
+    else{
+      instance->pCell_is_safe=true;
+    }
+  
+  instance->is_updated=false;
   return;
 }
 
 void Addon::update_custom_class(Cell* pCell){
+  // #pragma omp private(pCell)
+  
+  std::ofstream ofs ("test3.txt", std::ofstream::app);
+
+
   Base_Addon_Class* instance=class_instances_by_pCell[pCell->index];
-  // std::cout<<"Instance: "<< instance<<"\n";
-  // std::cout<<"Safety: "<< instance->pCell_is_safe<<"\n";
-  if(!(instance->is_updated) && instance->pCell_is_safe && !(instance->is_blank)){
-    instance->update_state();
+  ofs<<"Instance: "<< instance<<"\n";
+  ofs<<"Safety: "<< instance->pCell_is_safe<<"\n";
+  if(!(instance->is_blank)){
+    if(!(instance->is_updated) && instance->pCell_is_safe){
+      instance->update_state();
+    }
+    ofs<<"Checking Safety: "<<std::boolalpha<<instance->pCell_is_safe<<"\n";
+    check_pCell_safety(pCell);
+
   }
-  check_pCell_safety(instance->m_pCell);
+  else{
+
+    ofs<< "BLANK! "<<pCell->index<<", "<<instance<< "\n";
+  }
+  // std::cout<<"Checking Safety: "<< instance->pCell_is_safe<<"\n";
+  // check_pCell_safety(instance->m_pCell);
+  ofs.close();
   return;
 }
 Addon* create_Addon(Addon_Factory* custom_class_type ){//do not run in parrallel section
-    set_debug();
+    // set_debug();
     Addon* ptr=new Addon(custom_class_type);
   #pragma omp critical
   {
@@ -144,7 +172,7 @@ Addon* create_Addon(Addon_Factory* custom_class_type ){//do not run in parrallel
     return ptr; 
 }
 Addon* create_Addon(Addon_Factory* custom_class_type, int final_cell_count ){//do not run in parrallel section
-    set_debug();
+     // set_debug();
     Addon* ptr=new Addon(custom_class_type);
   #pragma omp critical
   {
