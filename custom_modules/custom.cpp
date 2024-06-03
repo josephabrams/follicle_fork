@@ -66,13 +66,9 @@
 */
 
 #include "./custom.h"
-#include "./addon_example.h"
-#include "./addon.h"
-#include "./addon_factory.h"
-#include "addon_division_tracker.h"
-#include "base_addon.h"
+#include "./multivoxel/multivoxel_functions.h"
+#include <vector>
 #include <cmath>
-
 
 void create_cell_types( void )
 {
@@ -93,9 +89,9 @@ void create_cell_types( void )
 	cell_defaults.functions.update_velocity = standard_update_cell_velocity;
 
 	cell_defaults.functions.update_migration_bias = NULL; 
-	cell_defaults.functions.update_phenotype = NULL; // update_cell_and_death_parameters_O2_based; 
-	cell_defaults.functions.custom_cell_rule = NULL; 
-	cell_defaults.functions.contact_function = NULL; 
+	// cell_defaults.functions.update_phenotype = NULL; // update_cell_and_death_parameters_O2_based; 
+	// cell_defaults.functions.custom_cell_rule = NULL; 
+	// cell_defaults.functions.contact_function = NULL; 
 	
 	cell_defaults.functions.add_cell_basement_membrane_interactions = NULL; 
 	cell_defaults.functions.calculate_distance_to_membrane = NULL;
@@ -174,9 +170,9 @@ void setup_tissue( void )
 		Zmax = 0.0; 
 	}
 	
-	double Xrange = Xmax - Xmin; 
-	double Yrange = Ymax - Ymin; 
-	double Zrange = Zmax - Zmin; 
+	double Xrange = Xmax-Xmin; 
+	double Yrange = Ymax-Ymin; 
+	double Zrange = Zmax-Zmin; 
 	
 	// create some of each type of cell 
 	
@@ -189,76 +185,61 @@ void setup_tissue( void )
 		for( int n = 0 ; n < parameters.ints("number_of_cells") ; n++ )
 		{
 			std::vector<double> position = {0,0,0}; 
-			position[0] = Xmin + UniformRandom()*Xrange; 
-			position[1] = Ymin + UniformRandom()*Yrange; 
-			position[2] = Zmin + UniformRandom()*Zrange; 
+			// position[0] = Xmin + UniformRandom()*Xrange; 
+			// position[1] = Ymin + UniformRandom()*Yrange; 
+			// position[2] = Zmin + UniformRandom()*Zrange; 
 			
+			position[0] = 0 + n*20; 
+			position[1] = 0 + n*20; 
+			position[2] = 0; 
 			pC = create_cell( *pCD ); 
 			pC->assign_position( position );
-      // example->check_pCell_safety(pC);
-      // example2->spawn_instance(pC);
-      // example2->check_pCell_safety(pC);
-		}
+      pC->set_radius(20);
+      
+	
+    }
 	}
 	std::cout << std::endl; 
 	
 	// // load cells from your CSV file (if enabled)
 	// // load_cells_from_pugixml(); 
+  //
   return; 
-}
-void setup_addons (void)
-{
-//Generator factory for each addon:
-  // Addon_Factory* example_class = new Example_Addon_Creator();
-  Addon_Factory* tracker = new Division_Tracker_Creator();
-
-//Create a wrapper for each addon, they are created in order and added to Addon_list:
-  int max_agents= 100000;
-  // Addon* example=create_Addon(example_class, max_agents);//assumes max number of agents will be (twice the curent number)
-  Addon* division_tracking=create_Addon(tracker, max_agents);
-  // Best if you can reduce overhead and specify the max number of agents there will be
-  //Addon* example=create_Addon(example_class, max_agents);
-  // Addon* example2=create_Addon(example_class2);
-  
-//Create and attach instance to cells:
-	for( int i = 0 ; i < (*all_cells).size(); i++ )
-	{	
-    Cell* pCell=(*all_cells)[i];
-    // example->spawn_instance(pCell);
-    division_tracking->spawn_instance(pCell);
-  }
-  return;
 }
 std::vector<std::string> my_coloring_function( Cell* pCell )
 { return paint_by_number_cell_coloring(pCell); }
 
 void phenotype_function( Cell* pCell, Phenotype& phenotype, double dt )
 {
-  // int index=pCell->custom_data.find_variable_index("initial_volume");
-  // pCell->custom_data.variables[index].value=10;
-  // pCell->custom_data.variables[index].conserved_quantity=true;
-  Addon_list[0]->update_custom_class(pCell); //update the state of the first addon
-  // Addon_list[1]->update_custom_class(pCell);
-  if(PhysiCell_globals.current_time>3.0 && PhysiCell_globals.current_time<3.01)
-  {
-    pCell->flag_for_division(); 
-  }
-
-  std::ofstream ofs ("test2.txt", std::ofstream::app);
-
-  ofs <<pCell<<", "<< PhysiCell_globals.current_time <<", "<< Addon_list[0]->class_instances_by_pCell[pCell->index]->is_blank<<"\n";
-
-  ofs.close();
-  
+  // std::vector<int> test_box;
   return; }
-void attach_new_cells(){
-  // Cell* pCell=(*all_cells)[0]; //grab an already attached cell
-  // Addon_list[0]->get_instance(pCell)->on_division();//get the instance and run customized on_division function
 
-  return;
-}
 void custom_function( Cell* pCell, Phenotype& phenotype , double dt )
-{ return; } 
+{
+  std::vector<int> test_box{};
+  std::vector<int> test_box2{};
+
+  std::vector<int> test_box3{};
+    // diffusion_bounding_box(pCell, &test_box);
+  std::vector<double> radius(3,pCell->phenotype.geometry.radius);
+  double voxel_length=default_microenvironment_options.dx;
+  general_voxel_bounding_box(&test_box, pCell->position, radius,voxel_length, pCell->get_microenvironment()->mesh);
+  std::vector<int> return_box{}; 
+  get_intersecting_voxels(pCell,test_box,&return_box);
+  std::string plot1="intersecting-voxels-";
+  std::string plot2="intersecting-neighbour-voxels-";
+  std::vector<int> neighbor_voxels{};
+  Cell* me=(*all_cells)[0];
+  Cell* neighbor=(*all_cells)[1];
+
+  general_voxel_bounding_box(&test_box2, me->position, radius,voxel_length, me->get_microenvironment()->mesh);
+  general_voxel_bounding_box(&test_box3, neighbor->position, radius,voxel_length, neighbor->get_microenvironment()->mesh);
+  intersecting_neighbor_voxels(me, neighbor, test_box2,test_box3, &neighbor_voxels);
+
+  #pragma omp critical
+  python_plot_cell_and_voxels(pCell, dt,return_box,plot1);
+  python_plot_two_cells_and_voxels(me,neighbor, dt,neighbor_voxels,plot2);
+  return; } 
 
 void contact_function( Cell* pMe, Phenotype& phenoMe , Cell* pOther, Phenotype& phenoOther , double dt )
 { return; } 

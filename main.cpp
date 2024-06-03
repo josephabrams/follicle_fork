@@ -75,12 +75,14 @@
 
 #include "./core/PhysiCell.h"
 #include "./modules/PhysiCell_standard_modules.h" 
-
+#include "./custom_modules/cryomodule/ABFM.h"
 // put custom code modules here! 
 
 #include "./custom_modules/custom.h" 
-#include "./custom_modules/addon_example.h"
-#include "./custom_modules/addon.h"
+#include "core/PhysiCell_constants.h"
+#include "modules/PhysiCell_settings.h"
+// #include "./custom_modules/addon_example.h"
+// #include "./custom_modules/addon.h"
 using namespace BioFVM;
 using namespace PhysiCell;
 
@@ -128,7 +130,7 @@ int main( int argc, char* argv[] )
 	
 	setup_tissue();
 	/* Users typically stop modifying here. END USERMODS */
-  setup_addons();	
+  // setup_addons();	
 	// set MultiCellDS save options 
 
 	set_save_biofvm_mesh_as_matlab( true ); 
@@ -174,7 +176,16 @@ int main( int argc, char* argv[] )
 	}
 	
 	// main loop 
-	
+      // std::vector<double> Next{1.0,2.0,3.0};
+      // std::vector<double> Current{1.0,2.0,3.0};
+      //
+      // std::vector<double> df_dts_vec=Current;
+      // std::vector<double> prev_df_dts_vec=df_dts_vec;
+
+      // double current=1.0;
+      // double next=1.0;
+      // double df_dt=current;
+      // double prev_df_dt=df_dt;
 	try 
 	{		
 		while( PhysiCell_globals.current_time < PhysiCell_settings.max_time + 0.1*diffusion_dt )
@@ -211,9 +222,39 @@ int main( int argc, char* argv[] )
 					PhysiCell_globals.next_SVG_save_time  += PhysiCell_settings.SVG_save_interval;
 				}
 			}
-
+      // // test Adams-bashforth and forward euler functions y'-y=0
+      // std::cout<<"Time: "<< PhysiCell_globals.current_time<<"\n";
+      // std::cout<<"past: "<< Current<<"\n";
+      // // if(PhysiCell_globals.current_time<diffusion_dt){
+      // //   Forward_Euler(&next, current, df_dt,diffusion_dt);
+      // //   std::cout<< "FIRST STEP!"<<"\n";
+      // // }
+      // // else{
+      // //   Adams_Bashforth_2(&next,current, df_dt, prev_df_dt, diffusion_dt); 
+      // // }
+      // // if(PhysiCell_globals.current_time<diffusion_dt){
+      // //   Forward_Euler_vec(&Next, Current, df_dts_vec,diffusion_dt);
+      // //   std::cout<< "FIRST STEP!"<<"\n";
+      // // }
+      // // else{
+      // //   Adams_Bashforth_2_vec(&Next,Current, df_dts_vec, prev_df_dts_vec, diffusion_dt); 
+      // // }
+      // Forward_Euler_vec(&Next, Current, df_dts_vec,diffusion_dt);
+      // std::cout<<"next: "<< Next<<"\n";
+      // std::cout<<"df_dt: "<< df_dts_vec<<"\n";
+      // prev_df_dts_vec=df_dts_vec;
+      // df_dts_vec=Current;
+      // Current=Next;
+      // std::cout<<"current: "<< Current<<"\n";
+      //
+      // // std::cout<<"current: "<< current<<"\n";
+      // // std::cout<< "solution: "<< exp(PhysiCell_globals.current_time)<<"\n\n\n\n";
+      // std::cout<< "solution 1: "<< exp(PhysiCell_globals.current_time)<<"\n";
+      // std::cout<< "solution 2: "<< 2*exp(PhysiCell_globals.current_time)<<"\n";
+      // std::cout<< "solution 3: "<< 3*exp(PhysiCell_globals.current_time)<<"\n\n\n\n";
+			
 			// update the microenvironment
-			microenvironment.simulate_diffusion_decay( diffusion_dt );
+      microenvironment.simulate_diffusion_decay( diffusion_dt );
 			
 			// run PhysiCell 
 			((Cell_Container *)microenvironment.agent_container)->update_all_cells( PhysiCell_globals.current_time );
@@ -232,7 +273,7 @@ int main( int argc, char* argv[] )
 			log_output(PhysiCell_globals.current_time, PhysiCell_globals.full_output_index, microenvironment, report_file);
 			report_file.close();
 		}
-    clean_up_Addons();
+    // clean_up_Addons();
 	}
 	catch( const std::exception& e )
 	{ // reference to the base of a polymorphic object
@@ -250,7 +291,8 @@ int main( int argc, char* argv[] )
 	// timer 
 	
 	std::cout << std::endl << "Total simulation runtime: " << std::endl; 
-	BioFVM::display_stopwatch_value( std::cout , BioFVM::runtime_stopwatch_value() ); 
+	BioFVM::display_stopwatch_value( std::cout , BioFVM::runtime_stopwatch_value() );
 
+ 
 	return 0; 
 }

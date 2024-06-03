@@ -1,5 +1,5 @@
 VERSION := $(shell grep . VERSION.txt | cut -f1 -d:)
-PROGRAM_NAME := project
+PROGRAM_NAME := liver_spheroid
 
 CC := g++
 # CC := g++-mp-7 # typical macports compiler name
@@ -59,7 +59,7 @@ PhysiCell_pugixml.o PhysiCell_settings.o PhysiCell_geometry.o
 # put your custom objects here (they should be in the custom_modules directory)
 
 PhysiCell_custom_module_OBJECTS := custom.o addon_factory.o base_addon.o addon.o addon_example.o quaternion.o \
-quaternion_addon.o debug_log.o addon_division_tracker.o 
+quaternion_addon.o debug_log.o addon_division_tracker.o multivoxel_functions.o ABFM.o 
 
 
 pugixml_OBJECTS := pugixml.o
@@ -173,29 +173,38 @@ PhysiCell_geometry.o: ./modules/PhysiCell_geometry.cpp
 custom.o: ./custom_modules/custom.cpp 
 	$(COMPILE_COMMAND) -c ./custom_modules/custom.cpp
 
-base_addon.o: ./custom_modules/base_addon.cpp
+base_addon.o: ./custom_modules/addons/base_addon.cpp
 	$(COMPILE_COMMAND) -c ./custom_modules/base_addon.cpp 
 
-addon_factory.o: ./custom_modules/addon_factory.cpp
+addon_factory.o: ./custom_modules/addons/addon_factory.cpp
 	$(COMPILE_COMMAND) -c ./custom_modules/addon_factory.cpp
 
-addon.o: ./custom_modules/addon.cpp
+addon.o: ./custom_modules/addons/addon.cpp
 	$(COMPILE_COMMAND) -c ./custom_modules/addon.cpp 
 
-addon_example.o: ./custom_modules/addon_example.cpp
+addon_example.o: ./custom_modules/addons/addon_example.cpp
 	$(COMPILE_COMMAND) -c ./custom_modules/addon_example.cpp 
 
-quaternion.o: ./custom_modules/quaternion.cpp
+quaternion.o: ./custom_modules/addons/quaternion.cpp
 	$(COMPILE_COMMAND) -c ./custom_modules/quaternion.cpp 
 
-quaternion_addon.o: ./custom_modules/quaternion_addon.cpp
+quaternion_addon.o: ./custom_modules/addons/quaternion_addon.cpp
 	$(COMPILE_COMMAND) -c ./custom_modules/quaternion_addon.cpp
 
-debug_log.o: ./custom_modules/debug_log.cpp
-	$(COMPILE_COMMAND) -c ./custom_modules/debug_log.cpp 
+debug_log.o: ./custom_modules/addons/debug_log.cpp
+	$(COMPILE_COMMAND) -c ./custom_modules/addons/debug_log.cpp 
 
-addon_division_tracker.o: ./custom_modules/addon_division_tracker.cpp
-	$(COMPILE_COMMAND) -c ./custom_modules/addon_division_tracker.cpp 
+addon_division_tracker.o: ./custom_modules/addons/addon_division_tracker.cpp
+	$(COMPILE_COMMAND) -c ./custom_modules/addons/addon_division_tracker.cpp 
+
+# --- for liver spheroid testing ---
+# multivoxel_functions
+multivoxel_functions.o: ./custom_modules/multivoxel/multivoxel_functions.cpp
+	$(COMPILE_COMMAND) -c ./custom_modules/multivoxel/multivoxel_functions.cpp
+# cryomodule
+ABFM.o: ./custom_modules/cryomodule/ABFM.cpp
+	$(COMPILE_COMMAND) -c ./custom_modules/cryomodule/ABFM.cpp
+
 
 # cleanup
 
