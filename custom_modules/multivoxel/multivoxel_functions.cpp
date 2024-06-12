@@ -2,7 +2,8 @@
 #include "./multivoxel_functions.h"
 using namespace BioFVM;
 using namespace PhysiCell;
-
+Voxel ghost_voxel;
+std::vector<Cell*> multivoxel_cells;
 void general_voxel_bounding_box(std::vector<int> *return_bounding_box, std::vector<double> center, std::vector<double> half_dimensions, double voxel_length, BioFVM::Cartesian_Mesh &a_mesh)  
 {
   
@@ -74,7 +75,7 @@ void general_voxel_bounding_box(std::vector<int> *return_bounding_box, std::vect
         // std::vector<int>::iterator it;
         // it = std::unique (bounding_box_by_index.begin(), bounding_box_by_index.end());   // 10 20 30 20 10 ?  ?  ?  ?
         // bounding_box_by_index.resize( std::distance(bounding_box_by_index.begin(),it) );
-        std::cout<<"bounding_box_by_index : "<<bounding_box_by_index<<"\n\n";
+      //std::cout<<"bounding_box_by_index : "<<bounding_box_by_index<<"\n\n";
         // bounding_box_by_index.insert(bounding_box_by_index.end(), bounding_box_by_index_private.begin(), bounding_box_by_index_private.end());
         return_bounding_box->assign(bounding_box_by_index.begin(),bounding_box_by_index.end());
         // std::cout<<"return_bounding_box ("<< (*return_bounding_box).size()<<"): "<<*return_bounding_box<<"\n";
@@ -408,10 +409,89 @@ void intersecting_neighbor_voxels(Cell* pCell, Cell* pNeighbor, std::vector<int>
 }
 
 
+void check_out_of_bounds(Cell* pCell, int fail_count)
+{
+  std::vector<double> position=pCell->position;
+  double length=pCell->phenotype.geometry.radius;
+  double Xmin = BioFVM::get_default_microenvironment()->mesh.bounding_box[0]; 
+	double Ymin = BioFVM::get_default_microenvironment()->mesh.bounding_box[1]; 
+	double Zmin = BioFVM::get_default_microenvironment()->mesh.bounding_box[2]; 
+
+	double Xmax = BioFVM::get_default_microenvironment()->mesh.bounding_box[3]; 
+	double Ymax = BioFVM::get_default_microenvironment()->mesh.bounding_box[4]; 
+	double Zmax = BioFVM::get_default_microenvironment()->mesh.bounding_box[5]; 
+	
+	if( default_microenvironment_options.simulate_2D == true )
+	{
+		Zmin = 0.0; 
+		Zmax = 0.0; 
+	}
+    
+    double xs = position[0] - length;
+    double xe = position[0] + length;
+    double ys = position[1] - length;
+    double ye = position[1] + length;
+    double zs = 0.0;
+    double ze = 0.0;
+    if (default_microenvironment_options.simulate_2D) {
+    }
+    else if (!default_microenvironment_options.simulate_2D) {
+        zs = position[2] - length;
+        ze = position[2] + length;
+    }
+
+    /* check whether a cell leaves the domain and if so initialise fibre again
+                assume user placed the centre of fibre within the domain so reinitialise orientation,
+                break after 10 failures
+                It needs re-writing at some stage to handle the 3D case properly */
+
+    if (PhysiCell::parameters.bools("multivoxel_off_boundary")) {
+        if (xs < Xmin || xe > Xmax || xe < Xmin || xs > Xmax ||
+            ys < Ymin || ye > Ymax || ye < Ymin || ys > Ymax) {
+            fail_count = 10;
+        }
+    }
+    else{
+        if (default_microenvironment_options.simulate_2D) {
+            while (fail_count < 10) {
+                if (xs < Xmin || xe > Xmax || xe < Xmin || xs > Xmax ||
+                    ys < Ymin || ye > Ymax || ye < Ymin || ys > Ymax) {
+                    fail_count++;
+                    xs = position[0] - length;
+                    xe = position[0] + length;
+                    ys = position[1] - length;
+                    ye = position[1] + length;
+                }
+                else {
+                    break;
+                }
+            }
+        }
+
+        if (!default_microenvironment_options.simulate_2D) {
+            while (fail_count < 10) {
+                if (xs < Xmin || xe > Xmax || xe < Xmin || xs > Xmax ||
+                    ys < Ymin || ye > Ymax || ye < Ymin || ys > Ymax ||
+                    zs < Zmin || ze > Zmax || ze < Xmin || zs > Xmax) {
+                    fail_count++;
+                    xs = position[0] - length;
+                    xe = position[0] + length;
+                    ys = position[1] - length;
+                    ye = position[1] + length;
+                    zs = position[2] - length;
+                    ze = position[2] + length;
+                }
+                else {
+                    break;
+                }
+            }
+        }
+    }
+}
 
 void python_plot_cell_and_voxels(Cell* pCell, double dt, std::vector<int> &bounding_box_by_index, std::string plot_name)
 {
-  if(PhysiCell_globals.current_time<dt)
+  if(PhysiCell_globals.current_time>1 && PhysiCell_globals.current_time<1.2)
   {
     double voxel_length=default_microenvironment_options.dx;
     std::string file= "./output/cell-"+plot_name+std::to_string(pCell->index)+"-singe_cell_plot.py";
@@ -446,7 +526,9 @@ void python_plot_cell_and_voxels(Cell* pCell, double dt, std::vector<int> &bound
 
 void python_plot_two_cells_and_voxels(Cell* pCell, Cell* pNeighbor, double dt, std::vector<int> &bounding_box_by_index, std::string plot_name)
 {
-  if(PhysiCell_globals.current_time<dt)
+
+  if(PhysiCell_globals.current_time>1 && PhysiCell_globals.current_time<1.2)
+  /*if(PhysiCell_globals.current_time>dt)*/
   {
     double voxel_length=default_microenvironment_options.dx;
     std::string file= "./output/cell-"+plot_name+std::to_string(pCell->index)+"-singe_cell_plot.py";

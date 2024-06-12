@@ -1,4 +1,4 @@
-
+#include "./conversions.h"
 /*convert from molarity to molality using the polynomial Ax^3+Bx^2+Cx+D, D is 0 where they intercept 
  * from python files in virial folder using CRC data located there for 20 degrees C --assumed ~= at 23 C
  * To convert from  molarity  to  molality  for  EG  the coefficients are:  [ 0.01277023 -0.02080002  1.13628309  0.        ]
@@ -23,6 +23,7 @@ std::unordered_map<std::string,double> virial_coeff_B={{"EG",0.037},{"GLY",0.023
 std::unordered_map<std::string,double> virial_coeff_C={{"EG",-0.001},{"GLY",0.0},{"NaCl",0.0}};
 std::unordered_map<std::string,double> kdiss={{"EG",1.0},{"GLY",1.0},{"NaCl",1.678}};
 std::unordered_map<std::string,double> molar_mass={{"EG",62.07},{"GLY",92.09},{"NaCl",58.44}};
+
 double binary_virial(double molality, std::string component_name)
 {//osmolality=mi+B_i*m_i^2+C_i*m_i^3
   double osmolality=molality+virial_coeff_B[component_name]*molality*molality+virial_coeff_C[component_name]*molality*molality*molality;
@@ -63,3 +64,13 @@ double ternary_virial(double molality_1, double molality_2, std::string componen
 }
 
 
+std::unordered_map<std::string,double> solute_specific_volume={{"NaCl", 0.01661}, {"EG", 0.0557414}, {"GLY", 0.0730903}, {"HM", 0.01661}};//{HM,EG,GLY,PBS} in um^3/femptomole (l/mole)
+//eventually pull values from xml for solution thermodynamic constants
+// const std::vector <double> Spring_Cell::solute_specific_volume={0.0,0.01661,0.0557414,0.0730903,0.01661};//{0,HM,EG,GLY,PBS} in um^3/femptomole (l/mole)
+//
+double moles_to_volume(double moles, std::string component_name)
+{
+  double volume=0.0;
+  volume=solute_specific_volume[component_name]*moles;
+  return volume;
+}

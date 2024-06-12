@@ -31,4 +31,6 @@ void intersecting_neighbor_voxels(Cell* pCell, Cell* pNeighbor, std::vector<int>
 void python_plot_cell_and_voxels(Cell* pCell, double dt, std::vector<int> &bounding_box_by_index, std::string plot_name);
 
 void python_plot_two_cells_and_voxels(Cell* pCell, Cell* pNeighbor, double dt, std::vector<int> &bounding_box_by_index, std::string plot_name);
+extern Voxel ghost_voxel;
+extern std::vector<Cell*> multivoxel_cells;
 #endif

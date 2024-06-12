@@ -30,10 +30,10 @@ void sum_total_volume(std::vector<double> &solute_volume, double water_volume, d
   }
 }
 //Note: this function is using molality
-void dVw_Osmolality( double &Lp,  double &surface_area,  double &gas_ant,  double &temperature,  double &exterior_osmolality,  double &interior_osmolality, double *previous_dVw, double *dVw)
+void dVw_Osmolality( double &Lp,  double &surface_area,  const double &gas_constant,  double &temperature,  double &exterior_osmolality,  double &interior_osmolality, double *previous_dVw, double *dVw)
 { //-LpART(m_e-m_i)
-  *previous_dVw=*dVw;
-  *dVw=-1*Lp*surface_area*temperature*gas_ant*(exterior_osmolality-interior_osmolality);//total exterior osmolality salt+CPA (mole/kg)
+  /*(*previous_dVw)=(*dVw);*/
+  *dVw=-1*Lp*surface_area*temperature*gas_constant*(exterior_osmolality-interior_osmolality);//total exterior osmolality salt+CPA (mole/kg)
   // std::cout<<"exterior_osmolality: "<<this->exterior_osmolality<<"\n";
   // std::cout<<"interior_osmolality: "<<this->interior_osmolality<<"\n";
   // std::cout<<"difference: "<< this->exterior_osmolality-this->interior_osmolality<<"\n";
@@ -49,7 +49,7 @@ void dN_molarity( std::vector<double> &Ps,  double &surface_area,  std::vector<d
     //multisolute
     //function=dN/dt=Ps*A(mol^ext-mol^int) for the ith solute, Ps=0 for non-permeating
     //internal molarity depends on Vw
-    *previous_dN=*dN; 
+    /*(*previous_dN)=(*dN); */
     for (size_t i = 0; i < (*dN).size(); i++)
     {
       (*dN)[i]=Ps[i]*surface_area*(exterior_molarity[i]-interior_molarity[i]);
@@ -93,15 +93,15 @@ void calculate_water_uptake( double *water_uptake,  double& next_water_volume,  
   *water_uptake=next_water_volume-water_volume;
   return;
 }
-void two_p_forward_step( double dt)
-{
-  #pragma omp critical
-  {
-  }
-  return;
-}
-
-void two_p_update_volume(){
-  //pcell.geometry.update();//update surface_area, radius and nuclear radius
-  return;
-}
+/*void two_p_forward_step( double dt)*/
+/*{*/
+/*  #pragma omp critical*/
+/*  {*/
+/*  }*/
+/*  return;*/
+/*}*/
+/**/
+/*void two_p_update_volume(){*/
+/*  //pcell.geometry.update();//update surface_area, radius and nuclear radius*/
+/*  return;*/
+/*}*/

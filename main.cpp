@@ -76,7 +76,8 @@
 #include "./core/PhysiCell.h"
 #include "./modules/PhysiCell_standard_modules.h" 
 #include "./custom_modules/cryomodule/ABFM.h"
-// put custom code modules here! 
+// put custom code modules here!
+#include "./custom_modules/cryomodule/cryocell.h"
 
 #include "./custom_modules/custom.h" 
 #include "core/PhysiCell_constants.h"
@@ -213,7 +214,7 @@ int main( int argc, char* argv[] )
 			// save SVG plot if it's time
 			if( fabs( PhysiCell_globals.current_time - PhysiCell_globals.next_SVG_save_time  ) < 0.01 * diffusion_dt )
 			{
-				if( PhysiCell_settings.enable_SVG_saves == false )
+				if( PhysiCell_settings.enable_SVG_saves == true )
 				{	
 					sprintf( filename , "%s/snapshot%08u.svg" , PhysiCell_settings.folder.c_str() , PhysiCell_globals.SVG_output_index ); 
 					SVG_plot( filename , microenvironment, 0.0 , PhysiCell_globals.current_time, cell_coloring_function );
@@ -258,7 +259,9 @@ int main( int argc, char* argv[] )
 			
 			// run PhysiCell 
 			((Cell_Container *)microenvironment.agent_container)->update_all_cells( PhysiCell_globals.current_time );
-			
+		  update_all_cells_voxels();	
+      two_p_forward_step(diffusion_dt);
+      two_p_update_volume();
 			/*
 			  Custom add-ons could potentially go here.
         

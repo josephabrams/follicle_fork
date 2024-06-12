@@ -67,7 +67,8 @@
 
 #include "../core/PhysiCell.h"
 #include "../modules/PhysiCell_standard_modules.h" 
-
+#include "./tissue_construction/tissue_construction.h"
+#include "../addons/PhysiMeSS/PhysiMeSS.h"
 using namespace BioFVM; 
 using namespace PhysiCell;
 
@@ -90,3 +91,13 @@ void custom_function( Cell* pCell, Phenotype& phenotype , double dt );
 // void attach_new_cells();
 void contact_function( Cell* pMe, Phenotype& phenoMe , Cell* pOther, Phenotype& phenoOther , double dt ); 
 
+
+Cell* instantiate_physimess_cell();
+Cell* instantiate_physimess_fibre();
+Cell* instantiate_physimess_cell_custom_degrade();
+
+class PhysiMeSS_Cell_Custom_Degrade : public PhysiMeSS_Cell
+{
+  public:  
+  void degrade_fibre(PhysiMeSS_Fibre* pFibre);
+};

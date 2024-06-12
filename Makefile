@@ -58,14 +58,17 @@ PhysiCell_pugixml.o PhysiCell_settings.o PhysiCell_geometry.o
 
 # put your custom objects here (they should be in the custom_modules directory)
 
+PhysiMeSS_OBJECTS := PhysiMeSS.o PhysiMeSS_agent.o PhysiMeSS_fibre.o PhysiMeSS_cell.o
+
 PhysiCell_custom_module_OBJECTS := custom.o addon_factory.o base_addon.o addon.o addon_example.o quaternion.o \
-quaternion_addon.o debug_log.o addon_division_tracker.o multivoxel_functions.o ABFM.o 
+quaternion_addon.o debug_log.o addon_division_tracker.o multivoxel_functions.o ABFM.o cryocell.o conversions.o \
+volume_change.o tissue_construction.o 
 
 
 pugixml_OBJECTS := pugixml.o
 
 PhysiCell_OBJECTS := $(BioFVM_OBJECTS)  $(pugixml_OBJECTS) $(PhysiCell_core_OBJECTS) $(PhysiCell_module_OBJECTS)
-ALL_OBJECTS := $(PhysiCell_OBJECTS) $(PhysiCell_custom_module_OBJECTS)
+ALL_OBJECTS := $(PhysiCell_OBJECTS) $(PhysiMeSS_OBJECTS) $(PhysiCell_custom_module_OBJECTS)
 
 # compile the project 
 
@@ -167,7 +170,21 @@ PhysiCell_basic_signaling.o: ./core/PhysiCell_basic_signaling.cpp
 	
 PhysiCell_geometry.o: ./modules/PhysiCell_geometry.cpp
 	$(COMPILE_COMMAND) -c ./modules/PhysiCell_geometry.cpp 
-	
+
+
+# PhysiMeSS
+PhysiMeSS.o: ./addons/PhysiMeSS/PhysiMeSS.cpp 
+	$(COMPILE_COMMAND) -c ./addons/PhysiMeSS/PhysiMeSS.cpp
+
+PhysiMeSS_agent.o: ./addons/PhysiMeSS/PhysiMeSS_agent.cpp 
+	$(COMPILE_COMMAND) -c ./addons/PhysiMeSS/PhysiMeSS_agent.cpp
+
+PhysiMeSS_fibre.o: ./addons/PhysiMeSS/PhysiMeSS_fibre.cpp 
+	$(COMPILE_COMMAND) -c ./addons/PhysiMeSS/PhysiMeSS_fibre.cpp
+
+PhysiMeSS_cell.o: ./addons/PhysiMeSS/PhysiMeSS_cell.cpp 
+	$(COMPILE_COMMAND) -c ./addons/PhysiMeSS/PhysiMeSS_cell.cpp
+
 # user-defined PhysiCell modules
 
 custom.o: ./custom_modules/custom.cpp 
@@ -204,7 +221,15 @@ multivoxel_functions.o: ./custom_modules/multivoxel/multivoxel_functions.cpp
 # cryomodule
 ABFM.o: ./custom_modules/cryomodule/ABFM.cpp
 	$(COMPILE_COMMAND) -c ./custom_modules/cryomodule/ABFM.cpp
+cryocell.o: ./custom_modules/cryomodule/cryocell.cpp
+	$(COMPILE_COMMAND) -c ./custom_modules/cryomodule/cryocell.cpp
+conversions.o: ./custom_modules/cryomodule/conversions.cpp
+	$(COMPILE_COMMAND) -c ./custom_modules/cryomodule/conversions.cpp
 
+volume_change.o: ./custom_modules/cryomodule/volume_change.cpp
+	$(COMPILE_COMMAND) -c ./custom_modules/cryomodule/volume_change.cpp
+tissue_construction.o: ./custom_modules/tissue_construction/tissue_construction.cpp
+	$(COMPILE_COMMAND) -c ./custom_modules/tissue_construction/tissue_construction.cpp
 
 # cleanup
 
