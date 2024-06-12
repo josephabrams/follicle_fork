@@ -215,7 +215,7 @@ void setup_tissue( void )
   double initial_inner_radius=parameters.doubles("average_pocket_radius");
 	double initial_overlap=.1;//representation of the initial packing density -- taken from physicell simulations of cancer spheroids
           std::vector<double> shift{30.0, 30.0, 0.0};
-	double sphere_radius=initial_cell_radius*10; 
+	double sphere_radius=initial_cell_radius*1; 
 	
   double cell_spacing = initial_cell_radius-initial_overlap;//slight overlap to represent cells up against each other better variable name
 	
@@ -246,14 +246,14 @@ void setup_tissue( void )
                                         
                     /*pC->assign_position(position);*/
     //            }
-                for(int n=0; n<cell_positions_1.size(); n++)
-                {
+               // for(int n=0; n<cell_positions_1.size(); n++)
+               // {
                   /*position[0] = 0 + n*120; */
                   /*position[1] = 0 + n*120; */
                   /*position[2] = 0;*/
                   pC=create_Cryocell(*pCD); 
                   /*pC = create_cell( *pCD ); */
-                  pC->assign_position( cell_positions_1[n] );
+                  pC->assign_position( position );
                   pC->set_radius(pC->custom_data["initial_cell_radius"]);
                     /*position[0] = Xmin + UniformRandom() * Xrange;*/
                     /*position[1] = Ymin + UniformRandom() * Yrange;*/
@@ -262,7 +262,7 @@ void setup_tissue( void )
                     /*pC = create_cell(*pCD);*/
                                         
                     /*pC->assign_position(position);*/
-                }
+                //}
             } 
             
             else 
@@ -365,6 +365,7 @@ void custom_function( Cell* pCell, Phenotype& phenotype , double dt )
     /*std::cout<<"Volume:" <<pCell->phenotype.volume.total<<"\n";*/
     Cryocell* cCell=static_cast<Cryocell*>(pCell);
     std::cout<<"volume: "<<cCell->phenotype.volume.total<<"\n";
+    std::cout<<"number of cryocells: "<<all_cryocells.size()<<"\n";
     /*std::cout<<"water volume: "<<cCell->cryocell_state.water_volume<<"\n";*/
     /*std::cout<<"interior molarity: "<< cCell->cryo_concentrations.interior_molarity<<"\n";*/
     /*std::cout<<"interior molality: "<< cCell->cryo_concentrations.interior_component_molality<<"\n";*/

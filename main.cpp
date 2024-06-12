@@ -126,7 +126,7 @@ int main( int argc, char* argv[] )
 	Cell_Container* cell_container = create_cell_container_for_microenvironment( microenvironment, mechanics_voxel_size );
 	
 	/* Users typically start modifying here. START USERMODS */ 
-	
+  double start_2p=1000;	
 	create_cell_types();
 	
 	setup_tissue();
@@ -195,12 +195,12 @@ int main( int argc, char* argv[] )
 			if( fabs( PhysiCell_globals.current_time - PhysiCell_globals.next_full_save_time ) < 0.01 * diffusion_dt )
 			{
 				display_simulation_status( std::cout ); 
-				if( PhysiCell_settings.enable_legacy_saves == false )
+				if( PhysiCell_settings.enable_legacy_saves == true )
 				{	
 					log_output( PhysiCell_globals.current_time , PhysiCell_globals.full_output_index, microenvironment, report_file);
 				}
 				
-				if( PhysiCell_settings.enable_full_saves == false )
+				if( PhysiCell_settings.enable_full_saves == true )
 				{	
 					sprintf( filename , "%s/output%08u" , PhysiCell_settings.folder.c_str(),  PhysiCell_globals.full_output_index ); 
 					
@@ -260,8 +260,12 @@ int main( int argc, char* argv[] )
 			// run PhysiCell 
 			((Cell_Container *)microenvironment.agent_container)->update_all_cells( PhysiCell_globals.current_time );
 		  update_all_cells_voxels();	
-      two_p_forward_step(diffusion_dt);
-      two_p_update_volume();
+ 
+      if( PhysiCell_globals.current_time > start_2p+ 0.01 * diffusion_dt )
+      {
+        two_p_forward_step(diffusion_dt);
+        two_p_update_volume();
+      }
 			/*
 			  Custom add-ons could potentially go here.
         

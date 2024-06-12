@@ -101,7 +101,13 @@ Cryocell::Cryocell(){
 }
 Cell* instantiate_Cryocell()
 {
-  return new Cryocell;
+  Cryocell* cNew=new Cryocell;
+  #pragma omp critical
+  {
+    all_cryocells.push_back(cNew);
+  }
+  return cNew;
+
 }
 Cell* create_Cryocell(Cell_Definition& cd){
   /*Cryocell* cCell=static_cast<Cryocell*>(create_cell());*/
@@ -137,7 +143,8 @@ Cell* create_Cryocell(Cell_Definition& cd){
 	pNew->displacement.resize(3,0.0); // state? 
 	
 	pNew->assign_orientation();
-	pNew->set_total_volume( pNew->phenotype.volume.total ); 
+	pNew->set_total_volume( pNew->phenotype.volume.total );
+  pNew->functions.instantiate_cell=instantiate_Cryocell;
   return pNew;
 }
 
