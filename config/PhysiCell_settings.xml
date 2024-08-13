@@ -109,7 +109,7 @@
 		</full_data>
 		
 		<SVG>
-			<interval units="min">10</interval>
+			<interval units="min">1</interval>
 			<enable>true</enable>
 		</SVG>
 		
@@ -167,11 +167,10 @@
 					<!-- use phase_transition_rates OR phase_durations -->
 				
 					<phase_transition_rates units="1/min"> 
-						<rate start_index="0" end_index="1" fixed_duration="false">0.0334672</rate>
-						<rate start_index="1" end_index="2" fixed_duration="false">0.0208333</rate>
-						<rate start_index="2" end_index="3" fixed_duration="false">0.0416667</rate>
-            <rate start_index="3" end_index="0" fixed_duration="false">0.00166667</rate>
-            <rate start_index="0" end_index="1" fixed_duration="true">0.00033467</rate>
+						<rate start_index="0" end_index="1" fixed_duration="true">0.20080321</rate>
+						<rate start_index="1" end_index="2" fixed_duration="true">0.125</rate>
+						<rate start_index="2" end_index="3" fixed_duration="true">0.25</rate>
+            <rate start_index="3" end_index="0" fixed_duration="true">1.0</rate>
 					</phase_transition_rates>
 					
 					
@@ -250,9 +249,9 @@
 				</volume> 				
 				
 				<mechanics> 
-					<cell_cell_adhesion_strength units="micron/min">0.4</cell_cell_adhesion_strength>
+					<cell_cell_adhesion_strength units="micron/min">1.0</cell_cell_adhesion_strength>
 					<cell_cell_repulsion_strength units="micron/min">10.0</cell_cell_repulsion_strength>
-					<relative_maximum_adhesion_distance units="dimensionless">1.25</relative_maximum_adhesion_distance>
+					<relative_maximum_adhesion_distance units="dimensionless">1.5</relative_maximum_adhesion_distance>
   					<cell_adhesion_affinities>
 	  					<cell_adhesion_affinity name="default">1</cell_adhesion_affinity> 
 		  			</cell_adhesion_affinities>					
@@ -268,7 +267,7 @@
 				</mechanics>
 				
 				<motility>  
-					<speed units="micron/min">1</speed>
+					<speed units="micron/min">0</speed>
 					<persistence_time units="min">1</persistence_time>
 					<migration_bias units="dimensionless">.5</migration_bias>
 					
@@ -324,10 +323,34 @@
         <Ps_1 units="um/sec" conserved="false">0.00000643</Ps_1>
         <initial_temp units="kelvin" conserved="false">293.15</initial_temp>
         <is_cryocell units="dimensionless" conserved="false">1</is_cryocell>
+
+        <anisotropic_fibres>0</anisotropic_fibres>
+        <fibre_length units="none" conserved="false">10.0</fibre_length>
+        <length_normdist_sd units="none" conserved="false" >2.0</length_normdist_sd>
+        <fibre_radius units="none" conserved="false">2.0</fibre_radius>
+        <radius_normdist_sd units="none" conserved="false">0.1</radius_normdist_sd>
+        <fibre_angle units="none" conserved="false">0.0</fibre_angle>
+        <angle_normdist_sd units="none" conserved="false">0.0</angle_normdist_sd>
+        
+        <fibre_degradation units="none" conserved="false">0</fibre_degradation>
+        <fibre_degradation_rate units="none">0.05</fibre_degradation_rate>
+        <fibre_custom_degradation units="none">0</fibre_custom_degradation>
+        <fibre_stuck_time units="1/min" >10.0</fibre_stuck_time>
+        <fibre_stuck_threshold  units="none" >0.05</fibre_stuck_threshold>
+        <fibre_pressure_threshold  units="1/min" >10.0</fibre_pressure_threshold>
+        <color_cells_by_pressure  units="none" >1</color_cells_by_pressure>
+        
+        <fibre_pushing units="none"> 1.0 </fibre_pushing>
+        <fibre_sticky units="none">1.0 </fibre_sticky>
+        <fibre_rotation  units="none">1.0 </fibre_rotation>
+        
+        <vel_adhesion  units="none" >0.6</vel_adhesion>
+        <vel_contact  units="none" >0.1</vel_contact>
+        <cell_velocity_max  units="none">1.0</cell_velocity_max>
 			</custom_data>
       </cell_definition>
 
-      <cell_definition name="ecm" ID="1">
+      <cell_definition name="matrix" ID="1">
         <phenotype>
         <cycle code="6" name="live">
 
@@ -384,8 +407,8 @@
           </volume>
 
           <mechanics>
-            <cell_cell_adhesion_strength units="micron/min">0.4</cell_cell_adhesion_strength>
-            <cell_cell_repulsion_strength units="micron/min">10.0</cell_cell_repulsion_strength>
+            <cell_cell_adhesion_strength units="micron/min">0.05</cell_cell_adhesion_strength>
+            <cell_cell_repulsion_strength units="micron/min">0.1</cell_cell_repulsion_strength>
             <relative_maximum_adhesion_distance units="dimensionless">1.25</relative_maximum_adhesion_distance>
             <options>
               <set_relative_equilibrium_distance enabled="false" units="dimensionless">1.8</set_relative_equilibrium_distance>
@@ -420,7 +443,164 @@
           </phenotype>
         <custom_data>
         <sample>1.0</sample>
+        <initial_cell_volume units="um^3" conserved="true">15598.53</initial_cell_volume>
+        <initial_cell_radius units="um" conserved="true">15.5</initial_cell_radius>
+        <Vb units="dimensionless" conserved="false">0.5</Vb>
+        <Lp units="um/sec/atm" conserved="false">0.00195</Lp>
+        <Ps_0 units="um/sec" conserved="false">0.0</Ps_0>
+        <Ps_1 units="um/sec" conserved="false">0.00000643</Ps_1>
+        <initial_temp units="kelvin" conserved="false">293.15</initial_temp>
         <is_cryocell units="dimensionless" conserved="false">0</is_cryocell>
+
+        <anisotropic_fibres>0</anisotropic_fibres>
+        <fibre_length units="none" conserved="false">40.0</fibre_length>
+        <length_normdist_sd units="none" conserved="false" >5.0</length_normdist_sd>
+        <fibre_radius units="none" conserved="false">2.0</fibre_radius>
+        <radius_normdist_sd units="none" conserved="false">0.0</radius_normdist_sd>
+        <fibre_angle units="none" conserved="false">0.0</fibre_angle>
+        <angle_normdist_sd units="none" conserved="false">0.0</angle_normdist_sd>
+        
+        <fibre_degradation units="none" conserved="false">0</fibre_degradation>
+        <fibre_degradation_rate units="none">0.05</fibre_degradation_rate>
+        <fibre_custom_degradation units="none">0</fibre_custom_degradation>
+        <fibre_stuck_time units="1/min" >10.0</fibre_stuck_time>
+        <fibre_stuck_threshold  units="none" >0.05</fibre_stuck_threshold>
+        <fibre_pressure_threshold  units="1/min" >10.0</fibre_pressure_threshold>
+        <color_cells_by_pressure  units="none" >1</color_cells_by_pressure>
+        
+        <fibre_pushing units="none"> 1.0 </fibre_pushing>
+        <fibre_sticky units="none">1.0 </fibre_sticky>
+        <fibre_rotation  units="none">1.0 </fibre_rotation>
+        
+        <vel_adhesion  units="none" >0.6</vel_adhesion>
+        <vel_contact  units="none" >0.1</vel_contact>
+        <cell_velocity_max  units="none">1.0</cell_velocity_max>
+        </custom_data>
+      </cell_definition>
+    
+      <cell_definition name="ecm" ID="2">
+        <phenotype>
+        <cycle code="6" name="live">
+
+					<phase_durations units="min"> 
+						<duration index="0" fixed_duration="true">100000.0</duration>
+						<!-- <duration index="1" fixed_duration="false">480</duration> -->
+						<!-- <duration index="2" fixed_duration="false">240</duration> -->
+						<!-- <duration index="3" fixed_duration="false">60</duration> -->
+					</phase_durations>
+            </cycle>
+
+          <death>
+            <model code="100" name="apoptosis">
+              <death_rate units="1/min">0.0</death_rate>
+              <phase_durations units="min">
+                <duration index="0" fixed_duration="true">516</duration>
+              </phase_durations>
+              <parameters>
+                <unlysed_fluid_change_rate units="1/min">0.0</unlysed_fluid_change_rate>
+                <lysed_fluid_change_rate units="1/min">0.0</lysed_fluid_change_rate>
+                <cytoplasmic_biomass_change_rate units="1/min">0.0</cytoplasmic_biomass_change_rate>
+                <nuclear_biomass_change_rate units="1/min">0.0</nuclear_biomass_change_rate>
+                <calcification_rate units="1/min">0.0</calcification_rate>
+                <relative_rupture_volume units="dimensionless">0.0</relative_rupture_volume>
+              </parameters>
+            </model>
+            <model code="101" name="necrosis">
+              <death_rate units="1/min">0.0</death_rate>
+              <phase_durations units="min">
+                <duration index="0" fixed_duration="true">0.0</duration>
+              <duration index="1" fixed_duration="true">8886400</duration>
+              </phase_durations>
+              <parameters>
+                <unlysed_fluid_change_rate units="1/min">0.0</unlysed_fluid_change_rate>
+                <lysed_fluid_change_rate units="1/min">0.0</lysed_fluid_change_rate>
+                <cytoplasmic_biomass_change_rate units="1/min">0.0</cytoplasmic_biomass_change_rate>
+                <nuclear_biomass_change_rate units="1/min">0.0</nuclear_biomass_change_rate>
+                <calcification_rate units="1/min">0.0</calcification_rate>
+                <relative_rupture_volume units="dimensionless">0.0</relative_rupture_volume>
+              </parameters>
+            </model>
+          </death>
+
+          <volume>
+            <total>2494</total>
+            <fluid_fraction>0.75</fluid_fraction>
+            <nuclear>540</nuclear>
+            <fluid_change_rate>0.05</fluid_change_rate>
+            <cytoplasmic_biomass_change_rate>0.0045</cytoplasmic_biomass_change_rate>
+            <nuclear_biomass_change_rate>0.0055</nuclear_biomass_change_rate>
+            <calcified_fraction>0</calcified_fraction>
+            <calcification_rate>0</calcification_rate>
+            <relative_rupture_volume>2.0</relative_rupture_volume>
+          </volume>
+
+          <mechanics>
+            <cell_cell_adhesion_strength units="micron/min">0.00</cell_cell_adhesion_strength>
+            <cell_cell_repulsion_strength units="micron/min">.00</cell_cell_repulsion_strength>
+            <relative_maximum_adhesion_distance units="dimensionless">1.25</relative_maximum_adhesion_distance>
+            <options>
+              <set_relative_equilibrium_distance enabled="false" units="dimensionless">1.8</set_relative_equilibrium_distance>
+              <set_absolute_equilibrium_distance enabled="false" units="micron">15.12</set_absolute_equilibrium_distance>
+            </options>
+          </mechanics>
+
+          <motility>
+            <speed>0.0</speed>
+            <persistence_time>0.0</persistence_time>
+            <migration_bias>0.0</migration_bias>
+            <options>
+              <enabled>false</enabled>
+              <use_2D>true</use_2D>
+              <chemotaxis>
+                <enabled>false</enabled>
+                <substrate>NaCl</substrate>
+                <direction>1</direction>
+              </chemotaxis>
+            </options>
+          </motility>
+
+          <secretion>
+            <substrate name="NaCl">
+              <secretion_rate units="1/min">0.0</secretion_rate>
+              <secretion_target units="substrate density">0.0</secretion_target>
+              <uptake_rate units="1/min">0.0</uptake_rate>
+              <net_export_rate units="total substrate/min">0.0</net_export_rate>
+            </substrate>
+            </secretion>
+
+          </phenotype>
+        <custom_data>
+        <sample>1.0</sample>
+
+        <initial_cell_volume units="um^3" conserved="true">15598.53</initial_cell_volume>
+        <initial_cell_radius units="um" conserved="true">15.5</initial_cell_radius>
+        <Vb units="dimensionless" conserved="false">0.5</Vb>
+        <Lp units="um/sec/atm" conserved="false">0.00195</Lp>
+        <Ps_0 units="um/sec" conserved="false">0.0</Ps_0>
+        <Ps_1 units="um/sec" conserved="false">0.00000643</Ps_1>
+        <initial_temp units="kelvin" conserved="false">293.15</initial_temp>
+
+        <is_cryocell units="dimensionless" conserved="false">0</is_cryocell>
+        <anisotropic_fibres>0</anisotropic_fibres>
+        <fibre_length units="none" conserved="false">4.0</fibre_length>
+        <length_normdist_sd units="none" conserved="false" >0.0</length_normdist_sd>
+        <fibre_radius units="none" conserved="false">2.0</fibre_radius>
+        <radius_normdist_sd units="none" conserved="false">0.0</radius_normdist_sd>
+        <fibre_angle units="none" conserved="false">0.0</fibre_angle>
+        <angle_normdist_sd units="none" conserved="false">0.0</angle_normdist_sd>
+        <fibre_degradation units="none" conserved="false">0</fibre_degradation>
+        <fibre_degradation_rate units="none">0.05</fibre_degradation_rate>
+        <fibre_custom_degradation units="none">0</fibre_custom_degradation>
+        <fibre_stuck_time units="1/min" >10.0</fibre_stuck_time>
+        <fibre_stuck_threshold  units="none" >0.05</fibre_stuck_threshold>
+        <fibre_pressure_threshold  units="1/min" >10.0</fibre_pressure_threshold>
+        <color_cells_by_pressure  units="none" >1</color_cells_by_pressure>
+        <fibre_pushing units="none"> 1.0 </fibre_pushing>
+        <fibre_sticky units="none">1.0 </fibre_sticky>
+        <fibre_rotation  units="none">1.0 </fibre_rotation>
+        <vel_adhesion  units="none" >0.0</vel_adhesion>
+        <vel_contact  units="none" >0.0</vel_contact>
+        <cell_velocity_max  units="none">1.0</cell_velocity_max>
           </custom_data>
           </cell_definition>
 	</cell_definitions>
@@ -455,15 +635,15 @@
 
     <number_of_fibres type="int" units="none" description="initial number of fibres">2000</number_of_fibres>   
     <anisotropic_fibres type="bool" units="none" description="flag for whether we want anisotropic fibres">false</anisotropic_fibres>
-    <fibre_length type="double" units="none" description="fibre length">40.0</fibre_length>
-    <length_normdist_sd type="double" units="none" description="standard deviation of fibre length">0.0</length_normdist_sd>
-    <fibre_radius type="double" units="none" description="fibre radius">2.0</fibre_radius>
-    <radius_normdist_sd type="double" units="none" description="standard deviation of fibre length">0.0</radius_normdist_sd>
-    <fibre_angle type="double" units="none" desctription="angle of fibre direction">0.0</fibre_angle>
-    <angle_normdist_sd type="double" units="none" description="standard deviation of fibre angle">0.0</angle_normdist_sd>
+    <!--<fibre_length type="double" units="none" description="fibre length">50.0</fibre_length>-->
+    <!--<length_normdist_sd type="double" units="none" description="standard deviation of fibre length">0.0</length_normdist_sd>-->
+    <!--<fibre_radius type="double" units="none" description="fibre radius">2.0</fibre_radius>-->
+    <!--<radius_normdist_sd type="double" units="none" description="standard deviation of fibre length">0.0</radius_normdist_sd>-->
+    <!--<fibre_angle type="double" units="none" desctription="angle of fibre direction">0.0</fibre_angle>-->
+    <!--<angle_normdist_sd type="double" units="none" description="standard deviation of fibre angle">0.0</angle_normdist_sd>-->
     
-    <fibre_degradation type="bool" units="none" description="flag for fibre degradation">true</fibre_degradation>
-    <fibre_degradation_rate type="double" units="1/min" description="fibre degradation rate">0.01</fibre_degradation_rate>
+    <fibre_degradation type="bool" units="none" description="flag for fibre degradation">false</fibre_degradation>
+    <fibre_degradation_rate type="double" units="1/min" description="fibre degradation rate">0.05</fibre_degradation_rate>
     <fibre_custom_degradation type="bool" units="none" description="flag for having degradation depends on pressure">false</fibre_custom_degradation>
     <fibre_stuck_time type="double" units="1/min" description="time before stuck cell can degrade fibre">10.0</fibre_stuck_time>
     <fibre_stuck_threshold type="double" units="none" description="movement threshold to declare a cell stuck">0.05</fibre_stuck_threshold>

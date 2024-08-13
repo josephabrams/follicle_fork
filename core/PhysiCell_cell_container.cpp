@@ -184,7 +184,9 @@ void Cell_Container::update_all_cells(double t, double phenotype_dt_ , double me
 		// process divides / removes 
 		for( int i=0; i < cells_ready_to_divide.size(); i++ )
 		{
-			cells_ready_to_divide[i]->divide();
+			cells_ready_to_divide[i]->Special_Division();
+			// cells_ready_to_divide[i]->divide();
+      // std::vector<Cell*> all_daughters=
 		}
 		for( int i=0; i < cells_ready_to_die.size(); i++ )
 		{	

@@ -196,6 +196,8 @@ class Cell : public Basic_Agent
 	void lyse_cell( void ); 
 
 	Cell* divide( void );
+
+  std::vector<Cell*> Special_Division();
 	void die( void ); 
 	void step(double dt);
 	Cell();

@@ -1,7 +1,9 @@
 #include "PhysiMeSS.h"
+#include "PhysiMeSS_fibre.h"
 
 #include <algorithm>
 #include <iterator> 
+#include <string>
 
 
 static double last_update_time = -mechanics_dt;
@@ -22,7 +24,8 @@ void remove_physimess_out_of_bounds_fibres()
 void physimess_update_cell_velocity( Cell* pCell, Phenotype& phenotype, double dt)
 {
     
-    double movement_threshold = PhysiCell::parameters.doubles("fibre_stuck_threshold");
+    double movement_threshold = pCell->custom_data["fibre_stuck_threshold"];
+    /*double movement_threshold = PhysiCell::parameters.doubles("fibre_stuck_threshold");*/
     if (!isFibre(pCell) && phenotype.motility.is_motile) {
 	
         // Here I changed this, because here we don't have access to the old position, and I didn't want to track the old position
@@ -143,9 +146,10 @@ void physimess_mechanics( double dt )
         for( int i=0; i < (*all_cells).size(); i++ )
         {
             Cell* pC = (*all_cells)[i];
-            
-            static_cast<PhysiMeSS_Agent*>(pC)->physimess_voxels.clear();
-            if( !pC->is_out_of_domain )
+            if(isFibre(pC)){ 
+              static_cast<PhysiMeSS_Agent*>(pC)->physimess_voxels.clear();
+            }
+            if( !pC->is_out_of_domain && isFibre(pC) )
             {
                 static_cast<PhysiMeSS_Agent*>(pC)->register_fibre_voxels();
             }
@@ -155,11 +159,10 @@ void physimess_mechanics( double dt )
         for( int i=0; i < (*all_cells).size(); i++ )
         {
             Cell* pC = (*all_cells)[i];
-            static_cast<PhysiMeSS_Agent*>(pC)->physimess_neighbors.clear();
             if (isFibre(pC)) {
                 static_cast<PhysiMeSS_Fibre*>(pC)->fibres_crosslinkers.clear();
             }
-            if( !pC->is_out_of_domain )
+            if( !pC->is_out_of_domain && isFibre(pC))
             {
                 static_cast<PhysiMeSS_Agent*>(pC)->find_agent_neighbors();
             }
@@ -169,7 +172,7 @@ void physimess_mechanics( double dt )
         for( int i=0; i < (*all_cells).size(); i++ )
         {
             Cell* pC = (*all_cells)[i];
-            if( !pC->is_out_of_domain )
+            if( pC->is_out_of_domain && isFibre(pC))
             {
                 static_cast<PhysiMeSS_Agent*>(pC)->deregister_fibre_voxels();
             }
@@ -181,52 +184,42 @@ void physimess_mechanics( double dt )
         {
             Cell* pC = (*all_cells)[i];
             if (isFibre(pC)) {
+              /*if(std::abs(uniform_random())>0.9)*/
+              /*{*/
                 static_cast<PhysiMeSS_Fibre*>(pC)->add_crosslinks();
-            }
+              /*}  */
+          }
         }
     }
 }
 
 
 void fibre_agent_SVG(std::ofstream& os, PhysiCell::Cell* pC, double z_slice, std::vector<std::string> (*cell_coloring_function)(Cell*), double X_lower, double Y_lower) {
-
-	// place a rod if it's a fibre (note fibre already renamed here)
+  
 	if (isFibre(pC) ){
-    
-        PhysiMeSS_Fibre* pFibre = static_cast<PhysiMeSS_Fibre*>(pC);
+    PhysiMeSS_Fibre* pFibre = static_cast<PhysiMeSS_Fibre*>(pC);
 		int crosslinks = pFibre->X_crosslink_count;
-        if (crosslinks >= 3){
-			// if fibre has cross-links different colour than if not
-			Write_SVG_line(os, (pC->position)[0] - (pFibre->mLength) * (pC->state.orientation)[0] - X_lower,
-							(pC->position)[1] - (pFibre->mLength) * (pC->state.orientation)[1] - Y_lower,
+	  int color1 = (int) round(crosslinks*20+20);
+    if(crosslinks==0){
+      color1=40;
+    }
+    int color=20;
+	  if(color1 > 255){
+      color1=255;
+      color= (int)round(crosslinks*20);
+	  }
+    if(color>255){
+      color=255;
+    }
+    std::string fibre_color="rgb(";
+    fibre_color+=std::to_string(255-color1)+","+std::to_string(255-color1)+","+std::to_string(255-color1)+")";
+  
+	Write_SVG_line(os, (pC->position)[0] - (pFibre->mLength) * (pC->state.orientation)[0] - X_lower,
+					(pC->position)[1] - (pFibre->mLength) * (pC->state.orientation)[1] - Y_lower,
 							(pC->position)[0] + (pFibre->mLength) * (pC->state.orientation)[0] - X_lower,
 							(pC->position)[1] + (pFibre->mLength) * (pC->state.orientation)[1] - Y_lower,
-							4.0, "darkblue");
-		}
-		else if (crosslinks == 2){
-			// if fibre has cross-links different colour than if not
-			Write_SVG_line(os, (pC->position)[0] - (pFibre->mLength) * (pC->state.orientation)[0] - X_lower,
-							(pC->position)[1] - (pFibre->mLength) * (pC->state.orientation)[1] - Y_lower,
-							(pC->position)[0] + (pFibre->mLength) * (pC->state.orientation)[0] - X_lower,
-							(pC->position)[1] + (pFibre->mLength) * (pC->state.orientation)[1] - Y_lower,
-							4.0, "blue");
-		}
-		else if (crosslinks == 1){
-			// if fibre has cross-links different colour than if not
-			Write_SVG_line(os, (pC->position)[0] - (pFibre->mLength) * (pC->state.orientation)[0] - X_lower,
-							(pC->position)[1] - (pFibre->mLength) * (pC->state.orientation)[1] - Y_lower,
-							(pC->position)[0] + (pFibre->mLength) * (pC->state.orientation)[0] - X_lower,
-							(pC->position)[1] + (pFibre->mLength) * (pC->state.orientation)[1] - Y_lower,
-							4.0, "steelblue");
-		}
-		else {
-    		Write_SVG_line(os, (pC->position)[0] - (pFibre->mLength) * (pC->state.orientation)[0] - X_lower,
-							(pC->position)[1] - (pFibre->mLength) * (pC->state.orientation)[1] - Y_lower,
-							(pC->position)[0] + (pFibre->mLength) * (pC->state.orientation)[0] - X_lower,
-							(pC->position)[1] + (pFibre->mLength) * (pC->state.orientation)[1] - Y_lower,
-							4.0, "lightskyblue");
-		}
-
+							4.0, fibre_color);
+	// place a rod if it's a fibre (note fibre already renamed here)
 	}
 	else{
         standard_agent_SVG(os, pC, z_slice, cell_coloring_function, X_lower, Y_lower);

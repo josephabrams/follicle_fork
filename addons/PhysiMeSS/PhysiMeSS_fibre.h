@@ -39,6 +39,9 @@ class PhysiMeSS_Fibre : public PhysiMeSS_Agent
     void check_fibre_crosslinks(PhysiMeSS_Fibre *fibre_neighbor);
     void add_crosslinks();
 
+    void set_length(double new_length);
+    void set_radius(double new_radius);
+
 };
 
 #endif

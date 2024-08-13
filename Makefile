@@ -62,7 +62,7 @@ PhysiMeSS_OBJECTS := PhysiMeSS.o PhysiMeSS_agent.o PhysiMeSS_fibre.o PhysiMeSS_c
 
 PhysiCell_custom_module_OBJECTS := custom.o addon_factory.o base_addon.o addon.o addon_example.o quaternion.o \
 quaternion_addon.o debug_log.o addon_division_tracker.o multivoxel_functions.o ABFM.o cryocell.o conversions.o \
-volume_change.o tissue_construction.o 
+volume_change.o tissue_construction.o custom_coloring.o
 
 
 pugixml_OBJECTS := pugixml.o
@@ -230,6 +230,8 @@ volume_change.o: ./custom_modules/cryomodule/volume_change.cpp
 	$(COMPILE_COMMAND) -c ./custom_modules/cryomodule/volume_change.cpp
 tissue_construction.o: ./custom_modules/tissue_construction/tissue_construction.cpp
 	$(COMPILE_COMMAND) -c ./custom_modules/tissue_construction/tissue_construction.cpp
+custom_coloring.o: ./custom_modules/custom_coloring.cpp
+	$(COMPILE_COMMAND) -c ./custom_modules/custom_coloring.cpp
 
 # cleanup
 

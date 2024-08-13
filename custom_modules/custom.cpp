@@ -67,6 +67,7 @@
 
 #include "./custom.h"
 /*#include "./multivoxel/multivoxel_functions.h"*/
+#include <ios>
 #include <vector>
 #include <cmath>
 #include "./cryomodule/cryocell.h"
@@ -90,7 +91,8 @@ void create_cell_types( void )
 	else
 		cell_defaults.functions.instantiate_cell = instantiate_physimess_cell;	
 	cell_defaults.functions.volume_update_function = standard_volume_update_function;
-	cell_defaults.functions.update_velocity = standard_update_cell_velocity;
+	cell_defaults.functions.update_velocity = standard_update_cell_velocity; 
+    /*physimess_update_cell_velocity;*/
 
 	cell_defaults.functions.update_migration_bias = NULL; 
 	// cell_defaults.functions.update_phenotype = NULL; // update_cell_and_death_parameters_O2_based; 
@@ -135,13 +137,14 @@ void create_cell_types( void )
 	cell_defaults.functions.custom_cell_rule = custom_function; 
 	cell_defaults.functions.contact_function = contact_function; 
 
-
+  
 	for (auto* pCD: *getFibreCellDefinitions()){
 		pCD->functions.instantiate_cell = instantiate_physimess_fibre;
 		pCD->functions.plot_agent_SVG = fibre_agent_SVG;
 		pCD->functions.plot_agent_legend = fibre_agent_legend;
-	
-	}
+    pCD->functions.custom_cell_rule=custom_function;
+	  pCD->functions.update_velocity = physimess_update_cell_velocity;
+  }
 	/*
 	   This builds the map of cell definitions and summarizes the setup. 
 	*/
@@ -219,7 +222,11 @@ void setup_tissue( void )
 	
   double cell_spacing = initial_cell_radius-initial_overlap;//slight overlap to represent cells up against each other better variable name
 	
-	std::vector<std::vector<double>> cell_positions_1= create_spheroid_2D(initial_cell_radius, sphere_radius);//
+    std::vector<std::vector<double>> cell_positions_1= create_spheroid_2D(initial_cell_radius, sphere_radius);//
+    std::cout<<"THERE ARE "<< cell_definitions_by_index.size()<< " TYPES OF AGENTS!\n";
+    Cell_Definition *pCD0=cell_definitions_by_index[0];
+    Cell_Definition *pCD1=cell_definitions_by_index[1];
+    Cell_Definition *pCD2=cell_definitions_by_index[2];
         for( int k=0; k < cell_definitions_by_index.size() ; k++ ) {
 
             Cell_Definition *pCD = cell_definitions_by_index[k];
@@ -265,26 +272,56 @@ void setup_tissue( void )
                 //}
             } 
             
-            else 
+            else if(pCD->name==(*pCD1).name) 
             {
-                std::cout<<"fibres being placed!\n";
+                double disk_edge=200;
+                std::cout<<(*pCD1).name<<" being placed!\n";
                 for ( int nf = 0 ; nf < parameters.ints("number_of_fibres") ; nf++ ) {
 
                     position[0] = Xmin + UniformRandom() * Xrange;
                     position[1] = Ymin + UniformRandom() * Yrange;
                     position[2] = 0;
-                    if(norm(position)>sphere_radius)
+                    if(norm(position)>sphere_radius+100 && norm(position)<= 300)
                     {
 
-                    pC = create_cell(*pCD);
+                    pC = create_cell(*pCD1);
 
-                    static_cast<PhysiMeSS_Fibre*>(pC)->assign_fibre_orientation();
-                    static_cast<PhysiMeSS_Fibre*>(pC)->check_out_of_bounds(position);
-                      std::cout<<"position: "<<position <<"\n";
-                      pC->assign_position(position);
+                      PhysiMeSS_Fibre* pF = static_cast<PhysiMeSS_Fibre*>(pC);
+            pF->set_length(pC->custom_data["fibre_length"]);
+                      pF->assign_fibre_orientation();
+                      pF->check_out_of_bounds(position);
+                      
+                      std::cout<<"length: "<<pF->mLength <<"\n";
+                      pF->assign_position(position);
+                       
                     }
                 }
             }
+
+            /*else if(pCD->name==(*pCD2).name) */
+            /*{*/
+                
+                /*std::cout<< (*pCD2).name<<" being placed!\n";*/
+                /*for ( int nf = 0 ; nf < parameters.ints("number_of_fibres")*15 ; nf++ ) {*/
+
+                    /*position[0] = Xmin + UniformRandom()*Xrange;*/
+                    /*position[1] = Ymin + UniformRandom()*Yrange;*/
+                    /*position[2] = 0;*/
+                    /*if(norm(position)>sphere_radius+20 && norm(position)<= sphere_radius+50)*/
+                    /*{*/
+
+                      /*pC = create_cell(*pCD2);*/
+                      /*PhysiMeSS_Fibre* pF = static_cast<PhysiMeSS_Fibre*>(pC);*/
+            
+                      /*pF->set_length(pC->custom_data["fibre_length"]);*/
+                      /*pF->assign_fibre_orientation();*/
+                      /*pF->check_out_of_bounds(position);*/
+                      
+                      /*std::cout<<"length: "<<pF->mLength <<"\n";*/
+                      /*pF->assign_position(position);*/
+                    /*}*/
+                /*}*/
+            /*}*/
         }
     }
 
@@ -315,6 +352,23 @@ void setup_tissue( void )
 	/*}*/
 	/*std::cout << std::endl; */
 	
+    for( int i=0; i < (*all_cells).size(); i++ ){
+
+        if (isFibre((*all_cells)[i]))
+        {
+            /* fibre positions are given by csv
+               assign fibre orientation and test whether out of bounds */
+      //      isFibreFromFile = true;
+      //
+			static_cast<PhysiMeSS_Fibre*>((*all_cells)[i])->register_fibre_voxels();
+			static_cast<PhysiMeSS_Fibre*>((*all_cells)[i])->find_agent_voxels();
+			static_cast<PhysiMeSS_Fibre*>((*all_cells)[i])->find_agent_neighbors();
+      if(std::abs(uniform_random())>0.8)
+      {
+			  static_cast<PhysiMeSS_Fibre*>((*all_cells)[i])->add_crosslinks();
+      }
+        } 
+    }
 	// // load cells from your CSV file (if enabled)
 	// // load_cells_from_pugixml(); 
   //
@@ -329,8 +383,8 @@ std::vector<std::string> paint_by_cell_pressure( Cell* pCell ){
 		color = 255;
 	}
 	char szTempString [128];
-	sprintf( szTempString , "rgb(%u,0,%u)", color, 255 - color);
-	output.push_back( std::string("black") );
+	sprintf( szTempString , "rgb(%u,0,0)", 255 - color);
+	output.push_back( std::string("red") );
 	output.push_back( szTempString );
 	output.push_back( szTempString );
 	output.push_back( szTempString );
@@ -357,15 +411,27 @@ void phenotype_function( Cell* pCell, Phenotype& phenotype, double dt )
 
 void custom_function( Cell* pCell, Phenotype& phenotype , double dt )
 {
-  if(pCell->custom_data["is_cryocell"]==1)
-  {
-  #pragma omp critical
-  {
+  /*if(isFibre(pCell))*/
+  /*{*/
+    /*#pragma omp critical*/
+    /*{*/
+      /*std::cout<<"isFibre: "<<isFibre(pCell)<<"\n";*/
+      /*PhysiMeSS_Fibre* fCell=static_cast<PhysiMeSS_Fibre*>(pCell);*/
+      /*fCell->find_agent_neighbors();*/
+      /*fCell->add_crosslinks();*/
+      /*std::cout<<"Number of crosslinks: "<< fCell->fibres_crosslinkers.size()<<"\n";*/
+
+    /*}*/
+  /*}*/
+  /*if(pCell->custom_data["is_cryocell"]==1)*/
+  /*{*/
+  /*#pragma omp critical*/
+  /*{*/
     
     /*std::cout<<"Volume:" <<pCell->phenotype.volume.total<<"\n";*/
-    Cryocell* cCell=static_cast<Cryocell*>(pCell);
-    std::cout<<"volume: "<<cCell->phenotype.volume.total<<"\n";
-    std::cout<<"number of cryocells: "<<all_cryocells.size()<<"\n";
+    /*Cryocell* cCell=static_cast<Cryocell*>(pCell);*/
+    /*std::cout<<"volume: "<<cCell->phenotype.volume.total<<"\n";*/
+    /*std::cout<<"number of cryocells: "<<all_cryocells.size()<<"\n";*/
     /*std::cout<<"water volume: "<<cCell->cryocell_state.water_volume<<"\n";*/
     /*std::cout<<"interior molarity: "<< cCell->cryo_concentrations.interior_molarity<<"\n";*/
     /*std::cout<<"interior molality: "<< cCell->cryo_concentrations.interior_component_molality<<"\n";*/
@@ -377,20 +443,20 @@ void custom_function( Cell* pCell, Phenotype& phenotype , double dt )
     /*std::cout<<"Ps: "<< cCell->cryo_parameters.Ps<<"\n";*/
     /*std::cout<<"Next water: "<< cCell->cryocell_state.next_water_volume<<"\n";*/
     /*std::cout<<"Next solute: "<< cCell->cryocell_state.next_solute_moles<<"\n";*/
-    std::cout<<"number of uptake voxels: "<<cCell->cryocell_state.uptake_voxels.size()<<"\n";
+    /*std::cout<<"number of uptake voxels: "<<cCell->cryocell_state.uptake_voxels.size()<<"\n";*/
   /*std::cout<<"dN: "<< cCell->cryo_parameters.dN<<"\n\n";*/
       /*std::cout<<"dVw: "<<cCell->cryo_parameters.dVw<<"\n\n\n";*/
-    std::cout<<"solute_uptake: "<<cCell->cryocell_state.solute_uptake<<"\n";
-    std::cout<<"water_uptake: "<<cCell->cryocell_state.water_uptake<<"\n";
-    std::cout<<"solute_uptake_per_voxel: "<<cCell->cryocell_state.solute_uptake_per_voxel<<"\n";
-    std::cout<<"water_uptake_per_voxel: "<<cCell->cryocell_state.water_uptake_per_voxel<<"\n\n\n";
-      std::string plot1="intersecting-voxels-";
-      python_plot_cell_and_voxels(cCell, dt,cCell->cell_voxels,plot1);
-      std::string plot2="uptake-voxels-";
-      python_plot_cell_and_voxels(pCell, dt,cCell->cryocell_state.uptake_voxels,plot2);
+    /*std::cout<<"solute_uptake: "<<cCell->cryocell_state.solute_uptake<<"\n";*/
+    /*std::cout<<"water_uptake: "<<cCell->cryocell_state.water_uptake<<"\n";*/
+    /*std::cout<<"solute_uptake_per_voxel: "<<cCell->cryocell_state.solute_uptake_per_voxel<<"\n";*/
+    /*std::cout<<"water_uptake_per_voxel: "<<cCell->cryocell_state.water_uptake_per_voxel<<"\n\n\n";*/
+      /*std::string plot1="intersecting-voxels-";*/
+      /*python_plot_cell_and_voxels(cCell, dt,cCell->cell_voxels,plot1);*/
+      /*std::string plot2="uptake-voxels-";*/
+      /*python_plot_cell_and_voxels(pCell, dt,cCell->cryocell_state.uptake_voxels,plot2);*/
 
-  }
-  }
+  /*}*/
+  /*}*/
 /*{*/
 /*  std::vector<int> test_box{};*/
 /*  std::vector<int> test_box2{};*/
@@ -413,7 +479,7 @@ void custom_function( Cell* pCell, Phenotype& phenotype , double dt )
 /**/
   /*#pragma omp critical*/
 /*  python_plot_two_cells_and_voxels(me,neighbor, dt,neighbor_voxels,plot2);*/
-  return; } 
+return; } 
 
 void contact_function( Cell* pMe, Phenotype& phenoMe , Cell* pOther, Phenotype& phenoOther , double dt )
 { return; } 
@@ -466,4 +532,94 @@ void PhysiMeSS_Cell_Custom_Degrade::degrade_fibre(PhysiMeSS_Fibre* pFibre)
             }
         }
     // }
+}
+bool arrest(Cell* pCell, Phenotype &phenotype, double dt){
+  return true;
+}
+void custom_arrest_function(double arrest_time, double dt){
+  #pragma omp parrallel
+  {
+    if(PhysiCell_globals.current_time>arrest_time)
+    {
+      #pragma omp for nowait
+      for(int i=0; i<all_cryocells.size(); i++)
+      {
+        Cell* pCell=static_cast<Cell*>(all_cryocells[i]);
+        int j= pCell->phenotype.cycle.data.current_phase_index;
+        
+        for(int k=0; k< pCell->phenotype.cycle.model().phase_links.size(); k++)
+        {
+          pCell->phenotype.cycle.model().phase_links[j][k].arrest_function=arrest;
+        }
+      }
+    }
+  }
+  return;
+}
+
+void custom_excretion_function(double excretion_time, double excretion_distrance,double dt){
+    std::cout<< "EXCRETION! 1 \n";
+	  /*if( fabs( PhysiCell_globals.current_time - excretion_time ) < 0.01 * dt )*/
+    /*{*/
+      std::cout<< "EXCRETION! 2 \n";
+        for(int i=0; i<(*all_cells).size(); i++)
+        {
+          Cell* pCell=(*all_cells)[i];
+          if(!isFibre(pCell))
+          {
+            std::cout<< "NOT FIBER!\n";
+            excrete_ECM(pCell, dt, excretion_distrance);
+          }
+        }
+      
+    /*}*/
+  return;
+}
+void excrete_ECM(Cell* pCell, double dt, double excretion_distrance){
+  
+    Cell_Definition *pCD2=cell_definitions_by_index[2];
+    std::cout<< (*pCD2).name<<" being placed!\n";
+    for ( int nf = 0 ; nf < 2 ; nf++ ) {
+      std::vector<double> position= pCell->position;
+      if(UniformRandom()<0.25)
+      {
+        position[0] = position[0]+ 25*excretion_distrance*pCell->phenotype.geometry.radius*UniformOnUnitCircle()[0];
+        position[1] = position[1]+ 25*excretion_distrance*pCell->phenotype.geometry.radius*UniformOnUnitCircle()[1];
+        position[2] = 0;
+      }
+      else if(UniformRandom()>0.25 && UniformRandom()<0.5){
+        position[0] = position[0]+ 25*excretion_distrance*pCell->phenotype.geometry.radius*UniformOnUnitCircle()[0]*-1;
+        position[1] = position[1]+ 25*excretion_distrance*pCell->phenotype.geometry.radius*UniformOnUnitCircle()[1];
+        position[2] = 0;
+      }
+      else if(UniformRandom()>0.50 && UniformRandom()<0.75){
+        position[0] = position[0]+ 25*excretion_distrance*pCell->phenotype.geometry.radius*UniformOnUnitCircle()[0];
+        position[1] = position[1]+ 25*excretion_distrance*pCell->phenotype.geometry.radius*UniformOnUnitCircle()[1]*-1;
+        position[2] = 0;
+      }
+      else {
+        position[0] = position[0]+ 25*excretion_distrance*pCell->phenotype.geometry.radius*UniformOnUnitCircle()[0]*-1;
+        position[1] = position[1]+ 25*excretion_distrance*pCell->phenotype.geometry.radius*UniformOnUnitCircle()[1]*-1;
+        position[2] = 0;
+      
+
+      
+      }
+      if(norm(position)<(norm(pCell->position)+30) && norm(position)>(norm(pCell->position)+pCell->phenotype.geometry.radius))
+      {
+          
+        #pragma omp critical 
+        {
+          Cell* pC = create_cell(*pCD2);
+          PhysiMeSS_Fibre* pF = static_cast<PhysiMeSS_Fibre*>(pC);
+          pF->set_length(pC->custom_data["fibre_length"]);
+          pF->assign_fibre_orientation();
+          pF->check_out_of_bounds(position);
+          /*std::cout<<"length: "<<pF->mLength <<"\n";*/
+          pF->assign_position(position);
+        }
+      }
+    }
+  
+  return;
 }

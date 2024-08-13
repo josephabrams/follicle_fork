@@ -75,7 +75,7 @@
 #include "./PhysiCell_pathology.h"
 #include "./PhysiCell_MultiCellDS.h"
 #include "./PhysiCell_various_outputs.h"
-
+#include "../custom_modules/custom_coloring.h"
 #include "./PhysiCell_pugixml.h"
 #include "./PhysiCell_settings.h" 
 

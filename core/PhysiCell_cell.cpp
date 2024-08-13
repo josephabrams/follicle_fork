@@ -534,7 +534,20 @@ void Cell::assign_orientation()
 	
 	return; 
 }
-
+std::vector<Cell*> Cell::Special_Division()
+{
+  std::vector<Cell*> return_cells;
+  int number_of_daughters=0;
+  if(this->phenotype.volume.total>= 10)
+  {
+    number_of_daughters=(int)(std::floor(this->phenotype.volume.total/10 ));
+  }
+  for(int i=0; i<number_of_daughters; i++)
+  {
+    return_cells.push_back(this->divide());
+  }
+  return return_cells;
+}
 
 
 Cell* Cell::divide( )
@@ -560,7 +573,6 @@ Cell* Cell::divide( )
 		{ custom_data.vector_variables[nn].value *= 0.5; }
 	}
 
-	
 	Cell* child = create_cell(functions.instantiate_cell);
 	child->copy_data( this );	
 	child->copy_function_pointers(this);

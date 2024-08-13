@@ -96,8 +96,13 @@ Cell* instantiate_physimess_cell();
 Cell* instantiate_physimess_fibre();
 Cell* instantiate_physimess_cell_custom_degrade();
 
+bool arrest(Cell* pCell, Phenotype &phenotype, double dt);
+void custom_arrest_function(double arrest_time, double dt);
 class PhysiMeSS_Cell_Custom_Degrade : public PhysiMeSS_Cell
 {
   public:  
   void degrade_fibre(PhysiMeSS_Fibre* pFibre);
 };
+
+void custom_excretion_function(double excretion_time, double excretion_distrance, double dt);
+void excrete_ECM(Cell* pCell, double dt, double excretion_distrance);

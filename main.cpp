@@ -75,10 +75,10 @@
 
 #include "./core/PhysiCell.h"
 #include "./modules/PhysiCell_standard_modules.h" 
-#include "./custom_modules/cryomodule/ABFM.h"
+/*#include "./custom_modules/cryomodule/ABFM.h"*/
 // put custom code modules here!
+/*#include "./custom_modules/custom_coloring.h"*/
 #include "./custom_modules/cryomodule/cryocell.h"
-
 #include "./custom_modules/custom.h" 
 #include "core/PhysiCell_constants.h"
 #include "modules/PhysiCell_settings.h"
@@ -188,7 +188,9 @@ int main( int argc, char* argv[] )
       // double df_dt=current;
       // double prev_df_dt=df_dt;
 	try 
-	{		
+	{	
+    double excretion_time=1;
+    double excretion_distrance=10;
 		while( PhysiCell_globals.current_time < PhysiCell_settings.max_time + 0.1*diffusion_dt )
 		{
 			// save data if it's time. 
@@ -217,8 +219,9 @@ int main( int argc, char* argv[] )
 				if( PhysiCell_settings.enable_SVG_saves == true )
 				{	
 					sprintf( filename , "%s/snapshot%08u.svg" , PhysiCell_settings.folder.c_str() , PhysiCell_globals.SVG_output_index ); 
-					SVG_plot( filename , microenvironment, 0.0 , PhysiCell_globals.current_time, cell_coloring_function );
-					
+					/*SVG_plot( filename , microenvironment, 0.0 , PhysiCell_globals.current_time, cell_coloring_function );*/
+				  Custom_SVG_plot( filename , microenvironment, 0.0 , PhysiCell_globals.current_time, cell_coloring_function );
+	
 					PhysiCell_globals.SVG_output_index++; 
 					PhysiCell_globals.next_SVG_save_time  += PhysiCell_settings.SVG_save_interval;
 				}
@@ -257,15 +260,20 @@ int main( int argc, char* argv[] )
 			// update the microenvironment
       microenvironment.simulate_diffusion_decay( diffusion_dt );
 			
+			physimess_mechanics(mechanics_dt);
 			// run PhysiCell 
 			((Cell_Container *)microenvironment.agent_container)->update_all_cells( PhysiCell_globals.current_time );
-		  update_all_cells_voxels();	
+		  
+      update_all_cells_voxels();	
  
       if( PhysiCell_globals.current_time > start_2p+ 0.01 * diffusion_dt )
       {
         two_p_forward_step(diffusion_dt);
         two_p_update_volume();
       }
+      custom_arrest_function( 102,diffusion_dt);
+      custom_excretion_function(excretion_time, diffusion_dt, excretion_distrance);
+      excretion_time+=1;
 			/*
 			  Custom add-ons could potentially go here.
         
