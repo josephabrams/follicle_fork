@@ -126,6 +126,7 @@ int main( int argc, char* argv[] )
 	Cell_Container* cell_container = create_cell_container_for_microenvironment( microenvironment, mechanics_voxel_size );
 	
 	/* Users typically start modifying here. START USERMODS */ 
+  double start_2p=1000;	
 	create_cell_types();
 	
 	setup_tissue();
@@ -218,12 +219,26 @@ int main( int argc, char* argv[] )
 			// update the microenvironment
       microenvironment.simulate_diffusion_decay( diffusion_dt );
 			
+			physimess_mechanics(mechanics_dt);
 			// run PhysiCell 
 			((Cell_Container *)microenvironment.agent_container)->update_all_cells( PhysiCell_globals.current_time );
 		  
       update_all_cells_voxels();	
-      two_p_forward_step(diffusion_dt);
-      two_p_update_volume();
+ 
+      if( PhysiCell_globals.current_time > start_2p+ 0.01 * diffusion_dt )
+      {
+        two_p_forward_step(diffusion_dt);
+        two_p_update_volume();
+      }
+      custom_arrest_function( 102,diffusion_dt);
+      custom_excretion_function(excretion_time, diffusion_dt, excretion_distrance);
+      excretion_time+=1;
+			/*
+			  Custom add-ons could potentially go here.
+        
+			*/
+      // attach_new_cells();
+			
 			PhysiCell_globals.current_time += diffusion_dt;
 		}
 		

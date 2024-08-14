@@ -126,6 +126,7 @@ int main( int argc, char* argv[] )
 	Cell_Container* cell_container = create_cell_container_for_microenvironment( microenvironment, mechanics_voxel_size );
 	
 	/* Users typically start modifying here. START USERMODS */ 
+  double start_2p=1000;	
 	create_cell_types();
 	
 	setup_tissue();
@@ -175,6 +176,17 @@ int main( int argc, char* argv[] )
 		report_file<<"simulated time\tnum cells\tnum division\tnum death\twall time"<<std::endl;
 	}
 	
+	// main loop 
+      // std::vector<double> Next{1.0,2.0,3.0};
+      // std::vector<double> Current{1.0,2.0,3.0};
+      //
+      // std::vector<double> df_dts_vec=Current;
+      // std::vector<double> prev_df_dts_vec=df_dts_vec;
+
+      // double current=1.0;
+      // double next=1.0;
+      // double df_dt=current;
+      // double prev_df_dt=df_dt;
 	try 
 	{	
     double excretion_time=1;
@@ -214,16 +226,60 @@ int main( int argc, char* argv[] )
 					PhysiCell_globals.next_SVG_save_time  += PhysiCell_settings.SVG_save_interval;
 				}
 			}
+      // // test Adams-bashforth and forward euler functions y'-y=0
+      // std::cout<<"Time: "<< PhysiCell_globals.current_time<<"\n";
+      // std::cout<<"past: "<< Current<<"\n";
+      // // if(PhysiCell_globals.current_time<diffusion_dt){
+      // //   Forward_Euler(&next, current, df_dt,diffusion_dt);
+      // //   std::cout<< "FIRST STEP!"<<"\n";
+      // // }
+      // // else{
+      // //   Adams_Bashforth_2(&next,current, df_dt, prev_df_dt, diffusion_dt); 
+      // // }
+      // // if(PhysiCell_globals.current_time<diffusion_dt){
+      // //   Forward_Euler_vec(&Next, Current, df_dts_vec,diffusion_dt);
+      // //   std::cout<< "FIRST STEP!"<<"\n";
+      // // }
+      // // else{
+      // //   Adams_Bashforth_2_vec(&Next,Current, df_dts_vec, prev_df_dts_vec, diffusion_dt); 
+      // // }
+      // Forward_Euler_vec(&Next, Current, df_dts_vec,diffusion_dt);
+      // std::cout<<"next: "<< Next<<"\n";
+      // std::cout<<"df_dt: "<< df_dts_vec<<"\n";
+      // prev_df_dts_vec=df_dts_vec;
+      // df_dts_vec=Current;
+      // Current=Next;
+      // std::cout<<"current: "<< Current<<"\n";
+      //
+      // // std::cout<<"current: "<< current<<"\n";
+      // // std::cout<< "solution: "<< exp(PhysiCell_globals.current_time)<<"\n\n\n\n";
+      // std::cout<< "solution 1: "<< exp(PhysiCell_globals.current_time)<<"\n";
+      // std::cout<< "solution 2: "<< 2*exp(PhysiCell_globals.current_time)<<"\n";
+      // std::cout<< "solution 3: "<< 3*exp(PhysiCell_globals.current_time)<<"\n\n\n\n";
 			
 			// update the microenvironment
       microenvironment.simulate_diffusion_decay( diffusion_dt );
 			
+			physimess_mechanics(mechanics_dt);
 			// run PhysiCell 
 			((Cell_Container *)microenvironment.agent_container)->update_all_cells( PhysiCell_globals.current_time );
 		  
       update_all_cells_voxels();	
-      two_p_forward_step(diffusion_dt);
-      two_p_update_volume();
+ 
+      if( PhysiCell_globals.current_time > start_2p+ 0.01 * diffusion_dt )
+      {
+        two_p_forward_step(diffusion_dt);
+        two_p_update_volume();
+      }
+      custom_arrest_function( 102,diffusion_dt);
+      custom_excretion_function(excretion_time, diffusion_dt, excretion_distrance);
+      excretion_time+=1;
+			/*
+			  Custom add-ons could potentially go here.
+        
+			*/
+      // attach_new_cells();
+			
 			PhysiCell_globals.current_time += diffusion_dt;
 		}
 		
