@@ -312,7 +312,6 @@
 			</phenotype>
 			<custom_data>  
         <sample units="dimensionless" conserved="false">1.0</sample>
-        <!-- <initial_cell_volume units="um^3" conserved="true">523.6</initial_cell_volume> -->
         <initial_cell_volume units="um^3" conserved="true">817283</initial_cell_volume>
         <initial_cell_radius units="um" conserved="true">58</initial_cell_radius>
         <Vb units="dimensionless" conserved="false">0.288</Vb>
