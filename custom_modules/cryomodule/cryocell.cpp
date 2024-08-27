@@ -67,7 +67,8 @@ Cryocell_State::Cryocell_State(Cryocell* cCell)
            total_solute_volume+=moles_to_volume(cCell->cryocell_state.solute_moles[i], density_name);
       }
   water_volume = (cCell->custom_data["initial_cell_volume"]*(1.0-cCell->custom_data["Vb"]))-total_solute_volume;
-    
+  std::cout<< "WATER VOLUME: "<< water_volume<<"\n";   
+  std::cout<< "SOLUTE VOLUME: "<< total_solute_volume<<"\n";   
     for(int i=0; i<parameters.ints("number_of_solutes"); i++)
     {
       if(cCell->cryo_parameters.Ps[i]==0)//find the non-permeating and put the same amount in cell
@@ -97,7 +98,7 @@ Cryocell::Cryocell(){
     cell_voxels.resize(1,-1);
     neighbor_voxels.resize(1,-1);
 
-  std::cout<<"INITIALIZED:!! "<< this->position<<this->cell_voxels<<"\n\n\n";
+  // std::cout<<"CONSTRUCTED:!! "<< this->position<<this->cell_voxels<<"\n\n\n";
 }
 Cell* instantiate_Cryocell()
 {
@@ -156,14 +157,14 @@ void Cryocell::update_cell_voxels(){
   double voxel_length=default_microenvironment_options.dx;
   general_voxel_bounding_box(&general_box, this->position, radius,voxel_length, this->get_microenvironment()->mesh);
   get_intersecting_voxels(this,general_box,&new_voxels);
-  #pragma omp critical
-  {
+  // #pragma omp critical
+  // {
 
-      this->cell_voxels.clear();
+    this->cell_voxels.clear();
     this->cell_voxels.assign(new_voxels.begin(),new_voxels.end());
     this->cryocell_state.uptake_voxels.assign(new_voxels.begin(),new_voxels.end());///these are the same for now, set in two places
     
-  }
+  // }
   return;
 
 }
@@ -184,9 +185,9 @@ void Cryocell::update_neighbor_voxels(){
   return;
 }
 void update_all_cells_voxels()
-{
-  #pragma omp parallel
-    #pragma omp for nowait
+{ //TODO: this is slower with parallel??
+  // #pragma omp parallel
+    // #pragma omp for nowait
     for(int i=0; i<(all_cryocells.size());i++)
     {
       Cryocell* cCell=(all_cryocells)[i];
@@ -662,6 +663,7 @@ void advance_uptake()
 
         double effective_water_from_diffusion=effective_water_constant*voxel_volume; //~water from each voxel in my neighborhood (including diagnols)+ my own
         double new_water_volume=(effective_water_from_diffusion-water_uptake_per_voxel)/effective_water_constant;
+        // double new_water_volume=(effective_water_from_diffusion-water_uptake_per_voxel)/effective_water_constant;
         if (new_water_volume<0)
         {
           std::cout<<"WARNING!! HIGH WATER UPTAKE!!\n";
@@ -733,8 +735,8 @@ update_exterior_concentrations();//update and get exterior concentrations
 update_interior_concentrations();
 calculate_derivatives();
 advance_osmosis(dt);
-calculate_uptakes(dt);
-calculate_per_voxel_uptake();
+// calculate_uptakes(dt);
+// calculate_per_voxel_uptake();
 /*uptake(dt);*/
 advance_uptake();
 update_next_step(dt);
@@ -742,17 +744,18 @@ return;
 }
 
 
-void two_p_update_volume()
+void two_p_update_volume() //TODO: check if parallel is faster
 {
 
-  #pragma omp parallel
-  {
-    #pragma omp for nowait
+  // #pragma omp parallel
+  // {
+    // #pragma omp for nowait
     for(int i=0; i<all_cryocells.size(); i++)
     {
       double voxel_volume=default_microenvironment_options.dx*default_microenvironment_options.dy*default_microenvironment_options.dz;
       Cryocell* cCell = all_cryocells[i];
       double osmotically_inactive_volume= cCell->custom_data["initial_cell_volume"]*cCell->custom_data["Vb"];
+      // std::cout<< "osmotically_inactive_volume: "<< osmotically_inactive_volume<< "\n";
       int num_of_solutes=cCell->get_microenvironment()->number_of_densities(); 
       double total_solute_volume=0.0;
       for (size_t i = 0; i < num_of_solutes; i++)
@@ -760,14 +763,16 @@ void two_p_update_volume()
         std::string density_name=microenvironment.density_names[i];
            total_solute_volume+=moles_to_volume(cCell->cryocell_state.solute_moles[i], density_name);
       }
-      #pragma omp critical
-      {
+      // #pragma omp critical
+      // {
         cCell->cryocell_state.solute_volume=total_solute_volume;
-
-        cCell->set_total_volume(cCell->cryocell_state.water_volume+osmotically_inactive_volume+total_solute_volume);  
-      }
+      
+        // std::cout<< "water volume: "<< cCell->cryocell_state.water_volume<<"\n";
+        cCell->set_total_volume(cCell->cryocell_state.water_volume+osmotically_inactive_volume+total_solute_volume); 
+        // std::cout<< "total volume: "<< cCell->phenotype.volume.total<<"\n";
+      // }
     }// ofs<< solute_uptake_per_voxel[i]<<", ";
-  }
+  // }
 
 
   return;

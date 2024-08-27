@@ -18,7 +18,7 @@ using namespace PhysiCell;
 std::vector<std::vector<double>> create_spheroid_2D(double cell_radius, double sphere_radius); 
 std::vector<std::vector<double>> create_spheroid(double cell_radius, double sphere_radius); 
 
-std::vector<std::vector<double>> create_cell_sphere_positions(double cell_radius, double sphere_radius,double inner_radius); 
+std::vector<std::vector<double>> create_spherical_shell(double cell_radius, double sphere_radius,double inner_radius); 
 
 /*void setup_single_cell(void);*/
 /*void setup_4_cell_test_case(void);*/

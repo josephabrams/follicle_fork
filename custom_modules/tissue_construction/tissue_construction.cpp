@@ -57,7 +57,7 @@ std::vector<std::vector<double>> create_spheroid(double cell_radius, double sphe
   }
   return cells;
 }
-std::vector<std::vector<double>> create_cell_sphere_positions(double cell_radius, double sphere_radius,double inner_radius) 
+std::vector<std::vector<double>> create_spherical_shell(double cell_radius, double sphere_radius,double inner_radius) 
 {
   std::vector<std::vector<double>> cells;
   int xc = 0, yc = 0, zc = 0;

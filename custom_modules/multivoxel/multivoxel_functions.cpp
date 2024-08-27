@@ -1,5 +1,7 @@
 
 #include "./multivoxel_functions.h"
+#include <cmath>
+#include <string>
 using namespace BioFVM;
 using namespace PhysiCell;
 Voxel ghost_voxel;
@@ -488,10 +490,65 @@ void check_out_of_bounds(Cell* pCell, int fail_count)
         }
     }
 }
+double intersection_of_cell_and_plane(double z_height, double r)
+{
+  double result=0.0;
+  z_height=std::abs(z_height);
+  double h=r-z_height;
+  if(h<=r)
+  {
+    result=std::sqrt(2*r*h-(h*h));
+  }
+  return result;
+}
+void python_plot_cell_and_voxels_single_layer(Cell* pCell, double dt, std::vector<int> &bounding_box_by_index, std::string plot_name, double z_height)
+{
+  // if(PhysiCell_globals.current_time>1 && PhysiCell_globals.current_time<1.2)
+  if(PhysiCell_globals.current_time>0)
+  {
+    double voxel_length=default_microenvironment_options.dx;
+    std::string file= "./output/cell-"+plot_name+std::to_string(pCell->index)+std::to_string(z_height)+"-layer.py";
+    // std::vector <double> cell_plot_position={50,50,50};
+    // std::vector <double> translation_vec=pCell->position-cell_plot_position;
+    std::ofstream ofs;
+    ofs.open (file, std::ofstream::out | std::ofstream::trunc);
+    ofs<<"import numpy as np\n"<<"import matplotlib.pyplot as plt\n"<<"import matplotlib.patches as mpatches\n";
+    ofs<<"xy_artists = [\n";
+    // std::vector<int> bounding_box{0};
+    std::vector<double> radial_dimensions{pCell->phenotype.geometry.radius,pCell->phenotype.geometry.radius,pCell->phenotype.geometry.radius};
+    std::vector<double> cell_position=pCell->position;
+    double voxel_size= default_microenvironment_options.dx;
+    BioFVM::Cartesian_Mesh the_mesh=pCell->get_microenvironment()->mesh;
+    // general_voxel_bounding_box_3D(&bounding_box_by_index, cell_position, radial_dimensions,voxel_size,the_mesh);
+    // diffusion_bounding_box(pCell, &bounding_box);
+    for(int i=0; i<bounding_box_by_index.size(); i++)
+    {
 
+      // std::cout<<"bounding_box size: "<< bounding_box_by_index.size()<<"\n\n";
+      std::vector <double> voxel_position=microenvironment.voxels(bounding_box_by_index[i]).center;
+      ofs<<"\t#("<<voxel_position[0]<<", "<<voxel_position[1]<<", "<< voxel_position[2] <<"), \n";
+      if(std::abs(voxel_position[2]-z_height)<=0.1)
+      {
+        std::vector <double> bottom_corner={voxel_position[0]-(voxel_length/2),voxel_position[1]-(voxel_length/2)};      
+        ofs<<"\tmpatches.Rectangle(("<<bottom_corner[0]<<", "<<bottom_corner[1]<<"), "<<voxel_length<<","<< voxel_length << ", alpha=0.5, ec=\"red\", fc=\'green\'), \n";
+      }
+    }
+    double adjusted_radius=intersection_of_cell_and_plane(z_height, pCell->phenotype.geometry.radius);
+    if(std::isnan(adjusted_radius) || adjusted_radius<=0.1)
+    {
+      adjusted_radius=0.0;
+    }
+    ofs<<"\tmpatches.Circle(("<<pCell->position[0]<<", "<<pCell->position[1]<<"), radius="<<adjusted_radius<<",alpha=0.2, ec=\"black\", fc=\'black\'),\n";
+    ofs<<"]\n";
+    ofs<<"fig,ax=plt.subplots()\n"<<"for i in xy_artists:\n"<<"\tax.add_patch(i)\n"<<"ax.autoscale_view()\n"<<"ax.set_aspect('equal', 'box')\n"<<"plt.show()";
+    ofs.close();
+  }
+  return;
+}
 void python_plot_cell_and_voxels(Cell* pCell, double dt, std::vector<int> &bounding_box_by_index, std::string plot_name)
 {
-  if(PhysiCell_globals.current_time>1 && PhysiCell_globals.current_time<1.2)
+  // if(PhysiCell_globals.current_time>1 && PhysiCell_globals.current_time<1.2)
+  if(PhysiCell_globals.current_time>0)
   {
     double voxel_length=default_microenvironment_options.dx;
     std::string file= "./output/cell-"+plot_name+std::to_string(pCell->index)+"-singe_cell_plot.py";
@@ -527,8 +584,8 @@ void python_plot_cell_and_voxels(Cell* pCell, double dt, std::vector<int> &bound
 void python_plot_two_cells_and_voxels(Cell* pCell, Cell* pNeighbor, double dt, std::vector<int> &bounding_box_by_index, std::string plot_name)
 {
 
-  if(PhysiCell_globals.current_time>1 && PhysiCell_globals.current_time<1.2)
-  /*if(PhysiCell_globals.current_time>dt)*/
+  // if(PhysiCell_globals.current_time>1 && PhysiCell_globals.current_time<1.2)
+  if(PhysiCell_globals.current_time>0)
   {
     double voxel_length=default_microenvironment_options.dx;
     std::string file= "./output/cell-"+plot_name+std::to_string(pCell->index)+"-singe_cell_plot.py";
