@@ -191,7 +191,13 @@ void setup_tissue( void )
             pC_granulosa->assign_position( cell_positions[i] );
             pC_granulosa->set_radius(initial_granulosa_radius);
             pC_granulosa->velocity=initial_velocity;
-            // std::cout<< pC_granulosa->custom_data["initial_cell_radius"]<<"\n";
+            Cryocell* cCell=static_cast<Cryocell*>(pC_granulosa);
+            std::cout<<cCell<< " and  "<< pC_granulosa;
+            // for(int i=0; i<pC_granulosa->custom_data.variables.size();i++)
+            // { 
+            //   std::cout<< pC_granulosa->custom_data[i]<<"\n";
+            //
+            // }
           }
       // 
       }

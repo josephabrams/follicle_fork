@@ -8,11 +8,20 @@ using namespace BioFVM;
 #define PI 3.14159265
 std::vector<Cryocell*> all_cryocells;
 constexpr double GAS_CONSTANT{0.08205};
-Cryo_Parameters::Cryo_Parameters(Cryocell* cCell)
+Cryo_Parameters::Cryo_Parameters()
 {
-  osmotically_inactive_fraction = cCell->custom_data["Vb"];
+    dVw=0.0;//cell water flux
+    previous_dVw=0.0;
+  // solute flux
+    Ps.resize(parameters.ints("number_of_solutes"),0.0);
+    dN.resize(parameters.ints("number_of_solutes"), 0.0);//cell mole flux of solutes
+    previous_dN.resize(parameters.ints("number_of_solutes"), 0.0);//previous mole flux of solutes
+}
+void Cryo_Parameters::sync_to_cell_definition(Cell_Definition& cd)
+{
+  osmotically_inactive_fraction = cd.custom_data["Vb"];
     // water flux
-    Lp=cCell->custom_data["Lp"];
+    Lp=cd.custom_data["Lp"];
     dVw=0.0;//cell water flux
     previous_dVw=0.0;
   // solute flux
@@ -20,12 +29,12 @@ Cryo_Parameters::Cryo_Parameters(Cryocell* cCell)
   for(int i=0; i<parameters.ints("number_of_solutes");i++)
   {
     std::string solute= "Ps_"+std::to_string(i);
-    Ps[i]= cCell->custom_data[solute];
+    Ps[i]= cd.custom_data[solute];
   };
     dN.resize(parameters.ints("number_of_solutes"), 0.0);//cell mole flux of solutes
     previous_dN.resize(parameters.ints("number_of_solutes"), 0.0);//previous mole flux of solutes
 }
-Cryo_Concentrations::Cryo_Concentrations(Cryocell* cCell)
+Cryo_Concentrations::Cryo_Concentrations()
 {
     use_virial = false;
     exterior_osmolality = 0.0;//total exterior osmolality salt+CPA (mole/kg)
@@ -37,45 +46,24 @@ Cryo_Concentrations::Cryo_Concentrations(Cryocell* cCell)
   for(int i =0; i<parameters.ints("number_of_solutes");i++){
      
     std::string density_name=microenvironment.density_names[i];
-    if(density_name=="NaCl")
-    {
+    // if(density_name=="NaCl")
+    // {
       std::string solute= "initial_molarity_"+std::to_string(i);
-      interior_molarity[i] = parameters.doubles(solute);
-    }
+      interior_molarity[i] = parameters.doubles(solute); //interior molarity is set from user parameters
+    // }
+
   }
 
 }
-Cryocell_State::Cryocell_State(Cryocell* cCell)
+Cryocell_State::Cryocell_State()
 {
     previous_radius = 0.0;
-  surface_area = 4*3.14159*cCell->custom_data["initial_cell_radius"]*cCell->custom_data["initial_cell_radius"];
-  temperature = cCell->custom_data["initial_temp"];
-    
     solute_volume = 0.0;
-    
     solute_moles.resize(parameters.ints("number_of_solutes"), 0.0);
     next_solute_moles.resize(parameters.ints("number_of_solutes"), 0.0);
-   
   next_water_volume = 0.0;//for ABM 2nd order
-
-      double osmotically_inactive_volume= cCell->custom_data["initial_cell_volume"]*cCell->custom_data["Vb"];
       int num_of_solutes=parameters.ints("number_of_solutes"); 
       double total_solute_volume=0.0;
-      for (size_t i = 0; i < num_of_solutes; i++)
-      {
-        std::string density_name=microenvironment.density_names[i];
-           total_solute_volume+=moles_to_volume(cCell->cryocell_state.solute_moles[i], density_name);
-      }
-  water_volume = (cCell->custom_data["initial_cell_volume"]*(1.0-cCell->custom_data["Vb"]))-total_solute_volume;
-  std::cout<< "WATER VOLUME: "<< water_volume<<"\n";   
-  std::cout<< "SOLUTE VOLUME: "<< total_solute_volume<<"\n";   
-    for(int i=0; i<parameters.ints("number_of_solutes"); i++)
-    {
-      if(cCell->cryo_parameters.Ps[i]==0)//find the non-permeating and put the same amount in cell
-      {
-        solute_moles[i]=cCell->cryo_concentrations.exterior_molarity[i]/this->water_volume;
-      }
-    }
     //voxel uptakes
     water_uptake = 0.0;//um^3
     solute_uptake.resize(parameters.ints("number_of_solutes"), 0.0);
@@ -84,69 +72,113 @@ Cryocell_State::Cryocell_State(Cryocell* cCell)
     uptake.resize(parameters.ints("number_of_solutes"), 0.0);//molar uptake/secretion of solutes
     uptake_voxels={}; //voxels changing from uptake
    
-    for(int i =0; i<parameters.ints("number_of_solutes");i++){
-      solute_moles[i] = cCell->cryo_concentrations.interior_molarity[i] * this->water_volume;
+    water_volume = 0.0;
+}
+void Cryocell_State::sync_to_cell_definition(Cell_Definition& cd, Cryo_Parameters& cryo_p){
+
+  
+    previous_radius = 0.0;
+  surface_area = 4*3.14159*cd.custom_data["initial_cell_radius"]*cd.custom_data["initial_cell_radius"];
+  temperature = cd.custom_data["initial_temp"];
+    
+
+      double osmotically_inactive_volume= cd.custom_data["initial_cell_volume"]*cd.custom_data["Vb"];
+      int num_of_solutes=parameters.ints("number_of_solutes"); 
+    //voxel uptakes
+    water_uptake = 0.0;//um^3
+    solute_uptake.resize(parameters.ints("number_of_solutes"), 0.0);
+    solute_uptake_per_voxel.resize(parameters.ints("number_of_solutes"), 0.0);
+    water_uptake_per_voxel=0.0;
+    uptake.resize(parameters.ints("number_of_solutes"), 0.0);//molar uptake/secretion of solutes
+    uptake_voxels={}; //voxels changing from uptake
+   
+}
+
+void Cryocell_State::sync_moles_and_volume(Cell_Definition& cd, Cryo_Parameters& cryo_p, Cryo_Concentrations& cc){
+    double total_solute_volume=0.0;
+    solute_volume = 0.0;
+    toxicity=0.0;
+    solute_moles.resize(parameters.ints("number_of_solutes"), 0.0);
+    next_solute_moles.resize(parameters.ints("number_of_solutes"), 0.0);
+    next_water_volume = 0.0;//for ABM 2nd order
+    water_volume = (cd.custom_data["initial_cell_volume"]*(1.0-cd.custom_data["Vb"]));
+    for(int i=0; i<parameters.ints("number_of_solutes"); i++) //get initial moles from initial molarity
+    {
+        solute_moles[i]=cc.interior_molarity[i]*water_volume;
     }
+    for (size_t i = 0; i < parameters.ints("number_of_solutes"); i++) //get initial solute volume
+    {
+        std::string density_name=microenvironment.density_names[i];
+        total_solute_volume+=moles_to_volume(solute_moles[i], density_name);
+    }
+    
+    solid_volume=cd.custom_data["initial_cell_volume"]*cryo_p.osmotically_inactive_fraction;
+    std::cout<< "custom_data: "<<cd.custom_data["initial_cell_volume"]<<"\n"; 
+    std::cout<< "WATER VOLUME: "<< water_volume<<"\n";   
+    std::cout<< "SOLUTE VOLUME: "<< total_solute_volume<<"\n";   
 }
 Cryocell::Cryocell(){
+
+  cell_voxels.resize(1,-1);
+  neighbor_voxels.resize(1,-1);
     //ghost voxel is place holder for when there are no neighbor_voxels
-    ghost_voxel.mesh_index=-1;
-    ghost_voxel.center=this->position;
-    ghost_voxel.volume=default_microenvironment_options.dx*default_microenvironment_options.dy*default_microenvironment_options.dz;
-    solid_volume=this->phenotype.volume.total*this->cryo_parameters.osmotically_inactive_fraction;
-    toxicity=0.0;
-    cell_voxels.resize(1,-1);
-    neighbor_voxels.resize(1,-1);
+    
+    // ghost_voxel.mesh_index=-1;
+    // ghost_voxel.center=this->position;
+    // ghost_voxel.volume=default_microenvironment_options.dx*default_microenvironment_options.dy*default_microenvironment_options.dz;
 
   // std::cout<<"CONSTRUCTED:!! "<< this->position<<this->cell_voxels<<"\n\n\n";
 }
 Cell* instantiate_Cryocell()
 {
   Cryocell* cNew=new Cryocell;
-  #pragma omp critical
-  {
-    all_cryocells.push_back(cNew);
-  }
-  return cNew;
+  Cell* pNew=static_cast<Cell*>(cNew);
+  
+  return pNew;
 
 }
 Cell* create_Cryocell(Cell_Definition& cd){
   /*Cryocell* cCell=static_cast<Cryocell*>(create_cell());*/
   /*cCell();*/
   Cryocell* cNew=new Cryocell;
-  Cell* pNew=static_cast<Cell*>(cNew);
+  // Cell* pNew;
   all_cryocells.push_back(cNew);
   
+  Cell* pNew=static_cast<Cell*>(cNew);
 	(*all_cells).push_back( pNew ); 
-  pNew->index=(*all_cells).size()-1;
+  cNew->index=(*all_cells).size()-1;
 
 	if( BioFVM::get_default_microenvironment() )
 	{
-		pNew->register_microenvironment( BioFVM::get_default_microenvironment() );
+		cNew->register_microenvironment( BioFVM::get_default_microenvironment() );
 	}
 
 	// All the phenotype and other data structures are already set 
 	// by virtue of the default Cell constructor. 
 	
-	pNew->type = cd.type; 
-	pNew->type_name = cd.name; 
+	cNew->type = cd.type; 
+	cNew->type_name = cd.name; 
 	
-	pNew->custom_data = cd.custom_data; 
-	pNew->parameters = cd.parameters; 
-	pNew->functions = cd.functions; 
-	
-	pNew->phenotype = cd.phenotype; 
-	if (pNew->phenotype.intracellular)
-		pNew->phenotype.intracellular->start();
+	cNew->custom_data = cd.custom_data; 
+	cNew->parameters = cd.parameters; 
+	cNew->functions = cd.functions; 	
+	cNew->phenotype = cd.phenotype; 
+	if (cNew->phenotype.intracellular)
+		cNew->phenotype.intracellular->start();
 
-	pNew->is_movable = cd.is_movable; //  true;
-	pNew->is_out_of_domain = false;
-	pNew->displacement.resize(3,0.0); // state? 
+	cNew->is_movable = cd.is_movable; //  true;
+	cNew->is_out_of_domain = false;
+	cNew->displacement.resize(3,0.0); // state? 
 	
-	pNew->assign_orientation();
-	pNew->set_total_volume( pNew->phenotype.volume.total );
-  pNew->functions.instantiate_cell=instantiate_Cryocell;
-  return pNew;
+	cNew->assign_orientation();
+	cNew->set_total_volume( cNew->phenotype.volume.total );
+  cNew->functions.instantiate_cell=NULL;
+
+  cNew->cryo_parameters.sync_to_cell_definition(cd);
+  cNew->cryocell_state.sync_to_cell_definition(cd, cNew->cryo_parameters);
+  cNew->cryocell_state.sync_moles_and_volume(cd, cNew->cryo_parameters, cNew->cryo_concentrations );
+  
+  return cNew;
 }
 
 void Cryocell::update_cell_voxels(){
@@ -735,9 +767,8 @@ update_exterior_concentrations();//update and get exterior concentrations
 update_interior_concentrations();
 calculate_derivatives();
 advance_osmosis(dt);
-// calculate_uptakes(dt);
-// calculate_per_voxel_uptake();
-/*uptake(dt);*/
+calculate_uptakes(dt); //handled externally?
+calculate_per_voxel_uptake();// handled externally?
 advance_uptake();
 update_next_step(dt);
 return;

@@ -29,7 +29,8 @@ class Cryo_Parameters
     std::vector<double> dN;//cell mole flux of solutes
     std::vector<double> previous_dN;//previous mole flux of solutes
 
-    Cryo_Parameters(Cryocell* cCell);
+    Cryo_Parameters();
+    void sync_to_cell_definition(Cell_Definition& cd); 
 };
 class Cryo_Concentrations
 {
@@ -44,7 +45,8 @@ class Cryo_Concentrations
     std::vector<double> interior_component_molality;
     std::vector<double> exterior_component_molality;
 
-    Cryo_Concentrations(Cryocell* cCell);
+    Cryo_Concentrations();
+    // void sync_to_cell_definition(Cell_Definition& cd); not needed atm 
 };
 class Cryocell_State 
 {
@@ -54,6 +56,8 @@ class Cryocell_State
     double surface_area;
     double temperature;
     
+    double solid_volume;
+    double toxicity;
     double solute_volume;
     
     std::vector<double> solute_moles;
@@ -70,19 +74,18 @@ class Cryocell_State
     std::vector<double> uptake;//molar uptake/secretion of solutes
     std::vector <int> uptake_voxels; //voxels changing from uptake
 
-    Cryocell_State(Cryocell* cCell);
-    
+    Cryocell_State();
+    void sync_to_cell_definition(Cell_Definition& cd, Cryo_Parameters& cryo_p); 
+    void sync_moles_and_volume(Cell_Definition& cd, Cryo_Parameters& cryo_p, Cryo_Concentrations& cc);
 };
 
 class Cryocell : public PhysiCell::Cell {
 
   private:
   public:
-    Cryo_Concentrations cryo_concentrations{this};
-    Cryo_Parameters cryo_parameters{this};
-    Cryocell_State cryocell_state{this};
-    double solid_volume;
-    double toxicity;
+    Cryo_Concentrations cryo_concentrations;
+    Cryo_Parameters cryo_parameters;
+    Cryocell_State cryocell_state;
     std::vector <int> cell_voxels;
     std::vector <int> neighbor_voxels;
     Cryocell();

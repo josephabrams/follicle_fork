@@ -246,8 +246,8 @@
 				</volume> 				
 				
 				<mechanics> 
-					<cell_cell_adhesion_strength units="micron/min">1.0</cell_cell_adhesion_strength>
-					<cell_cell_repulsion_strength units="micron/min">10.0</cell_cell_repulsion_strength>
+					<cell_cell_adhesion_strength units="micron/min">0.0</cell_cell_adhesion_strength>
+					<cell_cell_repulsion_strength units="micron/min">00.0</cell_cell_repulsion_strength>
 					<relative_maximum_adhesion_distance units="dimensionless">1.5</relative_maximum_adhesion_distance>
   					<cell_adhesion_affinities>
 	  					<cell_adhesion_affinity name="default">1</cell_adhesion_affinity> 
@@ -312,7 +312,7 @@
 			</phenotype>
 			<custom_data>  
         <sample units="dimensionless" conserved="false">1.0</sample>
-        <initial_cell_volume units="um^3" conserved="true">817283</initial_cell_volume>
+        <initial_cell_volume units="um^3" conserved="true">817283.0</initial_cell_volume>
         <initial_cell_radius units="um" conserved="true">58</initial_cell_radius>
         <Vb units="dimensionless" conserved="false">0.288</Vb>
         <Lp units="um/sec/atm" conserved="false">0.016667</Lp>
@@ -469,7 +469,20 @@
     <!--<radius_normdist_sd type="double" units="none" description="standard deviation of fibre length">0.0</radius_normdist_sd>-->
     <!--<fibre_angle type="double" units="none" desctription="angle of fibre direction">0.0</fibre_angle>-->
     <!--<angle_normdist_sd type="double" units="none" description="standard deviation of fibre angle">0.0</angle_normdist_sd>-->
-    
+    <initial_EG_only_molarity type="double" units="fmol/um^3" description="">1.819</initial_EG_only_molarity>
+    <initial_GLY_only_molarity type="double" units="fmol/um^3" description="">1.611</initial_GLY_only_molarity>
+    <initial_EG_mixed_molarity type="double" units="fmol/um^3" description="">1.756</initial_EG_mixed_molarity>
+    <initial_GLY_mixed_molarity type="double" units="fmol/um^3" description="">1.611</initial_GLY_mixed_molarity>
+    <initial_HM_molarity type="double" units="fmol/um^3" description="">0.151</initial_HM_molarity>
+    <!-- initial PBS molarities are less the HM molarity since both are treated as NaCl -->
+    <initial_1xPBS_molarity type="double" units="fmol/um^3" description="">0.191</initial_1xPBS_molarity>
+    <initial_2xPBS_molarity type="double" units="fmol/um^3" description="">0.376</initial_2xPBS_molarity>
+    <initial_5xPBS_molarity type="double" units="fmol/um^3" description="">0.911</initial_5xPBS_molarity>
+    <initial_05xPBS_molarity type="double" units="fmol/um^3" description="">0.111</initial_05xPBS_molarity>
+    <initial_EG_Karlsson_molarity type="double" units="fmol/um^3" description="">1.1</initial_EG_Karlsson_molarity>
+    <initial_PBS_Karlsson_molarity type="double" units="fmol/um^3" description="">0.756</initial_PBS_Karlsson_molarity>
+    <initial_DMSO_Karlsson_molarity type="double" units="fmol/um^3" description="">1.1</initial_DMSO_Karlsson_molarity>
+    <initial_PROH_Karlsson_molarity type="double" units="fmol/um^3" description="">1.0</initial_PROH_Karlsson_molarity> 
     <fibre_degradation type="bool" units="none" description="flag for fibre degradation">false</fibre_degradation>
     <fibre_degradation_rate type="double" units="1/min" description="fibre degradation rate">0.05</fibre_degradation_rate>
     <fibre_custom_degradation type="bool" units="none" description="flag for having degradation depends on pressure">false</fibre_custom_degradation>

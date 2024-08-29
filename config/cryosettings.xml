@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Cryocell_settings version="devel-version">
+  <cell_types>
+    <granulosa>
+      <initial_cell_volume units="um^3" conserved="true">523.6</initial_cell_volume>
+      <initial_cell_radius units="um" conserved="true">5</initial_cell_radius>
+      <Vb units="dimensionless" conserved="false">0.2</Vb>
+      <Lp units="um/sec/atm" conserved="false">0.00231</Lp>
+      <Ps_0 units="um/sec" conserved="false">0.0</Ps_0>
+      <Ps_1 units="um/sec" conserved="false">0.0276</Ps_1>
+      <initial_temp units="kelvin" conserved="false">293.15</initial_temp>
+      <is_cryocell units="dimensionless" conserved="false">1</is_cryocell>
+    </granulosa>
+    <oocyte>
+      <sample units="dimensionless" conserved="false">1.0</sample>
+      <initial_cell_volume units="um^3" conserved="true">817283</initial_cell_volume>
+      <initial_cell_radius units="um" conserved="true">58</initial_cell_radius>
+      <Vb units="dimensionless" conserved="false">0.288</Vb>
+      <Lp units="um/sec/atm" conserved="false">0.016667</Lp>
+      <Ps_0 units="um/sec" conserved="false">0.0</Ps_0>
+      <Ps_1 units="um/sec" conserved="false">0.12</Ps_1>
+      <initial_temp units="kelvin" conserved="false">293.15</initial_temp>
+      <is_cryocell units="dimensionless" conserved="false">1</is_cryocell>
+      <!-- <oocyte_Lp_EG type="double" units="um/sec/atm" description="Karlsson et al">0.016667</oocyte_Lp_EG> -->
+      <!-- <oocyte_Ps_EG type="double" units="um/sec" description="Karlsson et al">0.12</oocyte_Ps_EG> -->
+    </oocyte>
+    <hepg2>
+      <initial_cell_volume units="um^3" conserved="true">523.6</initial_cell_volume>
+      <initial_cell_radius units="um" conserved="true">5</initial_cell_radius>
+      <Vb units="dimensionless" conserved="false">0.2</Vb>
+      <Lp units="um/sec/atm" conserved="false">0.00231</Lp>
+      <Ps_0 units="um/sec" conserved="false">0.0</Ps_0>
+      <Ps_1 units="um/sec" conserved="false">0.0276</Ps_1>
+      <initial_temp units="kelvin" conserved="false">293.15</initial_temp>
+      <is_cryocell units="dimensionless" conserved="false">1</is_cryocell>
+    </hepg2>
+  </cell_types>
+</Cryocell_settings>
+
