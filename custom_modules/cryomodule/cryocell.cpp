@@ -113,9 +113,9 @@ void Cryocell_State::sync_moles_and_volume(Cell_Definition& cd, Cryo_Parameters&
     }
     
     solid_volume=cd.custom_data["initial_cell_volume"]*cryo_p.osmotically_inactive_fraction;
-    std::cout<< "custom_data: "<<cd.custom_data["initial_cell_volume"]<<"\n"; 
-    std::cout<< "WATER VOLUME: "<< water_volume<<"\n";   
-    std::cout<< "SOLUTE VOLUME: "<< total_solute_volume<<"\n";   
+    // std::cout<< "custom_data: "<<cd.custom_data["initial_cell_volume"]<<"\n"; 
+    // std::cout<< "WATER VOLUME: "<< water_volume<<"\n";   
+    // std::cout<< "SOLUTE VOLUME: "<< total_solute_volume<<"\n";   
 }
 Cryocell::Cryocell(){
 
@@ -207,7 +207,7 @@ void Cryocell::update_neighbor_voxels(){
   for(int i=0; i<this->state.neighbors.size(); i++){
     Cryocell* cCell=static_cast<Cryocell*>(this->state.neighbors[i]);
     std::vector<int> new_neighbor_voxels{};
-    intersecting_neighbor_voxels(this,cCell,this->cell_voxels,cCell->cell_voxels, &new_neighbor_voxels);
+    // intersecting_neighbor_voxels(this,cCell,this->cell_voxels,cCell->cell_voxels, &new_neighbor_voxels);
     #pragma omp critical
     {
       this->neighbor_voxels.clear();

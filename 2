@@ -81,7 +81,7 @@ void general_voxel_bounding_box(std::vector<int> *return_bounding_box, std::vect
           // bounding_box_by_index.insert(bounding_box_by_index.end(), bounding_box_by_index_private.begin(), bounding_box_by_index_private.end());
           return_bounding_box->assign(bounding_box_by_index.begin(),bounding_box_by_index.end());
           // std::cout<<"return_bounding_box ("<< (*return_bounding_box).size()<<"): "<<*return_bounding_box<<"\n";
-          // if((*return_bounding_box).size()==0){
+          if((*return_bounding_box).size()==0){
             // std::cout<<"return_bounding_box ("<< (*return_bounding_box).size()<<"): "<<*return_bounding_box<<"\n\n";
             // if(voxel_end[0]<voxel_start[0] || voxel_end[1]<voxel_start[1] || voxel_end[2]<voxel_end[2]){
               // std::cout<<"center "<< center <<"\n";
@@ -90,7 +90,7 @@ void general_voxel_bounding_box(std::vector<int> *return_bounding_box, std::vect
               // std::cout<<"lower_point: "<< lower_point <<"\n";
               // std::cout<<"upper_point: "<< upper_point <<"\n\n\n\n";
             // }
-          // }
+          }
         // }
     // }
     return;
@@ -128,8 +128,8 @@ void get_voxel_corners(std::vector<double> &voxel_center, std::vector<std::vecto
       }
     }   
   }
-  // #pragma omp critical
-  // {
+  #pragma omp critical
+  {
     for(int i =0; i<count; i++)
     {
       return_corners[i].assign(corners[i].begin(),corners[i].end());
@@ -142,7 +142,7 @@ void get_voxel_corners(std::vector<double> &voxel_center, std::vector<std::vecto
     // return_corners[5].assign(corners[5].begin(),corners[5].end());
     // return_corners[6].assign(corners[6].begin(),corners[6].end());
     // return_corners[7].assign(corners[7].begin(),corners[7].end());
-  // }
+  }
   return;
 }
 
@@ -168,8 +168,8 @@ void get_voxel_edges(std::vector<double> &voxel_center, std::vector<std::vector<
       }
       count++;
   }
-  // #pragma omp critical
-  // {
+  #pragma omp critical
+  {
     for(int i =0; i<2; i++)
     {
       x_edges[i].assign(edges[i].begin(),edges[i].end());
@@ -178,7 +178,7 @@ void get_voxel_edges(std::vector<double> &voxel_center, std::vector<std::vector<
 
     }
 
-  // }
+  }
   return;
 }
 bool edge_intersect(Cell* pCell, std::vector <std::vector<double>> &edges, int& face_count){
@@ -253,7 +253,7 @@ void get_intersecting_voxels(Cell* pCell,std::vector<int>& bounding_voxels,std::
 
       if(default_microenvironment_options.simulate_2D)
       {
-        // #pragma omp critical
+        #pragma omp critical
         test_corners.resize(4,std::vector<double>(3,0.0));
       }
       // std::vector<std::vector <double>> test_faces(6,std::vector<double>(3,0.0));
@@ -283,15 +283,15 @@ void get_intersecting_voxels(Cell* pCell,std::vector<int>& bounding_voxels,std::
         intersecting_voxels.push_back(bounding_voxels[i]);
       }
     }
-    // #pragma omp critical
-    // {   
+    #pragma omp critical
+    {   
       // std::vector<int>::iterator it;
       // it = std::unique (intersecting_voxels.begin(), intersecting_voxels.end());   // 10 20 30 20 10 ?  ?  ?  ?
       // intersecting_voxels.resize( std::distance(intersecting_voxels.begin(),it) ); 
         
       return_intersecting_voxel_indicies->assign(intersecting_voxels.begin(),intersecting_voxels.end());
     // std::cout<< "returing voxels size: "<< return_intersecting_voxel_indicies->size()<<"\n\n";
-    // }
+    }
     
     return;
 }
@@ -336,10 +336,10 @@ void get_exterior_voxels(Cell* pCell, std::vector<double>* return_exterior_voxel
       }
 
     }
-    // #pragma omp critical
-    // {
+    #pragma omp critical
+    {
       return_exterior_voxel_indicies->assign(exterior_voxels.begin(), exterior_voxels.end());
-    // }
+    }
 
     return;
 }
@@ -386,12 +386,12 @@ void get_interior_voxels(Cell* pCell, std::vector<int>* return_interior_voxel_in
 }
 
 
-void intersecting_neighbor_voxels(Cell* pCell, Cell* pNeighbor, std::vector<int> *my_bounding_voxels, std::vector<int> *neighbor_bounding_voxels, std::vector<int> *return_voxels){
+void intersecting_neighbor_voxels(Cell* pCell, Cell* pNeighbor, std::vector<int> my_bounding_voxels, std::vector<int> neighbor_bounding_voxels, std::vector<int> *return_voxels){
   std::vector<int> my_voxels{};
   std::vector<int> neighbor_voxels{};
 
-  // get_intersecting_voxels(pCell, my_bounding_voxels, &my_voxels);
-  // get_intersecting_voxels(pNeighbor, neighbor_bounding_voxels, &neighbor_voxels);
+  get_intersecting_voxels(pCell, my_bounding_voxels, &my_voxels);
+  get_intersecting_voxels(pNeighbor, neighbor_bounding_voxels, &neighbor_voxels);
   std::vector<int> intersecting_voxels{};
   // #pragma omp private(intersecting_voxels)
   for(int i=0; i<my_voxels.size();i++){
@@ -402,12 +402,12 @@ void intersecting_neighbor_voxels(Cell* pCell, Cell* pNeighbor, std::vector<int>
       }
     }
   }
-  // #pragma omp critical
-  // { 
+  #pragma omp critical
+  { 
     // if(intersecting_voxels.size()==1){
       // intersecting_voxels.push_back(0);    }
       return_voxels->assign(intersecting_voxels.begin(), intersecting_voxels.end());
-  // }
+  }
 }
 
 

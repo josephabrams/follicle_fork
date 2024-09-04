@@ -101,7 +101,19 @@ int main( int argc, char* argv[] )
 	else
 	{
 		XML_status = load_PhysiCell_config_file( "./config/PhysiCell_settings_follicle_EG.xml" );
-		sprintf( copy_command , "cp ./config/PhysiCell_settings.xml %s" , PhysiCell_settings.folder.c_str() ); 
+		sprintf( copy_command , "cp ./config/PhysiCell_settings_follicle_EG.xml %s" , PhysiCell_settings.folder.c_str() ); 
+		// XML_status = load_PhysiCell_config_file( "./config/PhysiCell_settings_follicle_GLY.xml" );
+		// sprintf( copy_command , "cp ./config/PhysiCell_settings_follicle_GLY.xml %s" , PhysiCell_settings.folder.c_str() ); 
+		// XML_status = load_PhysiCell_config_file( "./config/PhysiCell_settings_follicle_1xPBS.xml" );
+		// sprintf( copy_command , "cp ./config/PhysiCell_settings_follicle_1xPBS.xml %s" , PhysiCell_settings.folder.c_str() ); 
+		// XML_status = load_PhysiCell_config_file( "./config/PhysiCell_settings_follicle_2xPBS.xml" );
+		// sprintf( copy_command , "cp ./config/PhysiCell_settings_follicle_2xPBS.xml %s" , PhysiCell_settings.folder.c_str() ); 
+		// XML_status = load_PhysiCell_config_file( "./config/PhysiCell_settings_follicle_5xPBS.xml" );
+		// sprintf( copy_command , "cp ./config/PhysiCell_settings_follicle_5xPBS.xml %s" , PhysiCell_settings.folder.c_str() ); 
+		// XML_status = load_PhysiCell_config_file( "./config/PhysiCell_settings_follicle_05xPBS.xml" );
+		// sprintf( copy_command , "cp ./config/PhysiCell_settings_follicle_05xPBS.xml %s" , PhysiCell_settings.folder.c_str() ); 
+		// XML_status = load_PhysiCell_config_file( "./config/PhysiCell_settings_follicle_EGandGLY.xml" );
+		// sprintf( copy_command , "cp ./config/PhysiCell_settings_follicle_EGandGLY.xml %s" , PhysiCell_settings.folder.c_str() ); 
 	}
 	if( !XML_status )
 	{ exit(-1); }

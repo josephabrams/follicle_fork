@@ -134,13 +134,13 @@
       <Dirichlet_boundary_condition units="fmol/um^3" enabled="true">0.151</Dirichlet_boundary_condition>
 		</variable>
     
-		<variable name="EG" units="dimensionless" ID="1">
+		<variable name="GLY" units="dimensionless" ID="1">
 			<physical_parameter_set>
-        <diffusion_coefficient units="micron^2/sec">510</diffusion_coefficient>
+        <diffusion_coefficient units="micron^2/sec">530</diffusion_coefficient>
 				<decay_rate units="1/min">0</decay_rate>  
 			</physical_parameter_set>
-      <initial_condition units="fmol/um^3">1.819</initial_condition>
-      <Dirichlet_boundary_condition units="fmol/um^3" enabled="true">1.819</Dirichlet_boundary_condition>
+      <initial_condition units="fmol/um^3">1.611</initial_condition>
+      <Dirichlet_boundary_condition units="fmol/um^3" enabled="true">1.611</Dirichlet_boundary_condition>
 		</variable>
 		
 		<options>
@@ -315,9 +315,9 @@
         <initial_cell_volume units="um^3" conserved="true">817283.0</initial_cell_volume>
         <initial_cell_radius units="um" conserved="true">58</initial_cell_radius>
         <Vb units="dimensionless" conserved="false">0.288</Vb>
-        <Lp units="um/sec/atm" conserved="false">0.016667</Lp>
+        <Lp units="um/sec/atm" conserved="false">0.0053</Lp>
         <Ps_0 units="um/sec" conserved="false">0.0</Ps_0>
-        <Ps_1 units="um/sec" conserved="false">0.12</Ps_1>
+        <Ps_1 units="um/sec" conserved="false">0.107</Ps_1>
         <initial_temp units="kelvin" conserved="false">293.15</initial_temp>
         <is_cryocell units="dimensionless" conserved="false">1</is_cryocell>
         <!-- <oocyte_Lp_EG type="double" units="um/sec/atm" description="Karlsson et al">0.016667</oocyte_Lp_EG> -->
@@ -422,9 +422,9 @@
         <initial_cell_volume units="um^3" conserved="true">523.6</initial_cell_volume>
         <initial_cell_radius units="um" conserved="true">5</initial_cell_radius>
         <Vb units="dimensionless" conserved="false">0.2</Vb>
-        <Lp units="um/sec/atm" conserved="false">0.00231</Lp>
+        <Lp units="um/sec/atm" conserved="false">0.00267</Lp>
         <Ps_0 units="um/sec" conserved="false">0.0</Ps_0>
-        <Ps_1 units="um/sec" conserved="false">0.0276</Ps_1>
+        <Ps_1 units="um/sec" conserved="false">0.00294</Ps_1>
         <initial_temp units="kelvin" conserved="false">293.15</initial_temp>
         <is_cryocell units="dimensionless" conserved="false">1</is_cryocell>
 

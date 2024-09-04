@@ -169,19 +169,12 @@ void setup_tissue( void )
       std::cout << "Placing cells of type " << pCD->name << " ... " << std::endl;
       if(pCD->name=="oocyte")
       {
-          // Cell* pC; 
-          // pC=create_Cryocell(*pCD); 
-          // pC->assign_position( center_position );
-          // pC->set_radius(pC->custom_data["initial_cell_radius"]);
-          // pC->velocity=initial_velocity;
-          // std::cout<< pC->custom_data["initial_cell_radius"]<<"\n";
-          /*position[0] = Xmin + UniformRandom() * Xrange;*/
-            /*position[1] = Ymin + UniformRandom() * Yrange;*/
-            /*position[2] = Zmin + UniformRandom() * Zrange;*/
-
-            /*pC = create_cell(*pCD);*/
-                                
-            /*pC->assign_position(position);*/
+          Cell* pC_oocyte; 
+          pC_oocyte=create_Cryocell(*pCD); 
+          pC_oocyte->assign_position( center_position );
+          pC_oocyte->set_radius(pC_oocyte->custom_data["initial_cell_radius"]);
+          pC_oocyte->velocity=initial_velocity;
+          // std::cout<< pC_oocyte->custom_data["initial_cell_radius"]<<"\n";
       }
       if(pCD->name=="granulosa") {
           for(int i=0; i<cell_positions.size(); i++)
@@ -191,8 +184,8 @@ void setup_tissue( void )
             pC_granulosa->assign_position( cell_positions[i] );
             pC_granulosa->set_radius(initial_granulosa_radius);
             pC_granulosa->velocity=initial_velocity;
-            Cryocell* cCell=static_cast<Cryocell*>(pC_granulosa);
-            std::cout<<cCell<< " and  "<< pC_granulosa;
+            // Cryocell* cCell=static_cast<Cryocell*>(pC_granulosa);
+            // std::cout<<cCell<< " and  "<< pC_granulosa;
             // for(int i=0; i<pC_granulosa->custom_data.variables.size();i++)
             // { 
             //   std::cout<< pC_granulosa->custom_data[i]<<"\n";
@@ -207,8 +200,41 @@ void setup_tissue( void )
   return; 
 }
 
+std::vector<std::string> paint_by_volume( Cell* pCell ){
+
+  Cryocell* cCell=static_cast<Cryocell*>(pCell);
+	std::vector< std::string > output( 0);
+	int color = (int) round( ((cCell->phenotype.volume.total) / 10) * 255 );
+	if(color > 255){
+		color = 255;
+	}
+	char szTempString [128];
+	sprintf( szTempString , "rgb(%u,0,0)", 255 - color);
+	output.push_back( std::string("red") );
+	output.push_back( szTempString );
+	output.push_back( szTempString );
+	output.push_back( szTempString );
+	return output;
+}
+std::vector<std::string> paint_by_osmolality( Cell* pCell ){
+
+  Cryocell* cCell=static_cast<Cryocell*>(pCell);
+	std::vector< std::string > output( 0);
+	int color = (int) round( ((cCell->cryo_concentrations.interior_osmolality) / 10) * 255 );
+	if(color > 255){
+		color = 255;
+	}
+	char szTempString [128];
+	sprintf( szTempString , "rgb(%u,0,0)", 255 - color);
+	output.push_back( std::string("red") );
+	output.push_back( szTempString );
+	output.push_back( szTempString );
+	output.push_back( szTempString );
+	return output;
+}
 std::vector<std::string> paint_by_cell_pressure( Cell* pCell ){
 
+  Cryocell* cCell=static_cast<Cryocell*>(pCell);
 	std::vector< std::string > output( 0);
 	int color = (int) round( ((pCell->state.simple_pressure) / 10) * 255 );
 	if(color > 255){
@@ -226,13 +252,16 @@ std::vector<std::string> paint_by_cell_pressure( Cell* pCell ){
 std::vector<std::string> my_coloring_function( Cell* pCell )
 { 
 	if (parameters.bools("color_cells_by_pressure")){
-		return paint_by_cell_pressure(pCell); 
+		return paint_by_osmolality(pCell); 
+		// return paint_by_cell_pressure(pCell); 
 	} else {
 		return paint_by_number_cell_coloring(pCell);
 	}
 }
 std::vector<std::string> my_coloring_function_for_substrate( double concentration, double max_conc, double min_conc )
-{ return paint_by_density_percentage( concentration,  max_conc,  min_conc); }
+{
+  return paint_by_density_percentage( concentration,  max_conc,  min_conc); 
+}
 /*std::vector<std::string> my_coloring_function( Cell* pCell )*/
 /*{ return paint_by_number_cell_coloring(pCell); }*/
 
@@ -240,7 +269,10 @@ void phenotype_function( Cell* pCell, Phenotype& phenotype, double dt )
 {
   // std::vector<int> test_box;
   return; }
-
+void test_function()
+{
+  return;
+}
 void custom_function( Cell* pCell, Phenotype& phenotype , double dt )
 {
   if(pCell->custom_data["is_cryocell"]==1)
@@ -249,7 +281,7 @@ void custom_function( Cell* pCell, Phenotype& phenotype , double dt )
     {
       
       // std::cout<<"Volume:" <<pCell->phenotype.volume.total<<"\n";
-      Cryocell* cCell=static_cast<Cryocell*>(pCell);
+      // Cryocell* cCell=static_cast<Cryocell*>(pCell);
       // std::cout<<"cell type: "<<cCell->type_name<<"\n";
       // std::cout<<"volume: "<<cCell->phenotype.volume.total<<"\n";
       // std::cout<<"number of cryocells: "<<all_cryocells.size()<<"\n";
