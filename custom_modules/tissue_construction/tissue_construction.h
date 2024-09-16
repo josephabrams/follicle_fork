@@ -12,6 +12,9 @@
 #include "./../../modules/PhysiCell_standard_modules.h"
 #include <string>
 #include <vector>
+#define _USE_MATH_DEFINES
+ 
+#include <cmath>
 using namespace BioFVM;
 using namespace PhysiCell;
 
@@ -20,6 +23,7 @@ std::vector<std::vector<double>> create_spheroid(double cell_radius, double sphe
 
 std::vector<std::vector<double>> create_spherical_shell(double cell_radius, double sphere_radius,double inner_radius); 
 
+std::vector<std::vector<double>> twoD_symmetric_test_cells(double ring_radius); 
 /*void setup_single_cell(void);*/
 /*void setup_4_cell_test_case(void);*/
 /*void setup_secondary_stage_follicle(void);*/

@@ -57,6 +57,7 @@ Cryo_Concentrations::Cryo_Concentrations()
 }
 Cryocell_State::Cryocell_State()
 {
+    is_cryocell=true;
     previous_radius = 0.0;
     solute_volume = 0.0;
     solute_moles.resize(parameters.ints("number_of_solutes"), 0.0);
@@ -73,6 +74,7 @@ Cryocell_State::Cryocell_State()
     uptake_voxels={}; //voxels changing from uptake
    
     water_volume = 0.0;
+
 }
 void Cryocell_State::sync_to_cell_definition(Cell_Definition& cd, Cryo_Parameters& cryo_p){
 
@@ -121,6 +123,8 @@ Cryocell::Cryocell(){
 
   cell_voxels.resize(1,-1);
   neighbor_voxels.resize(1,-1);
+  net_force.resize(3, 0.0);
+  mass=this->phenotype.volume.total;
     //ghost voxel is place holder for when there are no neighbor_voxels
     
     // ghost_voxel.mesh_index=-1;
@@ -128,6 +132,10 @@ Cryocell::Cryocell(){
     // ghost_voxel.volume=default_microenvironment_options.dx*default_microenvironment_options.dy*default_microenvironment_options.dz;
 
   // std::cout<<"CONSTRUCTED:!! "<< this->position<<this->cell_voxels<<"\n\n\n";
+}
+
+void Cryocell::sync_spring_connections(){
+  this->spring_connections.m_pCell=this;
 }
 Cell* instantiate_Cryocell()
 {
@@ -172,12 +180,12 @@ Cell* create_Cryocell(Cell_Definition& cd){
 	
 	cNew->assign_orientation();
 	cNew->set_total_volume( cNew->phenotype.volume.total );
-  cNew->functions.instantiate_cell=NULL;
+  cNew->functions.instantiate_cell=NULL; //don't need this atm this thing does all of it
 
   cNew->cryo_parameters.sync_to_cell_definition(cd);
   cNew->cryocell_state.sync_to_cell_definition(cd, cNew->cryo_parameters);
   cNew->cryocell_state.sync_moles_and_volume(cd, cNew->cryo_parameters, cNew->cryo_concentrations );
-  
+  cNew->sync_spring_connections(); 
   return cNew;
 }
 
@@ -200,7 +208,7 @@ void Cryocell::update_cell_voxels(){
   return;
 
 }
-void Cryocell::update_neighbor_voxels(){
+void Cryocell::update_neighbor_voxels(){ //not currently used possible feature for ellipsoid cells
   // 
   // if neighbors.size()==0, this->neighbor_voxels=-1
   // loop through neighbors and get overlapping voxels
@@ -773,8 +781,173 @@ advance_uptake();
 update_next_step(dt);
 return;
 }
+void update_multivoxel_neighboorhood(){
+ 
+    for(int i=0; i<all_cryocells.size(); i++)
+    {
+      Cryocell* cCell = all_cryocells[i];
+      Cell* pCell =static_cast<Cryocell*>(cCell);
+      find_multivoxel_neighbors(pCell,&cCell->all_neighbors);
+    }
+  return;
+  
+}
+void update_initial_neighbors(){
 
+    for(int i=0; i<all_cryocells.size(); i++)
+    {
+      Cryocell* cCell = all_cryocells[i];
+      Cell* pCell =static_cast<Cryocell*>(cCell);
+      find_multivoxel_neighbors(pCell,&cCell->initial_neighbors);
+    }
+  return;
+}
+void update_springs(){
 
+    for(int i=0; i<all_cryocells.size(); i++)
+    {
+      Cryocell* cCell = all_cryocells[i];
+      for(int j=0; j<cCell->initial_neighbors.size(); j++)
+      {
+        bool is_TZP=false;
+        Cell* pCell= cCell->initial_neighbors[j];
+        double spring_constant=pCell->custom_data["k_granulosa"];
+        if(cCell->type_name=="oocyte" || pCell->type_name=="oocyte")
+        {
+          spring_constant=pCell->custom_data["k_oocyte"];
+          is_TZP=true;
+        }
+        double rest_length=norm(pCell->position-cCell->position)-pCell->phenotype.geometry.radius-cCell->phenotype.geometry.radius;
+        Spring sprg(pCell, rest_length, spring_constant, is_TZP);
+        cCell->spring_connections.add_spring(&sprg);
+      }
+    }
+}
+void update_all_spring_forces(){
+    for(int i=0; i<all_cryocells.size(); i++)
+    {
+      Cryocell* cCell = all_cryocells[i];
+      for(int j=0; j<cCell->spring_connections.neighbor_springs.size(); j++)
+      {
+        Spring* sprg = cCell->spring_connections.neighbor_springs[j];
+        cCell->spring_connections.calculate_spring_force(*sprg);
+
+      }
+    }
+
+  return;
+}
+void sum_spring_forces(Cryocell* cCell){
+  std::vector<double> sum_forces(3,0.0);
+  for(int i=0; i<cCell->spring_connections.neighbor_springs.size();i++)
+  {
+      sum_forces+=cCell->spring_connections.neighbor_springs[i]->m_force;
+  }
+  cCell->net_force+=sum_forces;
+}
+void sum_youngs_modulus(Cryocell* cCell){
+
+  std::vector<double> sum_forces(3,0.0);
+  for(int i=0; cCell->all_neighbors.size();i++)
+  {
+    std::vector<double> temp_force(3,0.0);
+    Cell* pNeighbor=cCell->all_neighbors[i];
+    cell_to_cell_youngs_modulus(cCell, pNeighbor, &temp_force);
+    sum_forces+=temp_force;
+  }
+  cCell->net_force+=sum_forces;
+}
+void cell_to_cell_youngs_modulus( Cryocell* pMe, Cell* pOther, std::vector<double> *return_force){
+  //assumes only Hertzian, no friction and smooth spherical surfaces 
+  std::vector<double> displacement= pMe->position-pOther->position;//force exerted on me
+  double penetration_depth= norm(displacement)-pOther->phenotype.geometry.radius-pMe->phenotype.geometry.radius;
+  if(penetration_depth>0)
+  {return;}
+  double constant = std::pow((3*3.14159),(2.0/3.0))/2;
+  double E1=pMe->custom_data["youngs_modulus"];
+  double E2=pOther->custom_data["youngs_modulus"];
+  double sigma_1=pMe->custom_data["poisson_ratio"];
+  double sigma_2=pOther->custom_data["poisson_ratio"];
+  double V1= (1-sigma_1*sigma_1)/(3.14159*E1);
+  double V2= (1-sigma_2*sigma_2)/(3.14159*E2);
+  double D1= 1/pMe->phenotype.geometry.radius*2;
+  double D2= 1/pOther->phenotype.geometry.radius*2;
+  penetration_depth*=-1;
+  double Vterm=std::pow((V1+V2),(2.0/3.0));
+  double Dterm=std::pow((D1+D2),(2.0/3.0));
+  double force_magnitude=penetration_depth/(constant*Vterm*Dterm);
+  force_magnitude=std::pow(force_magnitude,(3.0/2.0));
+  force_magnitude=force_magnitude/norm(displacement);
+  std::vector<double> force= force_magnitude*displacement;
+  if(std::fabs(force_magnitude)<1e-16)
+  {
+    force={0.0, 0.0, 0.0};
+  }
+  *return_force= force;
+  
+  return;
+}
+
+void update_net_force(){
+  for(int i=0; i<all_cryocells.size(); i++)
+  {
+    Cryocell* cCell = all_cryocells[i];
+    sum_spring_forces(cCell);
+    sum_youngs_modulus(cCell);
+  } 
+}
+
+void Cell::update_position( double dt )
+{
+	// BioFVM Basic_Agent::update_position(dt) returns without doing anything. 
+	// So we remove this to avoid any future surprises. 
+	// 
+	// Basic_Agent::update_position(dt);
+		
+	// use Adams-Bashforth 
+	static double d1; 
+	static double d2; 
+	static bool constants_defined = false; 
+	if( constants_defined == false )
+	{
+		d1 = dt; 
+		d1 *= 1.5; 
+		d2 = dt; 
+		d2 *= -0.5; 
+		constants_defined = true; 
+	}
+	
+	// new AUgust 2017
+	if( default_microenvironment_options.simulate_2D == true )
+	{ velocity[2] = 0.0; }
+	
+	std::vector<double> old_position(position); 
+	axpy( &position , d1 , velocity );  
+	axpy( &position , d2 , previous_velocity );  
+	// overwrite previous_velocity for future use 
+	// if(sqrt(dist(old_position, position))>3* phenotype.geometry.radius)
+		// std::cout<<sqrt(dist(old_position, position))<<"old_position: "<<old_position<<", new position: "<< position<<", velocity: "<<velocity<<", previous_velocity: "<< previous_velocity<<std::endl;
+	
+	return; 
+}
+void update_position_from_net_force(Cryocell* cCell, double dt){
+  
+	previous_velocity = velocity; 
+	
+	velocity[0]=0; velocity[1]=0; velocity[2]=0;
+	if(get_container()->underlying_mesh.is_position_valid(position[0],position[1],position[2]))
+	{
+		updated_current_mechanics_voxel_index=get_container()->underlying_mesh.nearest_voxel_index( position );
+	}
+	else
+	{
+		updated_current_mechanics_voxel_index=-1;
+		
+		is_out_of_domain = true; 
+		is_active = false; 
+		is_movable = false; 
+	}
+}
 void two_p_update_volume() //TODO: check if parallel is faster
 {
 

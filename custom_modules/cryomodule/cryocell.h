@@ -5,15 +5,20 @@
 #include "../../core/PhysiCell.h"
 #include <vector>
 #include "../multivoxel/multivoxel_functions.h"
+
+#include "../multivoxel/multivoxel_neighborhood.h"
 #include "./conversions.h"/*class Cryocell_State;*/
 #include "./volume_change.h"
 #include "ABFM.h"
 #include <string>
 #include <omp.h>
+
+#include "../spring_class/spring_class.h"
 using namespace PhysiCell;
 using namespace BioFVM;
 /*class Cryo_Concentrations;*/
 /*class Cryo_Parameters;*/
+// class Spring_Connections;
 class Cryocell;
 class Cryo_Parameters
 {
@@ -37,7 +42,7 @@ class Cryo_Concentrations
   private:
   public:
     
-    bool use_virial;
+    bool use_virial; //not currently doing anything
     double exterior_osmolality;//total exterior osmolality salt+CPA (mole/kg)
     double interior_osmolality;// total internal osmolality salt+CPA
     std::vector<double> interior_molarity;
@@ -52,6 +57,7 @@ class Cryocell_State
 {
   private:
   public:
+    bool is_cryocell; //incase someone casts a cell they shouldnt
     double previous_radius;
     double surface_area;
     double temperature;
@@ -86,12 +92,18 @@ class Cryocell : public PhysiCell::Cell {
     Cryo_Concentrations cryo_concentrations;
     Cryo_Parameters cryo_parameters;
     Cryocell_State cryocell_state;
+    Spring_Connections spring_connections;
     std::vector <int> cell_voxels;
     std::vector <int> neighbor_voxels;
+    std::vector<Cell*> initial_neighbors;
+    std::vector<Cell*> all_neighbors;
+    std::vector<double> net_force;
+    double mass;
     Cryocell();
     ~Cryocell(){};
     void update_cell_voxels();
     void update_neighbor_voxels();
+    void sync_spring_connections();
   //note it might make sense to just make a threadsafe_write function for return values
 
 };
@@ -123,6 +135,13 @@ void advance_uptake();
 void uptake(double dt);
 void two_p_forward_step(double dt);
 
+void update_multivoxel_neighboorhood();
+
+void update_initial_neighbors();
+
+void update_springs();
+
+void cell_to_cell_youngs_modulus( Cryocell* pMe, Cell* pOther, std::vector<double> *return_force);
 void two_p_update_volume();
 /*void multistep_loading(double dt); */
 

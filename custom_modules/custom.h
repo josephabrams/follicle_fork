@@ -87,6 +87,7 @@ std::vector<std::string> my_coloring_function( Cell* );
 
 // custom functions can go here 
 
+void custom_contact_function(Cell* pCell, Phenotype& phenotype,Cell* pCell_neighbor, Phenotype& neighbor_phenotype, double dt);
 void phenotype_function( Cell* pCell, Phenotype& phenotype, double dt );
 void custom_function( Cell* pCell, Phenotype& phenotype , double dt );
 // void attach_new_cells();

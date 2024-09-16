@@ -28,6 +28,8 @@ void get_interior_voxels(Cell *pCell, std::vector<int>* return_interior_voxel_in
 
 void intersecting_neighbor_voxels(Cell* pCell, Cell* pNeighbor, std::vector<int> *my_bounding_voxels, std::vector<int> *neighbor_bounding_voxels, std::vector<int> *return_voxels);
 // void cells_in_me(Cell *pCell, std::vector<Cell*> *return_cells_in_me); // uses mechanics vectors to search for cells that are within or equal to pCell radius can also be used for bounding boxes
+
+double intersection_of_cell_and_plane(double z_height, double r);
 void python_plot_cell_and_voxels_single_layer(Cell* pCell, double dt, std::vector<int> &bounding_box_by_index, std::string plot_name, double z_height);
 void python_plot_cell_and_voxels(Cell* pCell, double dt, std::vector<int> &bounding_box_by_index, std::string plot_name);
 

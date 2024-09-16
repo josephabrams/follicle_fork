@@ -144,7 +144,11 @@ int main( int argc, char* argv[] )
 	/* Users typically stop modifying here. END USERMODS */
   // setup_addons();	
 	// set MultiCellDS save options 
-
+  //SET INITIAL CONNECTIONS! -- I'm connected to my neighbors at time zero
+  update_initial_neighbors();
+  //turn into spring CONNECTIONS
+  update_springs();
+  //
 	set_save_biofvm_mesh_as_matlab( true ); 
 	set_save_biofvm_data_as_matlab( true ); 
 	set_save_biofvm_cell_data( true ); 
@@ -236,6 +240,7 @@ int main( int argc, char* argv[] )
       update_all_cells_voxels();	
       two_p_forward_step(diffusion_dt);
       two_p_update_volume();
+      update_multivoxel_neighboorhood();
 			PhysiCell_globals.current_time += diffusion_dt;
 		}
 		

@@ -87,7 +87,7 @@
 	</domain>
 	
 	<overall>
-		<max_time units="min">300</max_time> <!-- 5 days * 24 h * 60 min -->
+		<max_time units="min">1</max_time> <!-- 5 days * 24 h * 60 min -->
 		<time_units>min</time_units>
 		<space_units>micron</space_units>
 	
@@ -246,9 +246,9 @@
 				</volume> 				
 				
 				<mechanics> 
-					<cell_cell_adhesion_strength units="micron/min">0.0</cell_cell_adhesion_strength>
+					<cell_cell_adhesion_strength units="micron/min">1.0</cell_cell_adhesion_strength>
 					<cell_cell_repulsion_strength units="micron/min">00.0</cell_cell_repulsion_strength>
-					<relative_maximum_adhesion_distance units="dimensionless">1.5</relative_maximum_adhesion_distance>
+					<relative_maximum_adhesion_distance units="dimensionless">20</relative_maximum_adhesion_distance>
   					<cell_adhesion_affinities>
 	  					<cell_adhesion_affinity name="default">1</cell_adhesion_affinity> 
 		  			</cell_adhesion_affinities>					
@@ -320,6 +320,9 @@
         <Ps_1 units="um/sec" conserved="false">0.12</Ps_1>
         <initial_temp units="kelvin" conserved="false">293.15</initial_temp>
         <is_cryocell units="dimensionless" conserved="false">1</is_cryocell>
+        <maximum_interaction_distance units="um" conserved="false">10</maximum_interaction_distance>
+        <k_granulosa units="/um^2/sec" conserved="false">0.2</k_granulosa>
+        <k_oocyte units="/um^2/sec" conserved="false">0.7</k_oocyte>
         <!-- <oocyte_Lp_EG type="double" units="um/sec/atm" description="Karlsson et al">0.016667</oocyte_Lp_EG> -->
         <!-- <oocyte_Ps_EG type="double" units="um/sec" description="Karlsson et al">0.12</oocyte_Ps_EG> -->
       </custom_data>
@@ -383,9 +386,9 @@
           </volume>
 
           <mechanics>
-            <cell_cell_adhesion_strength units="micron/min">0.0</cell_cell_adhesion_strength>
+            <cell_cell_adhesion_strength units="micron/min">1.0</cell_cell_adhesion_strength>
             <cell_cell_repulsion_strength units="micron/min">0.0</cell_cell_repulsion_strength>
-            <relative_maximum_adhesion_distance units="dimensionless">1.25</relative_maximum_adhesion_distance>
+            <relative_maximum_adhesion_distance units="dimensionless">20</relative_maximum_adhesion_distance>
             <options>
               <set_relative_equilibrium_distance enabled="false" units="dimensionless">1.8</set_relative_equilibrium_distance>
               <set_absolute_equilibrium_distance enabled="false" units="micron">15.12</set_absolute_equilibrium_distance>
@@ -427,7 +430,9 @@
         <Ps_1 units="um/sec" conserved="false">0.0276</Ps_1>
         <initial_temp units="kelvin" conserved="false">293.15</initial_temp>
         <is_cryocell units="dimensionless" conserved="false">1</is_cryocell>
-
+        <maximum_interaction_distance units="um" conserved="false">2</maximum_interaction_distance>
+        <k_granulosa units="/um^2/sec" conserved="false">0.2</k_granulosa>
+        <k_oocyte units="/um^2/sec" conserved="false">0.7</k_oocyte>
         </custom_data>
       </cell_definition>
     

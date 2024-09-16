@@ -62,7 +62,7 @@ PhysiMeSS_OBJECTS := PhysiMeSS.o PhysiMeSS_agent.o PhysiMeSS_fibre.o PhysiMeSS_c
 
 PhysiCell_custom_module_OBJECTS := custom.o addon_factory.o base_addon.o addon.o addon_example.o quaternion.o \
 quaternion_addon.o debug_log.o addon_division_tracker.o multivoxel_functions.o ABFM.o cryocell.o conversions.o \
-volume_change.o tissue_construction.o custom_coloring.o
+volume_change.o tissue_construction.o custom_coloring.o spring_class.o multivoxel_neighborhood.o
 
 
 pugixml_OBJECTS := pugixml.o
@@ -218,6 +218,8 @@ addon_division_tracker.o: ./custom_modules/addons/addon_division_tracker.cpp
 # multivoxel_functions
 multivoxel_functions.o: ./custom_modules/multivoxel/multivoxel_functions.cpp
 	$(COMPILE_COMMAND) -c ./custom_modules/multivoxel/multivoxel_functions.cpp
+multivoxel_neighborhood.o: ./custom_modules/multivoxel/multivoxel_neighborhood.cpp
+	$(COMPILE_COMMAND) -c ./custom_modules/multivoxel/multivoxel_neighborhood.cpp
 # cryomodule
 ABFM.o: ./custom_modules/cryomodule/ABFM.cpp
 	$(COMPILE_COMMAND) -c ./custom_modules/cryomodule/ABFM.cpp
@@ -233,6 +235,8 @@ tissue_construction.o: ./custom_modules/tissue_construction/tissue_construction.
 custom_coloring.o: ./custom_modules/custom_coloring.cpp
 	$(COMPILE_COMMAND) -c ./custom_modules/custom_coloring.cpp
 
+spring_class.o: ./custom_modules/spring_class/spring_class.cpp
+	$(COMPILE_COMMAND) -c ./custom_modules/spring_class/spring_class.cpp
 # cleanup
 
 reset-reset:

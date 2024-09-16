@@ -1,4 +1,7 @@
 #include "./tissue_construction.h"
+#include <cmath>
+//#define _USE_MATH_DEFINES
+
 std::vector<std::vector<double>> create_spheroid_2D(double cell_radius, double sphere_radius) 
 {
   std::vector<std::vector<double>> cells;
@@ -86,6 +89,21 @@ std::vector<std::vector<double>> create_spherical_shell(double cell_radius, doub
         }
       }
     }
+  }
+  return cells;
+}
+
+
+std::vector<std::vector<double>> twoD_symmetric_test_cells(double ring_radius) 
+{
+  std::vector<std::vector<double>> cells;
+  std::vector<double> tempPoint(3, 0.0);
+  double full_circle =2*M_PI;
+  double angle_gap= M_PI/4;
+  for (double angle = 0; angle < full_circle; angle += angle_gap) {
+    tempPoint[0] = ring_radius*std::cos(angle);
+    tempPoint[1] = ring_radius*std::sin(angle);
+            cells.push_back(tempPoint);
   }
   return cells;
 }

@@ -66,11 +66,14 @@
 */
 
 #include "./custom.h"
-#include "./multivoxel/multivoxel_functions.h"
+// #include "./multivoxel/multivoxel_functions.h"
 // #include <ios>
 #include <vector>
 #include <cmath>
 #include "./cryomodule/cryocell.h"
+// #include "multivoxel/multivoxel_neighborhood.h"
+#include "spring_class/spring_class.h"
+#include "tissue_construction/tissue_construction.h"
 void create_cell_types( void )
 {
 	// set the random seed 
@@ -87,13 +90,13 @@ void create_cell_types( void )
 	cell_defaults.phenotype.secretion.sync_to_microenvironment( &microenvironment ); 
 	
 	cell_defaults.functions.volume_update_function = NULL;
-	cell_defaults.functions.update_velocity = NULL; 
+	// cell_defaults.functions.update_velocity = NULL; 
     /*physimess_update_cell_velocity;*/
 
 	cell_defaults.functions.update_migration_bias = NULL; 
 	cell_defaults.functions.update_phenotype = NULL;  
 	cell_defaults.functions.custom_cell_rule = custom_function; 
-	cell_defaults.functions.contact_function = NULL; 
+	// cell_defaults.functions.contact_function = custom_contact_function; 
 	
 	cell_defaults.functions.add_cell_basement_membrane_interactions = NULL; 
 	cell_defaults.functions.calculate_distance_to_membrane = NULL;
@@ -160,7 +163,8 @@ void setup_tissue( void )
   double cell_spacing = initial_granulosa_radius-initial_overlap;//slight overlap to represent cells up against each other better variable name
   std::vector<double> center_position{0.0, 0.0, 0.0};
   // std::vector<std::vector<double>> cell_positions_1= create_spheroid_2D(initial_cell_radius, sphere_radius);//
-  std::vector<std::vector<double>> cell_positions= create_spherical_shell(cell_spacing, follicle_radius, initial_oocyte_radius);//
+  // std::vector<std::vector<double>> cell_positions= create_spherical_shell(cell_spacing, follicle_radius, initial_oocyte_radius);//
+  std::vector<std::vector<double>> cell_positions= twoD_symmetric_test_cells(65);//
   
   std::cout<<"THERE ARE "<< cell_definitions_by_index.size()<< " TYPES OF AGENTS!\n";
   for( int k=0; k < cell_definitions_by_index.size() ; k++ ) 
@@ -174,6 +178,7 @@ void setup_tissue( void )
           pC_oocyte->assign_position( center_position );
           pC_oocyte->set_radius(pC_oocyte->custom_data["initial_cell_radius"]);
           pC_oocyte->velocity=initial_velocity;
+          
           // std::cout<< pC_oocyte->custom_data["initial_cell_radius"]<<"\n";
       }
       if(pCD->name=="granulosa") {
@@ -184,7 +189,8 @@ void setup_tissue( void )
             pC_granulosa->assign_position( cell_positions[i] );
             pC_granulosa->set_radius(initial_granulosa_radius);
             pC_granulosa->velocity=initial_velocity;
-            // Cryocell* cCell=static_cast<Cryocell*>(pC_granulosa);
+            Cryocell* cCell=static_cast<Cryocell*>(pC_granulosa);
+              void (*func)(Cell*, Phenotype&, double);
             // std::cout<<cCell<< " and  "<< pC_granulosa;
             // for(int i=0; i<pC_granulosa->custom_data.variables.size();i++)
             // { 
@@ -199,7 +205,13 @@ void setup_tissue( void )
 	
   return; 
 }
+void custom_contact_function(Cell* pCell, Phenotype& phenotype,Cell* pCell_neighbor, Phenotype& neighbor_phenotype, double dt)
+{
 
+  Cryocell* cCell=static_cast<Cryocell*>(pCell);
+  cCell->spring_connections.spring_contact_function(pCell, phenotype,dt);
+  return;
+}
 std::vector<std::string> paint_by_volume( Cell* pCell ){
 
   Cryocell* cCell=static_cast<Cryocell*>(pCell);
@@ -275,13 +287,13 @@ void test_function()
 }
 void custom_function( Cell* pCell, Phenotype& phenotype , double dt )
 {
-  if(pCell->custom_data["is_cryocell"]==1)
+  if(pCell->custom_data["is_cryocell"]==1 && pCell->type_name=="oocyte")
   {
     #pragma omp critical
     {
       
       // std::cout<<"Volume:" <<pCell->phenotype.volume.total<<"\n";
-      // Cryocell* cCell=static_cast<Cryocell*>(pCell);
+      Cryocell* cCell=static_cast<Cryocell*>(pCell);
       // std::cout<<"cell type: "<<cCell->type_name<<"\n";
       // std::cout<<"volume: "<<cCell->phenotype.volume.total<<"\n";
       // std::cout<<"number of cryocells: "<<all_cryocells.size()<<"\n";
@@ -303,20 +315,26 @@ void custom_function( Cell* pCell, Phenotype& phenotype , double dt )
       // std::cout<<"water_uptake: "<<cCell->cryocell_state.water_uptake<<"\n";
       // std::cout<<"solute_uptake_per_voxel: "<<cCell->cryocell_state.solute_uptake_per_voxel<<"\n";
       // std::cout<<"water_uptake_per_voxel: "<<cCell->cryocell_state.water_uptake_per_voxel<<"\n\n\n";
-      // std::string plot1="intersecting-voxels-";
+      std::string plot1="neighbor_plot-";
       // python_plot_cell_and_voxels(cCell, dt,cCell->cell_voxels,plot1);
       // std::string plot2="uptake-voxels-";
       // python_plot_cell_and_voxels(pCell, dt,cCell->cryocell_state.uptake_voxels,plot2);
 
 	    // double Zmin = microenvironment.mesh.bounding_box[2]; 
 	    // double Zmax = microenvironment.mesh.bounding_box[5]; 
-      // double z_height=microenvironment.mesh.dz/2;
-      // double zz=Zmin;
-      // while(zz<Zmax)
-      // {
+      double z_height=microenvironment.mesh.dz/2;
+      double Zmin= 4*z_height*-1; 
+      double Zmax= 4*z_height; 
+      double zz=Zmin;
+      std::vector<Cell*>nn=cCell->all_neighbors;
+      std::cout<<"NEIGHBORS SIZE: "<< nn.size()<<"\n";
+      std::cout<<"SPRING CONNECTIONS SIZE: "<< cCell->spring_connections.neighbor_springs.size()<<"\n";
+      while(zz<Zmax)
+      {
         // python_plot_cell_and_voxels_single_layer(cCell,dt, cCell->cell_voxels, plot1, zz);
-        // zz+=z_height;
-      // }
+          python_plot_cell_with_Neighbors(cCell, dt, cCell->cell_voxels, plot1, zz, nn);       
+        zz+=z_height;
+      }
     }
   }
 /*{*/
@@ -370,4 +388,42 @@ void custom_arrest_function(double arrest_time, double dt){
   }
   return;
 }
+void force_of_youngs_modulus( Cell* pMe, Phenotype& phenoMe , Cell* pOther, Phenotype& phenoOther , double dt, std::vector<double>* return_force )
+{
+  //this version assumes pOther is rigid like the probe of an AFM
+  std::vector<double> displacement= pMe->position-pOther->position;//force exerted on me
+  double penetration_depth= norm(displacement)-pOther->phenotype.geometry.radius-pMe->phenotype.geometry.radius;
+  if(penetration_depth>0)
+  {return;}
+  
+    penetration_depth*=-1;
+    double R1= pOther->phenotype.geometry.radius+pMe->phenotype.geometry.radius;
+    double R2= pMe->phenotype.geometry.radius*pMe->phenotype.geometry.radius;
+    double E=pMe->custom_data["youngs_modulus"];
+    double force_magnitude= std::pow(penetration_depth,1.5)*std::sqrt(R1/R2)*E*(16.0/9.0);
+  force_magnitude=force_magnitude/norm(displacement);
+  std::vector<double> force= force_magnitude*displacement;
+  if(penetration_depth>0.1*pMe->phenotype.geometry.radius)
+  {
+    std::cout<< "WARNING! HERTZ YOUNGS MODULUS IS NOT LINEAR AT THIS DEPTH\n";
+  }
+  *return_force= force;
+  return;
+}
 
+void caculate_position_from_acceleration(std::vector<double> &old_position, std::vector<double>&current_position, std::vector<double> &net_acceleration, double dt, std::vector<double> *new_position){
+  //new_position=2*current_position-old_position+acceleration*dt^2
+  if(std::fabs(norm(net_acceleration))<1e-16)
+  {
+    return;
+  }
+  else {
+    std::vector<double> temp_position=2*current_position;
+    temp_position=temp_position+(*new_position)-old_position;
+    net_acceleration=dt*dt*net_acceleration;
+    temp_position=temp_position+net_acceleration;
+    (*new_position)=temp_position;
+    
+  }
+
+}
