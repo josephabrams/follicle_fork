@@ -246,7 +246,7 @@
 				</volume> 				
 				
 				<mechanics> 
-					<cell_cell_adhesion_strength units="micron/min">1.0</cell_cell_adhesion_strength>
+					<cell_cell_adhesion_strength units="micron/min">0.0</cell_cell_adhesion_strength>
 					<cell_cell_repulsion_strength units="micron/min">00.0</cell_cell_repulsion_strength>
 					<relative_maximum_adhesion_distance units="dimensionless">20</relative_maximum_adhesion_distance>
   					<cell_adhesion_affinities>
@@ -256,9 +256,9 @@
 						<set_relative_equilibrium_distance enabled="false" units="dimensionless">1.8</set_relative_equilibrium_distance>
 						<set_absolute_equilibrium_distance enabled="false" units="micron">15.12</set_absolute_equilibrium_distance>
 					</options>
-                    <cell_BM_adhesion_strength units="micron/min">4.0</cell_BM_adhesion_strength>
-                    <cell_BM_repulsion_strength units="micron/min">10.0</cell_BM_repulsion_strength>
-                    <attachment_elastic_constant type="double" units="1/min">0.01</attachment_elastic_constant> 
+                    <cell_BM_adhesion_strength units="micron/min">0.0</cell_BM_adhesion_strength>
+                    <cell_BM_repulsion_strength units="micron/min">0.0</cell_BM_repulsion_strength>
+                    <attachment_elastic_constant type="double" units="1/min">0.00</attachment_elastic_constant> 
                     <attachment_rate type="double" units="1/min">0.0</attachment_rate> 
                     <detachment_rate type="double" units="1/min">0.0</detachment_rate> 
 				</mechanics>
@@ -323,6 +323,8 @@
         <maximum_interaction_distance units="um" conserved="false">10</maximum_interaction_distance>
         <k_granulosa units="/um^2/sec" conserved="false">0.2</k_granulosa>
         <k_oocyte units="/um^2/sec" conserved="false">0.7</k_oocyte>
+        <youngs_modulus units="needed" conserved="false"> 3100</youngs_modulus><!-- from Liu et al. 2012-->
+        <poisson_ratio units="needed" conserved="false"> 0.5</poisson_ratio>
         <!-- <oocyte_Lp_EG type="double" units="um/sec/atm" description="Karlsson et al">0.016667</oocyte_Lp_EG> -->
         <!-- <oocyte_Ps_EG type="double" units="um/sec" description="Karlsson et al">0.12</oocyte_Ps_EG> -->
       </custom_data>
@@ -386,7 +388,7 @@
           </volume>
 
           <mechanics>
-            <cell_cell_adhesion_strength units="micron/min">1.0</cell_cell_adhesion_strength>
+            <cell_cell_adhesion_strength units="micron/min">0.0</cell_cell_adhesion_strength>
             <cell_cell_repulsion_strength units="micron/min">0.0</cell_cell_repulsion_strength>
             <relative_maximum_adhesion_distance units="dimensionless">20</relative_maximum_adhesion_distance>
             <options>
@@ -433,6 +435,8 @@
         <maximum_interaction_distance units="um" conserved="false">2</maximum_interaction_distance>
         <k_granulosa units="/um^2/sec" conserved="false">0.2</k_granulosa>
         <k_oocyte units="/um^2/sec" conserved="false">0.7</k_oocyte>
+        <youngs_modulus units="needed" conserved="false"> 385.58</youngs_modulus> <!-- from Jalali et al. 2015 -->
+        <poisson_ratio units="needed" conserved="false"> 0.5</poisson_ratio>
         </custom_data>
       </cell_definition>
     

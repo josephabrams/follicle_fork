@@ -49,13 +49,13 @@ void find_multivoxel_neighbors(Cell* pCell, std::vector<Cell*> *return_neighbors
   std::sort(agents_in_voxel.begin(), agents_in_voxel.end());
   auto sorted_duplicates=std::unique(agents_in_voxel.begin(),agents_in_voxel.end());
   agents_in_voxel.erase(sorted_duplicates,agents_in_voxel.end());
-  std::cout<<"pCell: "<<pCell<<"\n";
-  std::cout<<"type: "<<pCell->type_name<<"\n";
-  std::cout<< "possible neighbor SIZE: "<< agents_in_voxel.size()<<"\n";
+  // std::cout<<"pCell: "<<pCell<<"\n";
+  // std::cout<<"type: "<<pCell->type_name<<"\n";
+  // std::cout<< "possible neighbor SIZE: "<< agents_in_voxel.size()<<"\n";
   // #pragma omp critical
   // {
     return_neighbors->assign(agents_in_voxel.begin(), agents_in_voxel.end());
-  std::cout<< "RETURN NEIGHBOR SIZE: "<< (*return_neighbors).size()<<"\n";
+  // std::cout<< "RETURN NEIGHBOR SIZE: "<< (*return_neighbors).size()<<"\n";
 
   // }
   return;

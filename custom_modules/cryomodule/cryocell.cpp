@@ -2,6 +2,7 @@
 #include "ABFM.h"
 #include "conversions.h"
 #include "volume_change.h"
+#include <cmath>
 #include <string>
 using namespace PhysiCell;
 using namespace BioFVM;
@@ -124,7 +125,9 @@ Cryocell::Cryocell(){
   cell_voxels.resize(1,-1);
   neighbor_voxels.resize(1,-1);
   net_force.resize(3, 0.0);
+  previous_net_force.resize(3, 0.0);
   mass=this->phenotype.volume.total;
+  old_position.resize(3,0.0);
     //ghost voxel is place holder for when there are no neighbor_voxels
     
     // ghost_voxel.mesh_index=-1;
@@ -135,7 +138,7 @@ Cryocell::Cryocell(){
 }
 
 void Cryocell::sync_spring_connections(){
-  this->spring_connections.m_pCell=this;
+  // this->spring_connections.m_pCell=this;
 }
 Cell* instantiate_Cryocell()
 {
@@ -743,11 +746,11 @@ void advance_uptake()
   return;
 }
 
-void uptake(double dt)
+void uptake(double dt) //deprecate, this is unneeded and unused
 {
 
   /*calculate_per_voxel_uptake();*/
-  advance_uptake();
+  //advance_uptake();
   return;
 
 }
@@ -798,7 +801,12 @@ void update_initial_neighbors(){
     {
       Cryocell* cCell = all_cryocells[i];
       Cell* pCell =static_cast<Cryocell*>(cCell);
+      cCell->initial_neighbors.clear();
+      cCell->all_neighbors.clear();
       find_multivoxel_neighbors(pCell,&cCell->initial_neighbors);
+      cCell->old_position=pCell->position;
+    
+      cCell->mass=cCell->phenotype.volume.total;
     }
   return;
 }
@@ -807,6 +815,7 @@ void update_springs(){
     for(int i=0; i<all_cryocells.size(); i++)
     {
       Cryocell* cCell = all_cryocells[i];
+      Cell* me=static_cast<Cell*>(cCell);
       for(int j=0; j<cCell->initial_neighbors.size(); j++)
       {
         bool is_TZP=false;
@@ -818,44 +827,37 @@ void update_springs(){
           is_TZP=true;
         }
         double rest_length=norm(pCell->position-cCell->position)-pCell->phenotype.geometry.radius-cCell->phenotype.geometry.radius;
-        Spring sprg(pCell, rest_length, spring_constant, is_TZP);
-        cCell->spring_connections.add_spring(&sprg);
+        Spring* sprg=create_spring(me,pCell, rest_length, spring_constant, is_TZP);
+        // cCell->spring_connections.add_spring(sprg);
       }
     }
-}
-void update_all_spring_forces(){
-    for(int i=0; i<all_cryocells.size(); i++)
-    {
-      Cryocell* cCell = all_cryocells[i];
-      for(int j=0; j<cCell->spring_connections.neighbor_springs.size(); j++)
-      {
-        Spring* sprg = cCell->spring_connections.neighbor_springs[j];
-        cCell->spring_connections.calculate_spring_force(*sprg);
-
-      }
-    }
-
-  return;
-}
-void sum_spring_forces(Cryocell* cCell){
-  std::vector<double> sum_forces(3,0.0);
-  for(int i=0; i<cCell->spring_connections.neighbor_springs.size();i++)
-  {
-      sum_forces+=cCell->spring_connections.neighbor_springs[i]->m_force;
-  }
-  cCell->net_force+=sum_forces;
 }
 void sum_youngs_modulus(Cryocell* cCell){
 
-  std::vector<double> sum_forces(3,0.0);
-  for(int i=0; cCell->all_neighbors.size();i++)
+  // std::vector<double> sum_forces(3,0.0);
+  // std::cout<< cCell->all_neighbors.size()<<"\n"; 
+  if(cCell->all_neighbors.size()==0)
   {
+    return;
+  }
+  for(int i=0; i<cCell->all_neighbors.size();i++)
+  {
+      // std::cout<< cCell->all_neighbors[i]<<"\n";
     std::vector<double> temp_force(3,0.0);
     Cell* pNeighbor=cCell->all_neighbors[i];
+    Cryocell* cNeighbor=static_cast<Cryocell*>(pNeighbor);
     cell_to_cell_youngs_modulus(cCell, pNeighbor, &temp_force);
-    sum_forces+=temp_force;
+    // sum_forces+=temp_force;
+    if(std::fabs(norm(temp_force))<1e-12)
+    {
+      temp_force={0.0, 0.0, 0.0};
+    }
+        
+    cNeighbor->net_force+=-1.0*temp_force;
+    cCell->net_force+=temp_force;
+
   }
-  cCell->net_force+=sum_forces;
+
 }
 void cell_to_cell_youngs_modulus( Cryocell* pMe, Cell* pOther, std::vector<double> *return_force){
   //assumes only Hertzian, no friction and smooth spherical surfaces 
@@ -874,12 +876,12 @@ void cell_to_cell_youngs_modulus( Cryocell* pMe, Cell* pOther, std::vector<doubl
   double D2= 1/pOther->phenotype.geometry.radius*2;
   penetration_depth*=-1;
   double Vterm=std::pow((V1+V2),(2.0/3.0));
-  double Dterm=std::pow((D1+D2),(2.0/3.0));
+  double Dterm=std::pow((D1+D2),(1.0/3.0));
   double force_magnitude=penetration_depth/(constant*Vterm*Dterm);
   force_magnitude=std::pow(force_magnitude,(3.0/2.0));
   force_magnitude=force_magnitude/norm(displacement);
   std::vector<double> force= force_magnitude*displacement;
-  if(std::fabs(force_magnitude)<1e-16)
+  if(std::fabs(force_magnitude)<1e-12)
   {
     force={0.0, 0.0, 0.0};
   }
@@ -889,64 +891,127 @@ void cell_to_cell_youngs_modulus( Cryocell* pMe, Cell* pOther, std::vector<doubl
 }
 
 void update_net_force(){
+  //temporary for testing:
+  //reset net force here
+  for(int j=0; j<all_springs.size();j++)
+  {
+    Spring* pSpring=all_springs[j];
+    // pSpring->calculate_spring_force();
+    // Cryocell* cMe=static_cast<Cryocell*>(pSpring->m_me);
+    // Cryocell* cNeighbor=static_cast<Cryocell*>(pSpring->m_neighbor);
+    // pSpring->update_force_vector(&cMe->net_force, &cNeighbor->net_force);
+
+  }
+
   for(int i=0; i<all_cryocells.size(); i++)
   {
     Cryocell* cCell = all_cryocells[i];
-    sum_spring_forces(cCell);
     sum_youngs_modulus(cCell);
+  }
+}
+void update_velocity(){
+  
+  for(int i=0; i<all_cryocells.size(); i++)
+  {
+    Cryocell* cCell = all_cryocells[i];
+    
+  //calculate acceleration for me and neighbor using volume as a proxy for mass
+  std::vector<double> acceleration= (1/cCell->custom_data["initial_cell_volume"])*cCell->net_force;
+  if(std::fabs(norm(acceleration))<1e-16)
+  {
+    acceleration={0.0, 0.0, 0.0};
+  }
+  // get velocity and add it
+  std::vector<double> prev_velocity=cCell->get_previous_velocity();
+  // first time step apply forward euler
+  if(PhysiCell_globals.current_time<mechanics_dt)
+  {
+    Forward_Euler_vec(&cCell->velocity, prev_velocity, acceleration, mechanics_dt);
+  }
+  else {
+    std::vector<double> prev_acceleration= (1/cCell->custom_data["initial_cell_volume"])*cCell->previous_net_force;
+    Adams_Bashforth_2_vec(&cCell->velocity, prev_velocity, acceleration, prev_acceleration, mechanics_dt); 
+  }
+
+  if(std::fabs(norm(cCell->velocity))<1e-16)
+  {
+      cCell->velocity={0.0, 0.0, 0.0};
+  }
+  // late time steps ABM (best would be to update position from force but requires messing with core code at the moment)
+  // set previous force to current for calculating previous acceleration
+    cCell->previous_net_force=cCell->net_force;
+    cCell->net_force={0.0, 0.0, 0.0};
+  //
+
+    
   } 
 }
+void calculate_position_from_acceleration(std::vector<double> &old_position, std::vector<double>&current_position, std::vector<double> &net_acceleration, double dt, std::vector<double> *new_position){
+  //new_position=2*current_position-old_position+acceleration*dt^2
+  if(std::fabs(norm(net_acceleration))<1e-16)
+  {
+    return;
+  }
+  else {
+    std::vector<double> temp_position=2*current_position;
+    temp_position=temp_position+(*new_position)-old_position;
+    net_acceleration=dt*dt*net_acceleration;
+    temp_position=temp_position+net_acceleration;
+    (*new_position)=temp_position;
+    
+  }
 
-void Cell::update_position( double dt )
-{
-	// BioFVM Basic_Agent::update_position(dt) returns without doing anything. 
-	// So we remove this to avoid any future surprises. 
-	// 
-	// Basic_Agent::update_position(dt);
-		
-	// use Adams-Bashforth 
-	static double d1; 
-	static double d2; 
-	static bool constants_defined = false; 
-	if( constants_defined == false )
-	{
-		d1 = dt; 
-		d1 *= 1.5; 
-		d2 = dt; 
-		d2 *= -0.5; 
-		constants_defined = true; 
-	}
-	
-	// new AUgust 2017
-	if( default_microenvironment_options.simulate_2D == true )
-	{ velocity[2] = 0.0; }
-	
-	std::vector<double> old_position(position); 
-	axpy( &position , d1 , velocity );  
-	axpy( &position , d2 , previous_velocity );  
-	// overwrite previous_velocity for future use 
-	// if(sqrt(dist(old_position, position))>3* phenotype.geometry.radius)
-		// std::cout<<sqrt(dist(old_position, position))<<"old_position: "<<old_position<<", new position: "<< position<<", velocity: "<<velocity<<", previous_velocity: "<< previous_velocity<<std::endl;
-	
-	return; 
 }
-void update_position_from_net_force(Cryocell* cCell, double dt){
-  
-	previous_velocity = velocity; 
-	
-	velocity[0]=0; velocity[1]=0; velocity[2]=0;
-	if(get_container()->underlying_mesh.is_position_valid(position[0],position[1],position[2]))
+void validate_cell_position(Cryocell* cCell)
+{
+  Cell* pCell=static_cast<Cell*>(cCell);
+
+  std::vector<double>position=cCell->position;
+	if(pCell->get_container()->underlying_mesh.is_position_valid(position[0],position[1],position[2]))
 	{
-		updated_current_mechanics_voxel_index=get_container()->underlying_mesh.nearest_voxel_index( position );
+      //this is a private member of physicell cell* 
+	    //pCell->updated_current_mechanics_voxel_index=pCell->get_container()->underlying_mesh.nearest_voxel_index( position );
 	}
 	else
 	{
-		updated_current_mechanics_voxel_index=-1;
-		
-		is_out_of_domain = true; 
-		is_active = false; 
-		is_movable = false; 
-	}
+	//pCell->updated_current_mechanics_voxel_index=-1;
+
+		pCell->is_out_of_domain = true; 
+		pCell->is_active = false; 
+		pCell->is_movable = false; 
+  }
+  return;
+}
+void calculate_velocity_from_net_force(double dt)
+{
+//forward_euler
+
+}
+void update_position_from_net_force(double dt){
+ 
+  for(int i=0; i<all_cryocells.size(); i++)
+    {
+      Cryocell* cCell=all_cryocells[i];
+      std::vector<double> new_position(3,0.0);
+      std::vector<double> acceleration=(1/(cCell->mass/10000))*cCell->net_force;
+      std::cout<< "Acceleration: "<< acceleration<<"\n";
+      if(PhysiCell_globals.current_time<dt)
+      {
+        std::vector<double> temp_velocity= cCell->get_previous_velocity()+(dt*acceleration);
+        cCell->velocity=temp_velocity;
+      }
+      else {
+        std::vector<double> temp_velocity= cCell->get_previous_velocity()+(dt*acceleration);
+        cCell->velocity=temp_velocity;
+        // calculate_position_from_acceleration(cCell->old_position, cCell->position, acceleration, dt, &new_position);
+      // std::cout<< "new_position: "<<new_position<< "\n";
+        // cCell->position[0]=0;
+        // validate_cell_position(cCell);
+      }
+
+      cCell->old_position=cCell->position;
+      cCell->net_force={0.0, 0.0, 0.0};
+    }
 }
 void two_p_update_volume() //TODO: check if parallel is faster
 {

@@ -28,9 +28,13 @@ def main():
     position_A=np.array([5,0,0])  
     position_B=np.array([10,5,0])  
     spring_constant=2.0
+    mass1=1.0
+    mass2=1.0
     plot_cells(position_A,position_B, 'before')
     test_result=hookes_law(spring_constant, 10, position_A, position_B)
-    plot_cells((position_A+test_result),position_B, 'after')
+    test_result1=test_result/mass1
+    test_result2=test_result/mass2
+    plot_cells((position_A+test_result1),(position_B-test_result2), 'after')
     print("TEST RESULT: ", test_result)
 
 if __name__ == "__main__":

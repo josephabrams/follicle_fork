@@ -241,7 +241,13 @@ int main( int argc, char* argv[] )
       two_p_forward_step(diffusion_dt);
       two_p_update_volume();
       update_multivoxel_neighboorhood();
-			PhysiCell_globals.current_time += diffusion_dt;
+      
+
+      // update_all_spring_forces();
+      update_net_force();
+      update_velocity(); 
+      // update_position_from_net_force(diffusion_dt);
+      PhysiCell_globals.current_time += diffusion_dt;
 		}
 		
 		if( PhysiCell_settings.enable_legacy_saves == false )

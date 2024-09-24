@@ -92,13 +92,15 @@ class Cryocell : public PhysiCell::Cell {
     Cryo_Concentrations cryo_concentrations;
     Cryo_Parameters cryo_parameters;
     Cryocell_State cryocell_state;
-    Spring_Connections spring_connections;
+    // Spring_Connections spring_connections;
     std::vector <int> cell_voxels;
     std::vector <int> neighbor_voxels;
     std::vector<Cell*> initial_neighbors;
     std::vector<Cell*> all_neighbors;
     std::vector<double> net_force;
+    std::vector<double> previous_net_force;
     double mass;
+    std::vector<double> old_position;
     Cryocell();
     ~Cryocell(){};
     void update_cell_voxels();
@@ -141,7 +143,17 @@ void update_initial_neighbors();
 
 void update_springs();
 
+void update_velocity();
+void update_all_spring_forces();
+void sum_spring_forces(Cryocell* cCell);
+
+void sum_youngs_modulus(Cryocell* cCell);
 void cell_to_cell_youngs_modulus( Cryocell* pMe, Cell* pOther, std::vector<double> *return_force);
+
+void update_net_force();
+void calculate_position_from_acceleration(std::vector<double> &old_position, std::vector<double>&current_position, std::vector<double> &net_acceleration, double dt, std::vector<double> *new_position);
+void validate_cell_position(Cryocell* cCell);
+void update_position_from_net_force(double dt);
 void two_p_update_volume();
 /*void multistep_loading(double dt); */
 

@@ -164,7 +164,7 @@ void setup_tissue( void )
   std::vector<double> center_position{0.0, 0.0, 0.0};
   // std::vector<std::vector<double>> cell_positions_1= create_spheroid_2D(initial_cell_radius, sphere_radius);//
   // std::vector<std::vector<double>> cell_positions= create_spherical_shell(cell_spacing, follicle_radius, initial_oocyte_radius);//
-  std::vector<std::vector<double>> cell_positions= twoD_symmetric_test_cells(65);//
+  std::vector<std::vector<double>> cell_positions= twoD_symmetric_test_cells(40);//
   
   std::cout<<"THERE ARE "<< cell_definitions_by_index.size()<< " TYPES OF AGENTS!\n";
   for( int k=0; k < cell_definitions_by_index.size() ; k++ ) 
@@ -178,7 +178,7 @@ void setup_tissue( void )
           pC_oocyte->assign_position( center_position );
           pC_oocyte->set_radius(pC_oocyte->custom_data["initial_cell_radius"]);
           pC_oocyte->velocity=initial_velocity;
-          
+          pC_oocyte->set_previous_velocity(0.0,0.0,0.0); 
           // std::cout<< pC_oocyte->custom_data["initial_cell_radius"]<<"\n";
       }
       if(pCD->name=="granulosa") {
@@ -189,6 +189,7 @@ void setup_tissue( void )
             pC_granulosa->assign_position( cell_positions[i] );
             pC_granulosa->set_radius(initial_granulosa_radius);
             pC_granulosa->velocity=initial_velocity;
+            pC_granulosa->set_previous_velocity(0.0,0.0,0.0); 
             Cryocell* cCell=static_cast<Cryocell*>(pC_granulosa);
               void (*func)(Cell*, Phenotype&, double);
             // std::cout<<cCell<< " and  "<< pC_granulosa;
@@ -208,8 +209,8 @@ void setup_tissue( void )
 void custom_contact_function(Cell* pCell, Phenotype& phenotype,Cell* pCell_neighbor, Phenotype& neighbor_phenotype, double dt)
 {
 
-  Cryocell* cCell=static_cast<Cryocell*>(pCell);
-  cCell->spring_connections.spring_contact_function(pCell, phenotype,dt);
+  // Cryocell* cCell=static_cast<Cryocell*>(pCell);
+  // cCell->spring_connections.spring_contact_function(pCell, phenotype,dt);
   return;
 }
 std::vector<std::string> paint_by_volume( Cell* pCell ){
@@ -291,9 +292,12 @@ void custom_function( Cell* pCell, Phenotype& phenotype , double dt )
   {
     #pragma omp critical
     {
-      
+    Cryocell* cCell=static_cast<Cryocell*>(pCell);
+    std::cout<< "POSITION: "<< cCell->position<< "\n";
+    std::cout<< "Old position: "<< cCell->old_position<< "\n";
+    std::cout<< "NET FORCE: "<< cCell->net_force<< "\n";
+    std::cout<< "Velocity: "<< cCell->velocity<<"\n"; 
       // std::cout<<"Volume:" <<pCell->phenotype.volume.total<<"\n";
-      Cryocell* cCell=static_cast<Cryocell*>(pCell);
       // std::cout<<"cell type: "<<cCell->type_name<<"\n";
       // std::cout<<"volume: "<<cCell->phenotype.volume.total<<"\n";
       // std::cout<<"number of cryocells: "<<all_cryocells.size()<<"\n";
@@ -327,12 +331,12 @@ void custom_function( Cell* pCell, Phenotype& phenotype , double dt )
       double Zmax= 4*z_height; 
       double zz=Zmin;
       std::vector<Cell*>nn=cCell->all_neighbors;
-      std::cout<<"NEIGHBORS SIZE: "<< nn.size()<<"\n";
-      std::cout<<"SPRING CONNECTIONS SIZE: "<< cCell->spring_connections.neighbor_springs.size()<<"\n";
+      // std::cout<<"NEIGHBORS SIZE: "<< nn.size()<<"\n";
+      // std::cout<<"SPRING CONNECTIONS SIZE: "<< cCell->spring_connections.neighbor_springs.size()<<"\n";
       while(zz<Zmax)
       {
         // python_plot_cell_and_voxels_single_layer(cCell,dt, cCell->cell_voxels, plot1, zz);
-          python_plot_cell_with_Neighbors(cCell, dt, cCell->cell_voxels, plot1, zz, nn);       
+          // python_plot_cell_with_Neighbors(cCell, dt, cCell->cell_voxels, plot1, zz, nn);       
         zz+=z_height;
       }
     }
@@ -411,19 +415,3 @@ void force_of_youngs_modulus( Cell* pMe, Phenotype& phenoMe , Cell* pOther, Phen
   return;
 }
 
-void caculate_position_from_acceleration(std::vector<double> &old_position, std::vector<double>&current_position, std::vector<double> &net_acceleration, double dt, std::vector<double> *new_position){
-  //new_position=2*current_position-old_position+acceleration*dt^2
-  if(std::fabs(norm(net_acceleration))<1e-16)
-  {
-    return;
-  }
-  else {
-    std::vector<double> temp_position=2*current_position;
-    temp_position=temp_position+(*new_position)-old_position;
-    net_acceleration=dt*dt*net_acceleration;
-    temp_position=temp_position+net_acceleration;
-    (*new_position)=temp_position;
-    
-  }
-
-}
