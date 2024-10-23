@@ -147,6 +147,8 @@ void update_velocity();
 void update_all_spring_forces();
 void sum_spring_forces(Cryocell* cCell);
 
+void sum_non_attached_forces(Cryocell* cCell);
+void simple_pressure_hookes_law(Cryocell* pMe, Cell* pOther, std::vector<double> *return_force);
 void sum_youngs_modulus(Cryocell* cCell);
 void cell_to_cell_youngs_modulus( Cryocell* pMe, Cell* pOther, std::vector<double> *return_force);
 

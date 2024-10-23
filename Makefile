@@ -237,6 +237,9 @@ custom_coloring.o: ./custom_modules/custom_coloring.cpp
 
 spring_class.o: ./custom_modules/spring_class/spring_class.cpp
 	$(COMPILE_COMMAND) -c ./custom_modules/spring_class/spring_class.cpp
+
+basement_membrane.o: ./custom_modules/tissue_construction/basement_membrane.cpp
+	$(COMPILE_COMMAND) -c ./custom_modules/tissue_construction/basement_membrane.cpp
 # cleanup
 
 reset-reset:

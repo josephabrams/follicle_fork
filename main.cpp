@@ -243,10 +243,9 @@ int main( int argc, char* argv[] )
       update_multivoxel_neighboorhood();
       
 
-      // update_all_spring_forces();
       update_net_force();
       update_velocity(); 
-      // update_position_from_net_force(diffusion_dt);
+      update_position_from_net_force(diffusion_dt);
       PhysiCell_globals.current_time += diffusion_dt;
 		}
 		

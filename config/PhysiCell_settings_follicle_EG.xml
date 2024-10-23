@@ -323,6 +323,8 @@
         <maximum_interaction_distance units="um" conserved="false">10</maximum_interaction_distance>
         <k_granulosa units="/um^2/sec" conserved="false">0.2</k_granulosa>
         <k_oocyte units="/um^2/sec" conserved="false">0.7</k_oocyte>
+        <spring_k units="/um^2/sec" conserved="false">0.7</spring_k>
+        <simple_pressure units="/um^2/sec" conserved="false">22.5</simple_pressure>
         <youngs_modulus units="needed" conserved="false"> 3100</youngs_modulus><!-- from Liu et al. 2012-->
         <poisson_ratio units="needed" conserved="false"> 0.5</poisson_ratio>
         <!-- <oocyte_Lp_EG type="double" units="um/sec/atm" description="Karlsson et al">0.016667</oocyte_Lp_EG> -->
@@ -435,6 +437,8 @@
         <maximum_interaction_distance units="um" conserved="false">2</maximum_interaction_distance>
         <k_granulosa units="/um^2/sec" conserved="false">0.2</k_granulosa>
         <k_oocyte units="/um^2/sec" conserved="false">0.7</k_oocyte>
+        <spring_k units="/um^2/sec" conserved="false">0.7</spring_k>
+        <simple_pressure units="/um^2/sec" conserved="false">22.5</simple_pressure>
         <youngs_modulus units="needed" conserved="false"> 385.58</youngs_modulus> <!-- from Jalali et al. 2015 -->
         <poisson_ratio units="needed" conserved="false"> 0.5</poisson_ratio>
         </custom_data>
@@ -504,6 +508,7 @@
     <fibre_sticky type="double" units="none" description="measure of how easy it is to move a fibre">1.0</fibre_sticky>
     <fibre_rotation type="bool" units="none" description="flag for fibre rotation">true</fibre_rotation>
     
+    <max_TZP_length type="double" units="" description="cell velocity parallel to fibre">0.6</max_TZP_length>
     <vel_adhesion type="double" units="" description="cell velocity parallel to fibre">0.6</vel_adhesion>
     <vel_contact type="double" units="" description="cell velocity orthogonal to fibre">0.1</vel_contact>
     <cell_velocity_max type="double" units="" description="max cell velocity">1.0</cell_velocity_max>

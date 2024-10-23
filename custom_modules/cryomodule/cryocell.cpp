@@ -7,6 +7,7 @@
 using namespace PhysiCell;
 using namespace BioFVM;
 #define PI 3.14159265
+//vector containing all the cryocells, populated by the create cryocell function, do not construct them differently
 std::vector<Cryocell*> all_cryocells;
 constexpr double GAS_CONSTANT{0.08205};
 Cryo_Parameters::Cryo_Parameters()
@@ -191,7 +192,7 @@ Cell* create_Cryocell(Cell_Definition& cd){
   cNew->sync_spring_connections(); 
   return cNew;
 }
-
+  //cryocells are multivoxel 
 void Cryocell::update_cell_voxels(){
   std::vector<int> new_voxels{};
   std::vector<int> general_box{};
@@ -247,7 +248,7 @@ void update_all_cells_voxels()
   // then run update_neighbor_voxels in parallel
   return;
 }
- 
+//go through all cell voxels and calculate the average concentration in the microenvironment voxels 
 void get_concentration_at_boundary()
 {
   int num_of_solutes=microenvironment.number_of_densities();
@@ -287,7 +288,8 @@ void get_concentration_at_boundary()
     }
   }
   return;
-}//currently only 2D, 3D should probably use boundary voxels
+}
+
 void get_exterior_molalities(){
 
   int num_of_solutes=microenvironment.number_of_densities();
@@ -316,7 +318,7 @@ void get_exterior_molalities(){
   }
   return;
 }
-
+// takes the molality and converts it to osmolality using the virial equation
 void get_exterior_osmolalities(){
 
   int num_of_solutes=microenvironment.number_of_densities();
@@ -810,7 +812,7 @@ void update_initial_neighbors(){
     }
   return;
 }
-void update_springs(){
+void update_springs(){ //only called once for the follicle to set initial neighbors
 
     for(int i=0; i<all_cryocells.size(); i++)
     {
@@ -836,17 +838,58 @@ void sum_youngs_modulus(Cryocell* cCell){
 
   // std::vector<double> sum_forces(3,0.0);
   // std::cout<< cCell->all_neighbors.size()<<"\n"; 
-  if(cCell->all_neighbors.size()==0)
+  if(cCell->all_neighbors.size()==0 || cCell->all_neighbors==cCell->initial_neighbors)
   {
     return;
   }
-  for(int i=0; i<cCell->all_neighbors.size();i++)
+  //since all_neighbors and initial_neighbors are sorted vectors, we can take their difference if any
+    std::vector<Cell*> non_initial_neighbors;
+ 
+    std::set_difference(cCell->all_neighbors.begin(), cCell->all_neighbors.end(), cCell->initial_neighbors.begin(), cCell->initial_neighbors.end(),
+                        std::inserter(non_initial_neighbors, non_initial_neighbors.begin()));
+  for(int i=0; i<non_initial_neighbors.size();i++)
   {
+    //loop through any neighbors that aren't attached and apply their forces to both cells
       // std::cout<< cCell->all_neighbors[i]<<"\n";
     std::vector<double> temp_force(3,0.0);
-    Cell* pNeighbor=cCell->all_neighbors[i];
+    Cell* pNeighbor=non_initial_neighbors[i];
     Cryocell* cNeighbor=static_cast<Cryocell*>(pNeighbor);
     cell_to_cell_youngs_modulus(cCell, pNeighbor, &temp_force);
+    // sum_forces+=temp_force;
+    if(std::fabs(norm(temp_force))<1e-12)
+    {
+      temp_force={0.0, 0.0, 0.0};
+    }
+        
+    cNeighbor->net_force+=-1.0*temp_force;
+    cCell->net_force+=temp_force;
+
+  }
+
+}
+void sum_non_attached_forces(Cryocell* cCell){
+
+  // std::vector<double> sum_forces(3,0.0);
+  // std::cout<< cCell->all_neighbors.size()<<"\n"; 
+  if(cCell->all_neighbors.size()==0 || cCell->all_neighbors==cCell->initial_neighbors)
+  {
+    return;
+  }
+  //since all_neighbors and initial_neighbors are sorted vectors, we can take their difference if any
+    std::vector<Cell*> non_initial_neighbors;
+ 
+    std::set_difference(cCell->all_neighbors.begin(), cCell->all_neighbors.end(), cCell->initial_neighbors.begin(), cCell->initial_neighbors.end(),
+                        std::inserter(non_initial_neighbors, non_initial_neighbors.begin()));
+  for(int i=0; i<non_initial_neighbors.size();i++)
+  {
+    //loop through any neighbors that aren't attached and apply their forces to both cells
+      // std::cout<< cCell->all_neighbors[i]<<"\n";
+    std::vector<double> temp_force(3,0.0);
+    Cell* pNeighbor=non_initial_neighbors[i];
+    Cryocell* cNeighbor=static_cast<Cryocell*>(pNeighbor);
+    // cell_to_cell_youngs_modulus(cCell, pNeighbor, &temp_force);
+    
+    simple_pressure_hookes_law(cCell, pNeighbor,&temp_force);
     // sum_forces+=temp_force;
     if(std::fabs(norm(temp_force))<1e-12)
     {
@@ -889,24 +932,35 @@ void cell_to_cell_youngs_modulus( Cryocell* pMe, Cell* pOther, std::vector<doubl
   
   return;
 }
-
+void simple_pressure_hookes_law(Cryocell* pMe, Cell* pOther, std::vector<double> *return_force){
+    double spring_constant=pMe->custom_data["spring_k"];
+    double simple_pressure=pMe->custom_data["simple_pressure"];
+    std::vector<double> displacement= pMe->position-pOther->position;//force exerted on me
+    double rest_length= norm(displacement)-pOther->phenotype.geometry.radius-pMe->phenotype.geometry.radius;
+    double delta_x=std::fabs(rest_length); //force points from me to neighbor
+    std::vector<double> unit_vec=1/norm(displacement)*displacement; 
+    std::vector<double> force=(spring_constant*(delta_x)*simple_pressure)*unit_vec;
+    *return_force=force;
+  return;
+}
 void update_net_force(){
   //temporary for testing:
   //reset net force here
   for(int j=0; j<all_springs.size();j++)
   {
     Spring* pSpring=all_springs[j];
-    // pSpring->calculate_spring_force();
-    // Cryocell* cMe=static_cast<Cryocell*>(pSpring->m_me);
-    // Cryocell* cNeighbor=static_cast<Cryocell*>(pSpring->m_neighbor);
-    // pSpring->update_force_vector(&cMe->net_force, &cNeighbor->net_force);
+    pSpring->calculate_spring_force();
+    Cryocell* cMe=static_cast<Cryocell*>(pSpring->m_me);
+    Cryocell* cNeighbor=static_cast<Cryocell*>(pSpring->m_neighbor);
+    pSpring->update_force_vector(&cMe->net_force, &cNeighbor->net_force);
 
   }
 
   for(int i=0; i<all_cryocells.size(); i++)
   {
     Cryocell* cCell = all_cryocells[i];
-    sum_youngs_modulus(cCell);
+    sum_non_attached_forces(cCell);
+    // sum_youngs_modulus(cCell);
   }
 }
 void update_velocity(){

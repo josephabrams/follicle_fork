@@ -1,6 +1,8 @@
 #include "./spring_class.h"
+#include <cmath>
 
 std::vector<Spring*> all_springs;
+std::vector<Point_Spring*> all_point_springs;
 Spring::Spring(Cell* me, Cell* neighbor, double rest_length, double spring_constant, bool is_TZP )
     : m_me{me}, m_neighbor{neighbor}, m_rest_length{rest_length}, m_spring_constant{spring_constant}, m_is_TZP{is_TZP} {
   m_force.resize(3,0.0);
@@ -9,26 +11,86 @@ Spring::Spring(Cell* me, Cell* neighbor, double rest_length, double spring_const
 }
 void Spring::calculate_spring_force()
 {
+  double spring_length=norm(m_neighbor->position-m_me->position)-m_neighbor->phenotype.geometry.radius-m_me->phenotype.geometry.radius;
+  std::cout<<"Spring length: "<<spring_length<<"\n";
+  double simple_pressure=m_me->custom_data["simple_pressure"];
+  //if spring_length< use youngs modulus
+  if(spring_length<0)
+  {
+    hookes_law_simple_pressure(spring_length,simple_pressure);
+    // calculate_youngs_modulus(spring_length);
+  }
+  else {
+    hookes_law(spring_length);
+  }
+}
+void Spring::hookes_law_simple_pressure(double spring_length, double simple_pressure)
+{
     // hooks law should be thread safe
-    double spring_length=norm(m_neighbor->position-m_me->position)-m_neighbor->phenotype.geometry.radius-m_me->phenotype.geometry.radius;
-    double delta_x=spring_length-m_rest_length;
+    double delta_x=std::fabs(m_rest_length-spring_length); //force points from me to neighbor
     std::vector<double> unit_vec=(1/norm(m_neighbor->position-m_me->position))*(m_neighbor->position-m_me->position); 
-    std::vector<double> force=(m_spring_constant*(delta_x))*unit_vec;
+    std::vector<double> force=(m_spring_constant*(delta_x)*simple_pressure)*unit_vec;
     m_force=force;
-
-  // std::vector<double> force(3,0.0);
-  //if connected neighbor
   // std::cout<<"Spring length: "<< spring_length<<"\n";
   // std::cout<<"delta_x: "<< delta_x<<"\n";
   // std::cout<<"unit_vec: "<< unit_vec<< "\n";
   // std::cout<<"spring constant: "<< spring.m_spring_constant<<"\n";
   // std::cout<<"force magnitude: "<< spring.m_spring_constant*delta_x<<"\n";
   // std::cout<<"FORCE: "<< spring.m_force<<"\n";
-  // else displacement==0
 }
+void Spring::hookes_law(double spring_length)
+{
+    // hooks law should be thread safe
+    double delta_x=std::fabs(m_rest_length-spring_length); //force points from me to neighbor
+    std::vector<double> unit_vec=(1/norm(m_neighbor->position-m_me->position))*(m_neighbor->position-m_me->position); 
+    std::vector<double> force=(m_spring_constant*(delta_x))*unit_vec;
+    m_force=force;
+  // std::cout<<"Spring length: "<< spring_length<<"\n";
+  // std::cout<<"delta_x: "<< delta_x<<"\n";
+  // std::cout<<"unit_vec: "<< unit_vec<< "\n";
+  // std::cout<<"spring constant: "<< spring.m_spring_constant<<"\n";
+  // std::cout<<"force magnitude: "<< spring.m_spring_constant*delta_x<<"\n";
+  // std::cout<<"FORCE: "<< spring.m_force<<"\n";
+}
+void Spring::calculate_youngs_modulus(double spring_length)
+{
+  //assumes only Hertzian, no friction and smooth spherical surfaces
+  std::vector<double> displacement= m_me->position-m_neighbor->position;//force exerted on me
+  double penetration_depth= spring_length;
+  std::cout<<"PASSED SPRING LENGTH: "<<spring_length<<"\n";
+  std::cout<<"penetration_depth: "<< penetration_depth<<"\n";
+  if(penetration_depth>0)//sanity check but should never happen
+  {
+    std::cout<<"WARNING! Spring should not use youngs modulus when there is no overlap of cells\n";
+    return;}
+  double constant = std::pow((3*3.14159),(2.0/3.0))/2;
+  double E1=m_me->custom_data["youngs_modulus"];
+  double E2=m_neighbor->custom_data["youngs_modulus"];
+  double sigma_1=m_me->custom_data["poisson_ratio"];
+  double sigma_2=m_neighbor->custom_data["poisson_ratio"];
+  double V1= (1-sigma_1*sigma_1)/(3.14159*E1);
+  double V2= (1-sigma_2*sigma_2)/(3.14159*E2);
+  double D1= 1/m_me->phenotype.geometry.radius*2;
+  double D2= 1/m_neighbor->phenotype.geometry.radius*2;
+  penetration_depth*=-1;
+  double Vterm=std::pow((V1+V2),(2.0/3.0));
+  double Dterm=std::pow((D1+D2),(1.0/3.0));
+  double force_magnitude=penetration_depth/(constant*Vterm*Dterm);
+  force_magnitude=std::pow(force_magnitude,(3.0/2.0));
+  force_magnitude=force_magnitude/norm(displacement);
+  std::vector<double> force= force_magnitude*displacement;
+  if(std::fabs(force_magnitude)<1e-16)
+  {
+    force={0.0, 0.0, 0.0};
+  }
+  m_force= force;
+  
+  return;
+}
+
 void Spring::update_force_vector(std::vector<double> *my_return_force, std::vector<double> *neighbor_return_force)
 {
-  if(std::fabs(norm(m_force))<1e-12)
+  if(std::fabs(norm(m_force))<1e-16)
   {
     m_force={0.0, 0.0, 0.0};
   }
@@ -80,6 +142,12 @@ void Spring::test_TZPs()
   
   }
   
+}
+
+Spring* create_spring( Cell* me, Cell* neighbor, double rest_length, double spring_constant, bool is_TZP ){
+  Spring* nSpring=new Spring(me, neighbor, rest_length, spring_constant, is_TZP);
+  all_springs.push_back(nSpring);
+  return nSpring;
 }
 void calculate_all_spring_forces()
 {
@@ -139,7 +207,14 @@ void TZPs()
 
 
 
-
+Point_Spring::Point_Spring(Cell* me, double rest_length, double spring_constant)
+  :m_me{me}, m_rest_length{rest_length}, m_spring_constant{spring_constant}
+{
+  m_force_normal.resize(3,0.0);
+  m_force.resize(3,0.0);
+  m_previous_force.resize(3,0.0);
+  m_spring_length=0;
+}
 /// spring connections
 // void Spring_Connections::calculate_spring_force(Spring& spring)
 // { 
@@ -194,12 +269,103 @@ void TZPs()
 //   return;
 // }
 
-Spring* create_spring( Cell* me, Cell* neighbor, double rest_length, double spring_constant, bool is_TZP ){
-  Spring* nSpring=new Spring(me, neighbor, rest_length, spring_constant, is_TZP);
-  all_springs.push_back(nSpring);
-  return nSpring;
+
+void Point_Spring::calculate_spring_force()
+{
+  double spring_length=m_spring_length;
+  double simple_pressure=m_me->custom_data["simple_pressure"];
+  //if spring_length< use youngs modulus or hookes
+  if(spring_length<0)
+  {
+    hookes_law(spring_length);
+    //hookes_law_simple_pressure(spring_length,simple_pressure);
+    // calculate_youngs_modulus(spring_length);
+  }
+  else {
+    hookes_law(spring_length);
+  }
 }
 
+void Point_Spring::hookes_law_simple_pressure(double spring_length, double simple_pressure)
+{
+    // hooks law should be thread safe
+    double delta_x=std::fabs(m_rest_length-spring_length); //force points from me to neighbor
+    std::vector<double> unit_vec=m_force_normal; 
+    std::vector<double> force=(m_spring_constant*(delta_x)*simple_pressure)*unit_vec;
+    m_force=force;
+  // std::cout<<"Spring length: "<< spring_length<<"\n";
+  // std::cout<<"delta_x: "<< delta_x<<"\n";
+  // std::cout<<"unit_vec: "<< unit_vec<< "\n";
+  // std::cout<<"spring constant: "<< spring.m_spring_constant<<"\n";
+  // std::cout<<"force magnitude: "<< spring.m_spring_constant*delta_x<<"\n";
+  // std::cout<<"FORCE: "<< spring.m_force<<"\n";
+}
+void Point_Spring::hookes_law(double spring_length)
+{
+    // hooks law should be thread safe
+    double delta_x=std::fabs(m_rest_length-spring_length); //force points from me to neighbor
+    std::vector<double> unit_vec=m_force_normal; 
+    std::vector<double> force=(m_spring_constant*(delta_x))*unit_vec;
+    m_force=force;
+  // std::cout<<"Spring length: "<< spring_length<<"\n";
+  // std::cout<<"delta_x: "<< delta_x<<"\n";
+  // std::cout<<"unit_vec: "<< unit_vec<< "\n";
+  // std::cout<<"spring constant: "<< spring.m_spring_constant<<"\n";
+  // std::cout<<"force magnitude: "<< spring.m_spring_constant*delta_x<<"\n";
+  // std::cout<<"FORCE: "<< spring.m_force<<"\n";
+}
+
+void Point_Spring::update_force_vector(std::vector<double> *my_return_force, std::vector<double> *neighbor_return_force)
+{
+  if(std::fabs(norm(m_force))<1e-16)
+  {
+    m_force={0.0, 0.0, 0.0};
+  }
+  axpy(my_return_force, 1.0, m_force);
+}
+void Point_Spring::update_spring_velocity()//for when using only springs!!!
+{
+  //calculate acceleration for me and neighbor using volume as a proxy for mass
+  std::vector<double> me_acceleration= (1/m_me->custom_data["initial_volume"])*m_force;
+  // get velocity and add it
+  // first time step apply forward euler
+  if(PhysiCell_globals.current_time<mechanics_dt)
+  {
+    axpy(&m_me->velocity,mechanics_dt, me_acceleration);
+  }
+  else {
+    std::vector<double> prev_me_acceleration= (1/m_me->custom_data["initial_volume"])*m_previous_force;
+    std::vector<double> prev_me_velocity=m_me->get_previous_velocity();
+    Adams_Bashforth_2_vec(&m_me->velocity, prev_me_velocity, me_acceleration, prev_me_acceleration, mechanics_dt); 
+  }
+  // late time steps ABM (best would be to update position from force but requires messing with core code at the moment)
+  // set previous force to current for calculating previous acceleration
+    m_previous_force=m_force;
+    m_force={0.0, 0.0, 0.0};
+  //
+}
+Point_Spring* create_point_spring( Cell* me, double rest_length, double spring_constant){
+  Point_Spring* nPoint_Spring=new Point_Spring(me, rest_length, spring_constant);
+  all_point_springs.push_back(nPoint_Spring);
+  return nPoint_Spring;
+}
+void calculate_all_point_spring_forces()
+{
+  // for(int i=0; i<all_springs.size(); i++)
+  // {
+  //   Point_Spring* pPoint_Spring=all_point_springs[i];
+  //   pPoint_Spring->calculate_spring_force();
+  // }
+  return;
+}
+void calculate_point_spring_velocity()
+{
+  for(int i=0; i<all_springs.size(); i++)
+  {
+    Spring* pSpring=all_springs[i];
+    pSpring->update_spring_velocity();
+  }
+}
 // class Spring_Connections{
 // private:
 // public:
