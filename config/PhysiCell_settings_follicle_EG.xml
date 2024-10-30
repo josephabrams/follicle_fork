@@ -87,7 +87,7 @@
 	</domain>
 	
 	<overall>
-		<max_time units="min">1</max_time> <!-- 5 days * 24 h * 60 min -->
+		<max_time units="min">100</max_time> <!-- 5 days * 24 h * 60 min -->
 		<time_units>min</time_units>
 		<space_units>micron</space_units>
 	
@@ -508,7 +508,7 @@
     <fibre_sticky type="double" units="none" description="measure of how easy it is to move a fibre">1.0</fibre_sticky>
     <fibre_rotation type="bool" units="none" description="flag for fibre rotation">true</fibre_rotation>
     
-    <max_TZP_length type="double" units="" description="cell velocity parallel to fibre">0.6</max_TZP_length>
+    <max_TZP_length type="double" units="" description="cell velocity parallel to fibre">100.0</max_TZP_length>
     <vel_adhesion type="double" units="" description="cell velocity parallel to fibre">0.6</vel_adhesion>
     <vel_contact type="double" units="" description="cell velocity orthogonal to fibre">0.1</vel_contact>
     <cell_velocity_max type="double" units="" description="max cell velocity">1.0</cell_velocity_max>
@@ -516,6 +516,7 @@
     <average_pocket_radius type="double" units="" description="mean radius for hollow sphere">50</average_pocket_radius>
     <average_oocyte_radius type="double" units="" description=""> 58 </average_oocyte_radius>
     <average_granulosa_radius type="double" units="" description=""> 5 </average_granulosa_radius>
+    <bm_spring_constant type="double" units="" description=""> 0.9 </bm_spring_constant>
 	</user_parameters>
 	
 </PhysiCell_settings>

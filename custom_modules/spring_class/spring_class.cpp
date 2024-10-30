@@ -1,8 +1,10 @@
 #include "./spring_class.h"
+#include <algorithm>
 #include <cmath>
 
 std::vector<Spring*> all_springs;
 std::vector<Point_Spring*> all_point_springs;
+static int tzp_count=0;
 Spring::Spring(Cell* me, Cell* neighbor, double rest_length, double spring_constant, bool is_TZP )
     : m_me{me}, m_neighbor{neighbor}, m_rest_length{rest_length}, m_spring_constant{spring_constant}, m_is_TZP{is_TZP} {
   m_force.resize(3,0.0);
@@ -12,7 +14,7 @@ Spring::Spring(Cell* me, Cell* neighbor, double rest_length, double spring_const
 void Spring::calculate_spring_force()
 {
   double spring_length=norm(m_neighbor->position-m_me->position)-m_neighbor->phenotype.geometry.radius-m_me->phenotype.geometry.radius;
-  std::cout<<"Spring length: "<<spring_length<<"\n";
+  // std::cout<<"Spring length: "<<spring_length<<"\n";
   double simple_pressure=m_me->custom_data["simple_pressure"];
   //if spring_length< use youngs modulus
   if(spring_length<0)
@@ -23,6 +25,8 @@ void Spring::calculate_spring_force()
   else {
     hookes_law(spring_length);
   }
+
+  // std::cout<<"SPRING FORCE: "<< m_force<< "\n";
 }
 void Spring::hookes_law_simple_pressure(double spring_length, double simple_pressure)
 {
@@ -94,8 +98,14 @@ void Spring::update_force_vector(std::vector<double> *my_return_force, std::vect
   {
     m_force={0.0, 0.0, 0.0};
   }
+  //apply force
   axpy(my_return_force, 1.0, m_force);
-  axpy(neighbor_return_force,-1.0,m_force);
+  if(m_is_TZP)//oocyte is so big connection is one way so force has to be applied to both cells
+  {
+    axpy(neighbor_return_force,-1.0,m_force);
+  }
+  //zero force for next step done in cryocell update velocity
+  // m_force={0.0, 0.0, 0.0};
 }
 void Spring::update_spring_velocity()//for when using only springs!!!
 {
@@ -119,11 +129,15 @@ void Spring::update_spring_velocity()//for when using only springs!!!
   }
   // late time steps ABM (best would be to update position from force but requires messing with core code at the moment)
   // set previous force to current for calculating previous acceleration
+  // std::cout<<"SPRING FORCE: "<< m_force<< "\n";
     m_previous_force=m_force;
     m_force={0.0, 0.0, 0.0};
   //
 }
-
+int TZP_count()
+{
+  return tzp_count;
+}
 void Spring::test_TZPs()
 {
   if(!m_is_TZP)
@@ -133,19 +147,44 @@ void Spring::test_TZPs()
   else {
     double spring_length=norm(m_neighbor->position-m_me->position)-m_neighbor->phenotype.geometry.radius-m_me->phenotype.geometry.radius;
     double delta_x=spring_length-m_rest_length;
+    tzp_count++;
     if(delta_x>parameters.doubles("max_TZP_length"))
     {
       m_spring_constant=0.0;
       m_is_broken=true;
+      this->remove_spring();
     }
     
   
   }
   
 }
+void Spring::remove_spring()
+{
+  //move broken spring to end of the all springs list and pop it off
+	auto result = std::find( std::begin(all_springs),std::end(all_springs),this );
+  if(result != std::end(all_springs))
+  {
+    if(this->m_is_TZP){
+      tzp_count--;
+    }
+    Spring* temp_ptr= all_springs[ all_springs.size()-1 ];
+    all_springs[result-all_springs.begin()+1] = temp_ptr;
+    all_springs[all_springs.size()-1]=this;
+		all_springs.pop_back();	
+  }
+  else {
+    std::cout<<"WARNING! Tried to remove spring that wasn't in list.\n";
+  }
 
+}
 Spring* create_spring( Cell* me, Cell* neighbor, double rest_length, double spring_constant, bool is_TZP ){
   Spring* nSpring=new Spring(me, neighbor, rest_length, spring_constant, is_TZP);
+  if(me->type_name=="oocyte" || me->type==0)
+  {
+    is_TZP=true;
+    std::cout<<"TZP made!"<<"\n";
+  }
   all_springs.push_back(nSpring);
   return nSpring;
 }
@@ -315,7 +354,7 @@ void Point_Spring::hookes_law(double spring_length)
   // std::cout<<"FORCE: "<< spring.m_force<<"\n";
 }
 
-void Point_Spring::update_force_vector(std::vector<double> *my_return_force, std::vector<double> *neighbor_return_force)
+void Point_Spring::update_force_vector(std::vector<double> *my_return_force)
 {
   if(std::fabs(norm(m_force))<1e-16)
   {
@@ -387,3 +426,18 @@ void calculate_point_spring_velocity()
 //   void calculate_spring_force(Spring* spring);
 //   void update_springs(std::vector<Spring*> &springs);
 // };
+Spring* find_spring( Cell* me, Cell* neighbor)
+{
+  Spring* result=all_springs[all_springs.size()-1];
+	for(int i=0; all_springs.size();i++)
+  {
+    Spring* test= all_springs[i];
+    if(test->m_me==me && test->m_neighbor==neighbor)
+    {
+      // std::cout<<"TEST PTR: "<< test<<"\n";
+      return test;
+    }
+  }
+  return NULL;
+
+}

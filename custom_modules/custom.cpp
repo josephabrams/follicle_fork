@@ -164,8 +164,9 @@ void setup_tissue( void )
   std::vector<double> center_position{0.0, 0.0, 0.0};
   // std::vector<std::vector<double>> cell_positions_1= create_spheroid_2D(initial_cell_radius, sphere_radius);//
   // std::vector<std::vector<double>> cell_positions= create_spherical_shell(cell_spacing, follicle_radius, initial_oocyte_radius);//
-  std::vector<std::vector<double>> cell_positions= twoD_symmetric_test_cells(40);//
-  
+  // std::vector<std::vector<double>> cell_positions= twoD_symmetric_test_cells(40);//
+  std::vector<double> rod_start{40.0, 0.0, 0.0};
+    std::vector<std::vector<double>> cell_positions= x_test_rod(initial_granulosa_radius,rod_start,10); 
   std::cout<<"THERE ARE "<< cell_definitions_by_index.size()<< " TYPES OF AGENTS!\n";
   for( int k=0; k < cell_definitions_by_index.size() ; k++ ) 
   {
@@ -173,12 +174,12 @@ void setup_tissue( void )
       std::cout << "Placing cells of type " << pCD->name << " ... " << std::endl;
       if(pCD->name=="oocyte")
       {
-          Cell* pC_oocyte; 
-          pC_oocyte=create_Cryocell(*pCD); 
-          pC_oocyte->assign_position( center_position );
-          pC_oocyte->set_radius(pC_oocyte->custom_data["initial_cell_radius"]);
-          pC_oocyte->velocity=initial_velocity;
-          pC_oocyte->set_previous_velocity(0.0,0.0,0.0); 
+          // Cell* pC_oocyte; 
+          // pC_oocyte=create_Cryocell(*pCD); 
+          // pC_oocyte->assign_position( center_position );
+          // pC_oocyte->set_radius(pC_oocyte->custom_data["initial_cell_radius"]);
+          // pC_oocyte->velocity=initial_velocity;
+          // pC_oocyte->set_previous_velocity(0.0,0.0,0.0); 
           // std::cout<< pC_oocyte->custom_data["initial_cell_radius"]<<"\n";
       }
       if(pCD->name=="granulosa") {
@@ -288,15 +289,20 @@ void test_function()
 }
 void custom_function( Cell* pCell, Phenotype& phenotype , double dt )
 {
+  if(PhysiCell_globals.current_time<dt)
+  {
+    // pCell->velocity={0.1,0.0,0.0};
+
+  }
   if(pCell->custom_data["is_cryocell"]==1 && pCell->type_name=="oocyte")
   {
     #pragma omp critical
     {
     Cryocell* cCell=static_cast<Cryocell*>(pCell);
-    std::cout<< "POSITION: "<< cCell->position<< "\n";
-    std::cout<< "Old position: "<< cCell->old_position<< "\n";
-    std::cout<< "NET FORCE: "<< cCell->net_force<< "\n";
-    std::cout<< "Velocity: "<< cCell->velocity<<"\n"; 
+    // std::cout<< "POSITION: "<< cCell->position<< "\n";
+    // std::cout<< "Old position: "<< cCell->old_position<< "\n";
+    // std::cout<< "NET FORCE: "<< cCell->net_force<< "\n";
+    // std::cout<< "Velocity: "<< cCell->velocity<<"\n"; 
       // std::cout<<"Volume:" <<pCell->phenotype.volume.total<<"\n";
       // std::cout<<"cell type: "<<cCell->type_name<<"\n";
       // std::cout<<"volume: "<<cCell->phenotype.volume.total<<"\n";

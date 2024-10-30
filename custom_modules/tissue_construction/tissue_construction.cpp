@@ -107,3 +107,51 @@ std::vector<std::vector<double>> twoD_symmetric_test_cells(double ring_radius)
   }
   return cells;
 }
+std::vector<std::vector<double>> x_test_rod(double cell_radius,std::vector<double> start_point,double length) 
+{
+  std::vector<std::vector<double>> cells;
+  std::vector<double> tempPoint(3, 0.0);
+
+  double x_spacing = 2*cell_radius;
+  for (double x = start_point[0]; x < (start_point[0]+length); x += x_spacing) {
+    tempPoint[0] = x;
+    tempPoint[1] = start_point[1];
+    tempPoint[2] = start_point[2];
+            cells.push_back(tempPoint);
+  }
+  return cells;
+}
+//made the following test examples so that it's easy to modify them for quick tests
+std::vector<std::vector<double>> two_cells(double cell_radius) 
+{
+  std::vector<std::vector<double>> cells;
+  std::vector<double> tempPoint(3, 0.0);
+  double x_spacing = 2*cell_radius;
+  std::vector<double> point_1{-cell_radius,cell_radius,0.0};
+  std::vector<double> x_length{x_spacing, 0.0, 0.0};
+  std::vector<double> point_2=point_1+x_length;
+  cells.push_back(point_1);
+  cells.push_back(point_2);
+  return cells;
+}
+std::vector<std::vector<double>> four_cells(double cell_radius) 
+{
+  std::vector<std::vector<double>> cells;
+  std::vector<double> tempPoint(3, 0.0);
+  double x_spacing = 2*cell_radius;
+  double y_spacing = 2*cell_radius;
+  std::vector<double> point_1{-cell_radius,cell_radius,0.0};
+  std::vector<double> x_length{x_spacing, 0.0, 0.0};
+  std::vector<double> point_2=point_1+x_length;
+  cells.push_back(point_1);
+  cells.push_back(point_2);
+  return cells;
+}
+
+//Functions to check that cells are not passing into the oocyte or through the BM these are constraints on the allowed force
+void outter_constraint(){
+
+}
+void inner_constraint(){
+
+}

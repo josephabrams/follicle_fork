@@ -96,6 +96,7 @@ class Cryocell : public PhysiCell::Cell {
     std::vector <int> cell_voxels;
     std::vector <int> neighbor_voxels;
     std::vector<Cell*> initial_neighbors;
+    std::vector<Cell*> extra_neighbors;//only used for debugging
     std::vector<Cell*> all_neighbors;
     std::vector<double> net_force;
     std::vector<double> previous_net_force;
@@ -164,5 +165,8 @@ void two_p_update_volume();
 /*bool isMultivoxel(PhysiCell::Cell_Definition * cellDef);*/
 
 /*std::vector<PhysiCell::Cell_Definition*>* getMultivoxelCellDefinitions();*/
+//files for testing mechanics
+void create_output_mechanics_csv();
+void output_mechanics_csv();
 extern std::vector<Cryocell*> all_cryocells;
 #endif

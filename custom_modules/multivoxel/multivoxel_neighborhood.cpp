@@ -34,7 +34,7 @@ void find_multivoxel_neighbors(Cell* pCell, std::vector<Cell*> *return_neighbors
         Cell* temp_agent_ptr=pCell->get_container()->agent_grid[grid_voxel][j];
         // if not pCell and close enough to be a neighbor 
         // if ( temp_agent_ptr!= pCell )
-        if ( temp_agent_ptr!= pCell && norm(temp_agent_ptr->position-pCell->position)<=(pCell->phenotype.geometry.radius+pCell->custom_data["maximum_interaction_distance"])) 
+        if ( temp_agent_ptr!= pCell && norm(temp_agent_ptr->position-pCell->position)<=(pCell->phenotype.geometry.radius+temp_agent_ptr->phenotype.geometry.radius+pCell->custom_data["maximum_interaction_distance"])) 
         {
           agents_in_voxel.push_back(temp_agent_ptr);
           // std::cout<< i << " Cell: "<<

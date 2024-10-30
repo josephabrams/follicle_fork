@@ -48,10 +48,11 @@ public:
   void calculate_youngs_modulus(double spring_length);
   void update_force_vector(std::vector<double> *my_return_force, std::vector<double> *neighbor_return_force);
   void update_spring_velocity();
-
+  void remove_spring();
   void test_TZPs();
 };
 
+int TZP_count();
 // class Spring_Connections{
 // private:
 // public:
@@ -106,7 +107,7 @@ public:
   void hookes_law_simple_pressure(double spring_length, double simple_pressure);
   void hookes_law(double spring_length);
   // void calculate_youngs_modulus(double spring_length);
-  void update_force_vector(std::vector<double> *my_return_force, std::vector<double> *neighbor_return_force);
+  void update_force_vector(std::vector<double> *my_return_force);
   void update_spring_velocity();
 
 };
@@ -116,6 +117,13 @@ Point_Spring* create_point_spring( Cell* me, double rest_length, double spring_c
 void delete_point_spring();
 void calculate_all_point_spring_forces();
 void calculate_point_spring_velocity();
+
+Spring* find_spring( Cell* me, Cell* neighbor);
+
+
+
+
+
 extern std::vector<Spring*> all_springs;
 extern std::vector<Point_Spring*> all_point_springs;
 

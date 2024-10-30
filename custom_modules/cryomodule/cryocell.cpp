@@ -3,6 +3,7 @@
 #include "conversions.h"
 #include "volume_change.h"
 #include <cmath>
+#include <fstream>
 #include <string>
 using namespace PhysiCell;
 using namespace BioFVM;
@@ -260,7 +261,7 @@ void get_concentration_at_boundary()
       Cryocell* cCell=all_cryocells[i];   
       std::vector<double> average(num_of_solutes, 0.0);
       std::vector<double> sum(num_of_solutes, 0.0);
-      
+
       for (size_t j = 0; j < cCell->cell_voxels.size(); j++)
       {
         int voxel_index= cCell->cell_voxels[j];
@@ -846,7 +847,7 @@ void sum_youngs_modulus(Cryocell* cCell){
     std::vector<Cell*> non_initial_neighbors;
  
     std::set_difference(cCell->all_neighbors.begin(), cCell->all_neighbors.end(), cCell->initial_neighbors.begin(), cCell->initial_neighbors.end(),
-                        std::inserter(non_initial_neighbors, non_initial_neighbors.begin()));
+                        std::inserter(non_initial_neighbors, non_initial_neighbors.end()));
   for(int i=0; i<non_initial_neighbors.size();i++)
   {
     //loop through any neighbors that aren't attached and apply their forces to both cells
@@ -879,7 +880,8 @@ void sum_non_attached_forces(Cryocell* cCell){
     std::vector<Cell*> non_initial_neighbors;
  
     std::set_difference(cCell->all_neighbors.begin(), cCell->all_neighbors.end(), cCell->initial_neighbors.begin(), cCell->initial_neighbors.end(),
-                        std::inserter(non_initial_neighbors, non_initial_neighbors.begin()));
+                        std::inserter(non_initial_neighbors, non_initial_neighbors.end()));
+  cCell->extra_neighbors=non_initial_neighbors;
   for(int i=0; i<non_initial_neighbors.size();i++)
   {
     //loop through any neighbors that aren't attached and apply their forces to both cells
@@ -944,8 +946,8 @@ void simple_pressure_hookes_law(Cryocell* pMe, Cell* pOther, std::vector<double>
   return;
 }
 void update_net_force(){
-  //temporary for testing:
   //reset net force here
+  std::cout<<"All springs size: "<< all_springs.size()<<"\n";
   for(int j=0; j<all_springs.size();j++)
   {
     Spring* pSpring=all_springs[j];
@@ -969,36 +971,45 @@ void update_velocity(){
   {
     Cryocell* cCell = all_cryocells[i];
     
-  //calculate acceleration for me and neighbor using volume as a proxy for mass
-  std::vector<double> acceleration= (1/cCell->custom_data["initial_cell_volume"])*cCell->net_force;
-  if(std::fabs(norm(acceleration))<1e-16)
-  {
-    acceleration={0.0, 0.0, 0.0};
-  }
-  // get velocity and add it
-  std::vector<double> prev_velocity=cCell->get_previous_velocity();
-  // first time step apply forward euler
-  if(PhysiCell_globals.current_time<mechanics_dt)
-  {
-    Forward_Euler_vec(&cCell->velocity, prev_velocity, acceleration, mechanics_dt);
-  }
-  else {
-    std::vector<double> prev_acceleration= (1/cCell->custom_data["initial_cell_volume"])*cCell->previous_net_force;
-    Adams_Bashforth_2_vec(&cCell->velocity, prev_velocity, acceleration, prev_acceleration, mechanics_dt); 
-  }
+    //calculate acceleration for me and neighbor using volume as a proxy for mass
+    std::vector<double> acceleration= (1/cCell->custom_data["initial_cell_volume"])*cCell->net_force;
+    if(std::fabs(norm(acceleration))<1e-16)
+    {
+      acceleration={0.0, 0.0, 0.0};
+    }
+    // get velocity and add it
+    std::vector<double> prev_velocity=cCell->get_previous_velocity();
+    // first time step apply forward euler
+    if(PhysiCell_globals.current_time<mechanics_dt)
+    {
+      Forward_Euler_vec(&cCell->velocity, prev_velocity, acceleration, mechanics_dt);
+    }
+    else {
+      std::vector<double> prev_acceleration= (1/cCell->custom_data["initial_cell_volume"])*cCell->previous_net_force;
+      Adams_Bashforth_2_vec(&cCell->velocity, prev_velocity, acceleration, prev_acceleration, mechanics_dt); 
+    }
 
-  if(std::fabs(norm(cCell->velocity))<1e-16)
-  {
-      cCell->velocity={0.0, 0.0, 0.0};
-  }
-  // late time steps ABM (best would be to update position from force but requires messing with core code at the moment)
-  // set previous force to current for calculating previous acceleration
+    if(std::fabs(norm(cCell->velocity))<1e-16)
+    {
+        cCell->velocity={0.0, 0.0, 0.0};
+    }
+    // late time steps ABM (best would be to update position from force but requires messing with core code at the moment)
+    // set previous force to current for calculating previous acceleration
     cCell->previous_net_force=cCell->net_force;
     cCell->net_force={0.0, 0.0, 0.0};
-  //
-
+    //
     
-  } 
+  }
+  for(int j=0; j<all_springs.size(); j++)
+  {
+    Spring* pSpring=all_springs[j];
+    pSpring->m_force={0.0, 0.0, 0.0};
+  }
+  for(int k=0; k<all_point_springs.size(); k++)
+  {
+    Point_Spring* pointSpring=all_point_springs[k];
+    pointSpring->m_force={0.0, 0.0, 0.0};
+  }
 }
 void calculate_position_from_acceleration(std::vector<double> &old_position, std::vector<double>&current_position, std::vector<double> &net_acceleration, double dt, std::vector<double> *new_position){
   //new_position=2*current_position-old_position+acceleration*dt^2
@@ -1048,7 +1059,7 @@ void update_position_from_net_force(double dt){
       Cryocell* cCell=all_cryocells[i];
       std::vector<double> new_position(3,0.0);
       std::vector<double> acceleration=(1/(cCell->mass/10000))*cCell->net_force;
-      std::cout<< "Acceleration: "<< acceleration<<"\n";
+      // std::cout<< "Acceleration: "<< acceleration<<"\n";
       if(PhysiCell_globals.current_time<dt)
       {
         std::vector<double> temp_velocity= cCell->get_previous_velocity()+(dt*acceleration);
@@ -1099,4 +1110,58 @@ void two_p_update_volume() //TODO: check if parallel is faster
 
 
   return;
+}
+
+
+void create_output_mechanics_csv()
+{
+
+  std::ofstream ofs;
+    std::string filename= "./output/cell-mechanics.csv";
+	  ofs.open(filename, std::ofstream::out | std::ofstream::trunc);
+    ofs<<"cell,"<<"neighbor,"<<"time,"<<"x,y,z,"<<"radius,"<<"spring_k,"<<"spring_length,"<<"net_force_x,"<<"net_force_y,"<<"net_force_z,"<<"simple_pressure,"<<"rest_length"<< "\n";
+    ofs.close();
+}
+void output_mechanics_csv()
+{
+
+  std::ofstream ofs;
+  for(size_t i=0; i<all_cryocells.size(); i++)
+  {
+    Cryocell* cCell=all_cryocells[i];
+    Cell* pC=static_cast<Cell*>(cCell);
+    std::string filename= "./output/cell-mechanics.csv";
+	  ofs.open(filename, std::ofstream::out | std::ofstream::app);
+    // ofs<<"cell,"<<"time,"<<"radius,"<<"spring_k,"<<"spring_length,"<<"net_force,"<<"simple_pressure,"<<"rest_length"<< "\n";
+    ofs<<cCell->index<<","<<"NA" <<","<<PhysiCell_globals.current_time<<","<< cCell->position[0]<<","<< cCell->position[1]<<","<< cCell->position[2]<<","<<cCell->phenotype.geometry.radius<<","<<cCell->custom_data["spring_k"]<<","<<"NA,"<<cCell->net_force[0]<<","<<cCell->net_force[1]<<","<<cCell->net_force[2]<<","<<cCell->custom_data["simple_pressure"]<<",NA"<<"\n";
+    for(size_t j=0; j<all_springs.size();j++)
+    {
+      Spring* nSpring_ptr=all_springs[j];
+      if(nSpring_ptr->m_me==pC)
+      {
+        Cell* pCell=nSpring_ptr->m_neighbor;
+
+        double spring_length=norm(pCell->position-cCell->position)-pCell->phenotype.geometry.radius-cCell->phenotype.geometry.radius;
+        ofs<<cCell->index<<","<<pCell->index<<","<<PhysiCell_globals.current_time<<","<< pCell->position[0]<<","<< pCell->position[1]<<","<< pCell->position[2]<<","<<pCell->phenotype.geometry.radius<<","<<cCell->custom_data["spring_k"]<<","<<spring_length<<","<<nSpring_ptr->m_force[0]<<","<<nSpring_ptr->m_force[1]<<","<<nSpring_ptr->m_force[2]<<","<<cCell->custom_data["simple_pressure"]<<","<<nSpring_ptr->m_rest_length<<"\n";
+      }
+    }
+    for(size_t k=0; k<cCell->extra_neighbors.size(); k++)
+    {
+      Cell* pCell=cCell->extra_neighbors[k];
+      double spring_length=norm(pCell->position-cCell->position)-pCell->phenotype.geometry.radius-cCell->phenotype.geometry.radius;
+      ofs<<cCell->index<<","<<pCell->index<<","<<PhysiCell_globals.current_time<<","<< pCell->position[0]<<","<< pCell->position[1]<<","<< pCell->position[2]<<","<<pCell->phenotype.geometry.radius<<","<<cCell->custom_data["spring_k"]<<","<<spring_length<<","<<"NA,NA,NA"<<","<<cCell->custom_data["simple_pressure"]<<",NA"<<"\n";
+    }
+    for(size_t m=0; m<all_point_springs.size(); m++)
+    {
+
+      Point_Spring* nSpring_ptr=all_point_springs[m];
+      if(nSpring_ptr->m_me==pC)
+      {
+        double spring_length= nSpring_ptr->m_spring_length;
+        ofs<<cCell->index<<","<<"-1"<<","<<PhysiCell_globals.current_time<<","<< pC->position[0]<<","<< pC->position[1]<<","<< pC->position[2]<<","<<pC->phenotype.geometry.radius<<","<<nSpring_ptr->m_spring_constant<<","<<spring_length<<","<<nSpring_ptr->m_force[0]<<","<<nSpring_ptr->m_force[1]<<","<<nSpring_ptr->m_force[2]<<","<<cCell->custom_data["simple_pressure"]<<","<<nSpring_ptr->m_rest_length<<"\n";
+      }
+    }
+    ofs.close();
+    
+  }
 }

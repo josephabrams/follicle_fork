@@ -81,6 +81,8 @@
 #include "./custom_modules/cryomodule/cryocell.h"
 #include "./custom_modules/custom.h" 
 #include "core/PhysiCell_constants.h"
+#include "custom_modules/spring_class/spring_class.h"
+#include "custom_modules/tissue_construction/basement_membrane.h"
 #include "modules/PhysiCell_settings.h"
 // #include "./custom_modules/addon_example.h"
 // #include "./custom_modules/addon.h"
@@ -148,7 +150,21 @@ int main( int argc, char* argv[] )
   update_initial_neighbors();
   //turn into spring CONNECTIONS
   update_springs();
+  double BM_inner_radius=40;
+  double BM_outter_radius=50;
+  std::vector <double> BM_center{0.0, 0.0, 0.0};
+
+  get_basement_membrane_voxels(BM_center, BM_inner_radius, BM_outter_radius, &basement_membrane_voxels );
+  get_initial_BM_neighbors(BM_outter_radius, BM_inner_radius);
+  create_BM_springs(BM_outter_radius, BM_inner_radius);
+  python_plot_BM(BM_inner_radius,BM_outter_radius);
+  python_plot_BM_cells(BM_inner_radius, BM_outter_radius);
   //
+  TZPs();
+  int initial_tzp_count=TZP_count();
+  std::cout<<"TZP_count: "<<initial_tzp_count<<"\n";
+  std::cout<<"Point springs size: "<<all_point_springs.size()<<"\n";
+  create_output_mechanics_csv();
 	set_save_biofvm_mesh_as_matlab( true ); 
 	set_save_biofvm_data_as_matlab( true ); 
 	set_save_biofvm_cell_data( true ); 
@@ -244,8 +260,16 @@ int main( int argc, char* argv[] )
       
 
       update_net_force();
+      
+      update_BM_neighbors(BM_outter_radius, BM_inner_radius);
+      advance_BM_springs(BM_outter_radius, BM_inner_radius);
+      output_mechanics_csv();
       update_velocity(); 
-      update_position_from_net_force(diffusion_dt);
+      // update_position_from_net_force(diffusion_dt);
+      TZPs();
+      int TZP_score=TZP_count()/initial_tzp_count;
+      std::cout<<"TZP_score: "<<TZP_score<<"\n";
+      std::cout<<"Point springs size: "<<all_point_springs.size()<<"\n";
       PhysiCell_globals.current_time += diffusion_dt;
 		}
 		

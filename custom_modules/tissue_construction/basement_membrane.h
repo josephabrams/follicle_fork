@@ -23,6 +23,25 @@ void spherical_bounding_region(std::vector <double> &center_point, double &radiu
 
 void get_basement_membrane_voxels(std::vector <double> &center_point, double &inner_radius, double &outter_radius, std::vector<int> *basement_voxels );
 
+void python_plot_BM(double inner_radius, double outter_radius);
 void python_plot_BM( std::vector<double> center, double inner_radius, double outter_radius, std::vector<int>& bm_voxels);
 
+void python_plot_BM_cells(double inner_radius, double outter_radius);
+void find_multivoxel_neighbors_region(std::vector<int> &voxel_region, std::vector<Cell*> *return_neighbors, double outter_radius, double inner_radius);
+
+
+void get_initial_BM_neighbors(double outter_radius, double inner_radius);
+
+
+void create_BM_springs(double outter_radius, double inner_radius);
+
+void update_BM_neighbors(double outter_radius, double inner_radius);
+
+void advance_BM_springs(double outter_radius, double inner_radius);
+void linker_test();
+
+extern std::vector<int> basement_membrane_voxels;
+extern std::vector<Cell*> basement_neighbors;
+extern std::vector<Cell*> basement_initial_neighbors;
+extern std::vector<Cell*> outter_neighbors;
 #endif
