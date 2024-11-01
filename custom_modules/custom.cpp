@@ -166,7 +166,9 @@ void setup_tissue( void )
   // std::vector<std::vector<double>> cell_positions= create_spherical_shell(cell_spacing, follicle_radius, initial_oocyte_radius);//
   // std::vector<std::vector<double>> cell_positions= twoD_symmetric_test_cells(40);//
   std::vector<double> rod_start{40.0, 0.0, 0.0};
-    std::vector<std::vector<double>> cell_positions= x_test_rod(initial_granulosa_radius,rod_start,10); 
+    // std::vector<std::vector<double>> cell_positions= x_test_rod(initial_granulosa_radius,rod_start,10); 
+    // std::vector<std::vector<double>> cell_positions= two_cells(initial_granulosa_radius); 
+    std::vector<std::vector<double>> cell_positions= four_cells(initial_granulosa_radius); 
   std::cout<<"THERE ARE "<< cell_definitions_by_index.size()<< " TYPES OF AGENTS!\n";
   for( int k=0; k < cell_definitions_by_index.size() ; k++ ) 
   {

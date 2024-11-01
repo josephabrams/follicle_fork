@@ -30,9 +30,14 @@ void Spring::calculate_spring_force()
 }
 void Spring::hookes_law_simple_pressure(double spring_length, double simple_pressure)
 {
+  double force_sign=1.0;
+  if(spring_length<m_rest_length)
+  {
+    force_sign=-1.0;
+  }
     // hooks law should be thread safe
     double delta_x=std::fabs(m_rest_length-spring_length); //force points from me to neighbor
-    std::vector<double> unit_vec=(1/norm(m_neighbor->position-m_me->position))*(m_neighbor->position-m_me->position); 
+    std::vector<double> unit_vec=(force_sign*1/norm(m_neighbor->position-m_me->position))*(m_neighbor->position-m_me->position); 
     std::vector<double> force=(m_spring_constant*(delta_x)*simple_pressure)*unit_vec;
     m_force=force;
   // std::cout<<"Spring length: "<< spring_length<<"\n";
@@ -44,9 +49,14 @@ void Spring::hookes_law_simple_pressure(double spring_length, double simple_pres
 }
 void Spring::hookes_law(double spring_length)
 {
+  double force_sign=1.0;
+  if(spring_length<m_rest_length)
+  {
+    force_sign=-1.0;
+  }
     // hooks law should be thread safe
     double delta_x=std::fabs(m_rest_length-spring_length); //force points from me to neighbor
-    std::vector<double> unit_vec=(1/norm(m_neighbor->position-m_me->position))*(m_neighbor->position-m_me->position); 
+    std::vector<double> unit_vec=(force_sign*1/norm(m_neighbor->position-m_me->position))*(m_neighbor->position-m_me->position); 
     std::vector<double> force=(m_spring_constant*(delta_x))*unit_vec;
     m_force=force;
   // std::cout<<"Spring length: "<< spring_length<<"\n";
@@ -327,10 +337,16 @@ void Point_Spring::calculate_spring_force()
 
 void Point_Spring::hookes_law_simple_pressure(double spring_length, double simple_pressure)
 {
+
+  double force_sign=1.0;
+  if(spring_length<m_rest_length)
+  {
+    force_sign=-1.0;
+  }
     // hooks law should be thread safe
     double delta_x=std::fabs(m_rest_length-spring_length); //force points from me to neighbor
     std::vector<double> unit_vec=m_force_normal; 
-    std::vector<double> force=(m_spring_constant*(delta_x)*simple_pressure)*unit_vec;
+    std::vector<double> force=(force_sign*m_spring_constant*(delta_x)*simple_pressure)*unit_vec;
     m_force=force;
   // std::cout<<"Spring length: "<< spring_length<<"\n";
   // std::cout<<"delta_x: "<< delta_x<<"\n";
@@ -341,10 +357,16 @@ void Point_Spring::hookes_law_simple_pressure(double spring_length, double simpl
 }
 void Point_Spring::hookes_law(double spring_length)
 {
+
+  double force_sign=1.0;
+  if(spring_length<m_rest_length)
+  {
+    force_sign=-1.0;
+  }
     // hooks law should be thread safe
     double delta_x=std::fabs(m_rest_length-spring_length); //force points from me to neighbor
     std::vector<double> unit_vec=m_force_normal; 
-    std::vector<double> force=(m_spring_constant*(delta_x))*unit_vec;
+    std::vector<double> force=(force_sign*m_spring_constant*(delta_x))*unit_vec;
     m_force=force;
   // std::cout<<"Spring length: "<< spring_length<<"\n";
   // std::cout<<"delta_x: "<< delta_x<<"\n";

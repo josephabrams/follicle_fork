@@ -1005,11 +1005,11 @@ void update_velocity(){
     Spring* pSpring=all_springs[j];
     pSpring->m_force={0.0, 0.0, 0.0};
   }
-  for(int k=0; k<all_point_springs.size(); k++)
-  {
-    Point_Spring* pointSpring=all_point_springs[k];
-    pointSpring->m_force={0.0, 0.0, 0.0};
-  }
+  // for(int k=0; k<all_point_springs.size(); k++)
+  // {
+  //   Point_Spring* pointSpring=all_point_springs[k];
+  //   pointSpring->m_force={0.0, 0.0, 0.0};
+  // }
 }
 void calculate_position_from_acceleration(std::vector<double> &old_position, std::vector<double>&current_position, std::vector<double> &net_acceleration, double dt, std::vector<double> *new_position){
   //new_position=2*current_position-old_position+acceleration*dt^2
@@ -1151,16 +1151,16 @@ void output_mechanics_csv()
       double spring_length=norm(pCell->position-cCell->position)-pCell->phenotype.geometry.radius-cCell->phenotype.geometry.radius;
       ofs<<cCell->index<<","<<pCell->index<<","<<PhysiCell_globals.current_time<<","<< pCell->position[0]<<","<< pCell->position[1]<<","<< pCell->position[2]<<","<<pCell->phenotype.geometry.radius<<","<<cCell->custom_data["spring_k"]<<","<<spring_length<<","<<"NA,NA,NA"<<","<<cCell->custom_data["simple_pressure"]<<",NA"<<"\n";
     }
-    for(size_t m=0; m<all_point_springs.size(); m++)
-    {
-
-      Point_Spring* nSpring_ptr=all_point_springs[m];
-      if(nSpring_ptr->m_me==pC)
-      {
-        double spring_length= nSpring_ptr->m_spring_length;
-        ofs<<cCell->index<<","<<"-1"<<","<<PhysiCell_globals.current_time<<","<< pC->position[0]<<","<< pC->position[1]<<","<< pC->position[2]<<","<<pC->phenotype.geometry.radius<<","<<nSpring_ptr->m_spring_constant<<","<<spring_length<<","<<nSpring_ptr->m_force[0]<<","<<nSpring_ptr->m_force[1]<<","<<nSpring_ptr->m_force[2]<<","<<cCell->custom_data["simple_pressure"]<<","<<nSpring_ptr->m_rest_length<<"\n";
-      }
-    }
+    // for(size_t m=0; m<all_point_springs.size(); m++)
+    // {
+    //
+    //   Point_Spring* nSpring_ptr=all_point_springs[m];
+    //   if(nSpring_ptr->m_me==pC)
+    //   {
+    //     double spring_length= nSpring_ptr->m_spring_length;
+    //     ofs<<cCell->index<<","<<"-1"<<","<<PhysiCell_globals.current_time<<","<< pC->position[0]<<","<< pC->position[1]<<","<< pC->position[2]<<","<<pC->phenotype.geometry.radius<<","<<nSpring_ptr->m_spring_constant<<","<<spring_length<<","<<nSpring_ptr->m_force[0]<<","<<nSpring_ptr->m_force[1]<<","<<nSpring_ptr->m_force[2]<<","<<cCell->custom_data["simple_pressure"]<<","<<nSpring_ptr->m_rest_length<<"\n";
+    //   }
+    // }
     ofs.close();
     
   }

@@ -25,7 +25,13 @@ std::vector<std::vector<double>> create_spherical_shell(double cell_radius, doub
 
 std::vector<std::vector<double>> twoD_symmetric_test_cells(double ring_radius);
 
-std::vector<std::vector<double>> x_test_rod(double cell_radius,std::vector<double> start_point,double length); 
+std::vector<std::vector<double>> x_test_rod(double cell_radius,std::vector<double> start_point,double length);
+
+std::vector<std::vector<double>> two_cells(double cell_radius);
+
+std::vector<std::vector<double>> four_cells(double cell_radius);
+
+std::vector<std::vector<double>> seven_cells(double cell_radius); 
 /*void setup_single_cell(void);*/
 /*void setup_4_cell_test_case(void);*/
 /*void setup_secondary_stage_follicle(void);*/
