@@ -9,6 +9,8 @@ std::vector<int> basement_membrane_voxels={};
 std::vector<Cell*> basement_neighbors={};
 std::vector<Cell*> basement_initial_neighbors={};
 std::vector<Cell*> outter_neighbors={};
+
+double BASEMENT_K=0.0;
 void spherical_bounding_region(std::vector <double> &center_point, double &radius,std::vector <int> *return_bounding_region)
 {
   std::vector<int> bounding_box_by_index={};
@@ -212,7 +214,7 @@ void create_BM_springs(double outter_radius, double inner_radius)
   {
     Cell* BM_neighbor=basement_initial_neighbors[i];  
     double rest_length=((inner_radius+outter_radius)/2) - (norm(BM_neighbor->position)+BM_neighbor->phenotype.geometry.radius);
-    double spring_constant=parameters.doubles("bm_spring_constant");//BM_neighbor->custom_data["spring_k"];
+    double spring_constant=BASEMENT_K;//BM_neighbor->custom_data["spring_k"];
     std::cout<<"SPRING CONSTANT: "<< spring_constant<<"\n";
     create_point_spring(BM_neighbor, rest_length, spring_constant); 
   }
@@ -259,7 +261,7 @@ void advance_BM_springs(double outter_radius, double inner_radius)
       double spring_length= ((inner_radius+outter_radius)/2) - (norm(cCell->position)+cCell->phenotype.geometry.radius);
       double delta_x=std::fabs(spring_length); //force points from me to neighbor
       std::vector<double> unit_vec=(1/norm(cCell->position))*cCell->position;
-      double spring_constant=parameters.doubles("bm_spring_constant");//pCell->custom_data["spring_k"];
+      double spring_constant=BASEMENT_K;//parameters.doubles("bm_spring_constant");//pCell->custom_data["spring_k"];
       std::vector<double> force=(1.0*spring_constant*(delta_x))*unit_vec;
       cCell->net_force= cCell->net_force+force;
     }

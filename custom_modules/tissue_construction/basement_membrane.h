@@ -44,4 +44,6 @@ extern std::vector<int> basement_membrane_voxels;
 extern std::vector<Cell*> basement_neighbors;
 extern std::vector<Cell*> basement_initial_neighbors;
 extern std::vector<Cell*> outter_neighbors;
+
+extern double BASEMENT_K;
 #endif

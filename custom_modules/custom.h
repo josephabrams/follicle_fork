@@ -69,6 +69,7 @@
 #include "../modules/PhysiCell_standard_modules.h" 
 #include "./tissue_construction/tissue_construction.h"
 #include "../addons/PhysiMeSS/PhysiMeSS.h"
+#include "./tissue_construction/basement_membrane.h"
 using namespace BioFVM; 
 using namespace PhysiCell;
 
@@ -83,6 +84,7 @@ void setup_microenvironment( void );
 // void setup_addons( void );
 // custom pathology coloring function 
 
+void set_spring_constants_for_HPC(double granulosa_k, double oocyte_k, double basement_k);
 std::vector<std::string> my_coloring_function( Cell* );
 
 // custom functions can go here 

@@ -1,6 +1,7 @@
 #include "./spring_class.h"
 #include <algorithm>
 #include <cmath>
+#include <string>
 
 std::vector<Spring*> all_springs;
 std::vector<Point_Spring*> all_point_springs;
@@ -15,11 +16,11 @@ void Spring::calculate_spring_force()
 {
   double spring_length=norm(m_neighbor->position-m_me->position)-m_neighbor->phenotype.geometry.radius-m_me->phenotype.geometry.radius;
   // std::cout<<"Spring length: "<<spring_length<<"\n";
-  double simple_pressure=m_me->custom_data["simple_pressure"];
+  double membrane_pressure=m_me->custom_data["membrane_pressure"];
   //if spring_length< use youngs modulus
   if(spring_length<0)
   {
-    hookes_law_simple_pressure(spring_length,simple_pressure);
+    hookes_law_membrane_pressure(spring_length,membrane_pressure);
     // calculate_youngs_modulus(spring_length);
   }
   else {
@@ -28,7 +29,7 @@ void Spring::calculate_spring_force()
 
   // std::cout<<"SPRING FORCE: "<< m_force<< "\n";
 }
-void Spring::hookes_law_simple_pressure(double spring_length, double simple_pressure)
+void Spring::hookes_law_membrane_pressure(double spring_length, double membrane_pressure)
 {
   double force_sign=1.0;
   if(spring_length<m_rest_length)
@@ -38,7 +39,7 @@ void Spring::hookes_law_simple_pressure(double spring_length, double simple_pres
     // hooks law should be thread safe
     double delta_x=std::fabs(m_rest_length-spring_length); //force points from me to neighbor
     std::vector<double> unit_vec=(force_sign*1/norm(m_neighbor->position-m_me->position))*(m_neighbor->position-m_me->position); 
-    std::vector<double> force=(m_spring_constant*(delta_x)*simple_pressure)*unit_vec;
+    std::vector<double> force=(m_spring_constant*(delta_x)*membrane_pressure)*unit_vec;
     m_force=force;
   // std::cout<<"Spring length: "<< spring_length<<"\n";
   // std::cout<<"delta_x: "<< delta_x<<"\n";
@@ -217,6 +218,7 @@ void calculate_spring_velocity()
 }
 void TZPs()
 {
+  tzp_count=0;
   for(int i=0; i<all_springs.size(); i++)
   {
     Spring* pSpring=all_springs[i];
@@ -322,12 +324,12 @@ Point_Spring::Point_Spring(Cell* me, double rest_length, double spring_constant)
 void Point_Spring::calculate_spring_force()
 {
   double spring_length=m_spring_length;
-  double simple_pressure=m_me->custom_data["simple_pressure"];
+  double membrane_pressure=m_me->custom_data["membrane_pressure"];
   //if spring_length< use youngs modulus or hookes
   if(spring_length<0)
   {
     hookes_law(spring_length);
-    //hookes_law_simple_pressure(spring_length,simple_pressure);
+    //hookes_law_membrane_pressure(spring_length,membrane_pressure);
     // calculate_youngs_modulus(spring_length);
   }
   else {
@@ -335,7 +337,7 @@ void Point_Spring::calculate_spring_force()
   }
 }
 
-void Point_Spring::hookes_law_simple_pressure(double spring_length, double simple_pressure)
+void Point_Spring::hookes_law_membrane_pressure(double spring_length, double membrane_pressure)
 {
 
   double force_sign=1.0;
@@ -346,7 +348,7 @@ void Point_Spring::hookes_law_simple_pressure(double spring_length, double simpl
     // hooks law should be thread safe
     double delta_x=std::fabs(m_rest_length-spring_length); //force points from me to neighbor
     std::vector<double> unit_vec=m_force_normal; 
-    std::vector<double> force=(force_sign*m_spring_constant*(delta_x)*simple_pressure)*unit_vec;
+    std::vector<double> force=(force_sign*m_spring_constant*(delta_x)*membrane_pressure)*unit_vec;
     m_force=force;
   // std::cout<<"Spring length: "<< spring_length<<"\n";
   // std::cout<<"delta_x: "<< delta_x<<"\n";
@@ -462,4 +464,70 @@ Spring* find_spring( Cell* me, Cell* neighbor)
   }
   return NULL;
 
+}
+
+int initial_tzp_count=0;
+void output_TZP_csv(double k_oocyte, double k_granulosa, double k_basement)
+{
+  std::string simulation_condition= "";
+  std::string condition_vector="";
+  TZPs();
+  double tzp_score=(double)(tzp_count)/double(initial_tzp_count);
+  
+  for(int i=0; i<microenvironment.number_of_densities()-1; i++)
+  {
+    simulation_condition+=(microenvironment.density_names[i]+"-");
+    condition_vector+=(std::to_string(default_microenvironment_options.Dirichlet_condition_vector[i])+",");
+  }
+  simulation_condition+=(microenvironment.density_names[microenvironment.number_of_densities()-1]);
+  condition_vector+=(std::to_string(default_microenvironment_options.Dirichlet_condition_vector[microenvironment.number_of_densities()-1]));
+  std::ofstream ofs;
+  ofs.open ("./output/TZP_score.csv", std::ofstream::out | std::ofstream::app);
+  ofs << simulation_condition<<","<< condition_vector<<","<<PhysiCell_globals.current_time<<", "<< tzp_score<<", "<<k_oocyte<<","<< k_granulosa<<","<<k_basement<<"\n";
+  ofs.close();
+}
+
+
+void create_output_TZP_csv()
+{
+  TZPs();
+  std::string condition_vector_column="";
+  initial_tzp_count=TZP_count();
+  std::ofstream ofs;
+  for(int i=0; i<microenvironment.number_of_densities(); i++)
+  {
+    condition_vector_column+=("condition_vector_"+std::to_string(i)+",");
+  }
+  std::string filename= "./output/TZP_score.csv";
+  ofs.open(filename, std::ofstream::out | std::ofstream::trunc);
+  ofs << "simulation_condition"<<","<< condition_vector_column <<"current_time"<<","<< "tzp_score"<<","<<"k_oocyte"<<","<< "k_granulosa"<<","<<"k_basement"<<"\n";
+  ofs.close();
+}
+
+
+//Functions to check that cells are not passing into the oocyte or through the BM these are constraints on the allowed force
+//constraint functions set a very large magnitude tzp_score 
+void outter_constraint(double outter_bound){
+  for(int i=0; i<(*all_cells).size(); i++)
+  {
+    Cell* test_pCell=(*all_cells)[i];
+    if(norm(test_pCell->position)>outter_bound)
+    {
+      tzp_count=2*(*all_cells).size();
+    }
+
+  }
+  return;
+}
+void inner_constraint(double inner_bound){
+  for(int i=0; i<(*all_cells).size(); i++)
+  {
+    Cell* test_pCell=(*all_cells)[i];
+    if( test_pCell->type_name!="oocyte" && norm(test_pCell->position)<inner_bound )
+    {
+      tzp_count=2*(*all_cells).size();
+    }
+
+  }
+  return;
 }

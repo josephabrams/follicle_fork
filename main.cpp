@@ -143,6 +143,8 @@ int main( int argc, char* argv[] )
 	create_cell_types();
 	
 	setup_tissue();
+
+  set_spring_constants_for_HPC(0.1, 0.2, 0.3);
 	/* Users typically stop modifying here. END USERMODS */
   // setup_addons();	
 	// set MultiCellDS save options 
@@ -163,6 +165,9 @@ int main( int argc, char* argv[] )
   TZPs();
   int initial_tzp_count=TZP_count();
   std::cout<<"TZP_count: "<<initial_tzp_count<<"\n";
+
+  set_spring_constants_for_HPC(1.1, 2.2, 3.3);
+  create_output_TZP_csv();
   // std::cout<<"Point springs size: "<<all_point_springs.size()<<"\n";
   create_output_mechanics_csv();
 	set_save_biofvm_mesh_as_matlab( true ); 
@@ -250,9 +255,20 @@ int main( int argc, char* argv[] )
 			// update the microenvironment
       microenvironment.simulate_diffusion_decay( diffusion_dt );
 			
+      output_TZP_csv(OOCYTE_K, GRANULOSA_K, BASEMENT_K);
 			// run PhysiCell 
 			((Cell_Container *)microenvironment.agent_container)->update_all_cells( PhysiCell_globals.current_time );
-		  
+      //example of multistep loading
+      // double dist_to_boundary=70;
+      // double step_time_1=98.9;
+      // std::vector<double> concentration_1{0.0,0.0};
+      // step_loading( dist_to_boundary, step_time_1, concentration_1);
+      // double step_time_2=99.5;
+      // std::vector<double> concentration_2{1.0,1.0};
+      // step_loading( dist_to_boundary, step_time_2, concentration_2);
+      // double step_time_3=99.9;
+      // std::vector<double> concentration_3{2.2,2.2};
+      // step_loading( dist_to_boundary, step_time_3, concentration_3);
       update_all_cells_voxels();	
       two_p_forward_step(diffusion_dt);
       two_p_update_volume();
@@ -265,8 +281,9 @@ int main( int argc, char* argv[] )
       // advance_BM_springs(BM_outter_radius, BM_inner_radius);
       output_mechanics_csv();
       update_velocity(); 
-      // update_position_from_net_force(diffusion_dt);
       TZPs();
+      
+      std::cout<<"TZP_count: "<<TZP_count()<<"\n";
       double TZP_score=(double)TZP_count()/(double)initial_tzp_count;
       std::cout<<"TZP_score: "<<TZP_score<<"\n";
       std::cout<<"Point springs size: "<<all_point_springs.size()<<"\n";

@@ -8,6 +8,9 @@
 using namespace PhysiCell;
 using namespace BioFVM;
 #define PI 3.14159265
+//the following global constants are used for HPC fitting
+double GRANULOSA_K=0;
+double OOCYTE_K=0;
 //vector containing all the cryocells, populated by the create cryocell function, do not construct them differently
 std::vector<Cryocell*> all_cryocells;
 constexpr double GAS_CONSTANT{0.08205};
@@ -823,10 +826,10 @@ void update_springs(){ //only called once for the follicle to set initial neighb
       {
         bool is_TZP=false;
         Cell* pCell= cCell->initial_neighbors[j];
-        double spring_constant=pCell->custom_data["k_granulosa"];
+        double spring_constant=pCell->custom_data["spring_k"];
         if(cCell->type_name=="oocyte" || pCell->type_name=="oocyte")
         {
-          spring_constant=pCell->custom_data["k_oocyte"];
+          spring_constant=pCell->custom_data["spring_k"];
           is_TZP=true;
         }
         double rest_length=norm(pCell->position-cCell->position)-pCell->phenotype.geometry.radius-cCell->phenotype.geometry.radius;
@@ -891,7 +894,7 @@ void sum_non_attached_forces(Cryocell* cCell){
     Cryocell* cNeighbor=static_cast<Cryocell*>(pNeighbor);
     // cell_to_cell_youngs_modulus(cCell, pNeighbor, &temp_force);
     
-    simple_pressure_hookes_law(cCell, pNeighbor,&temp_force);
+    membrane_pressure_hookes_law(cCell, pNeighbor,&temp_force);
     // sum_forces+=temp_force;
     if(std::fabs(norm(temp_force))<1e-12)
     {
@@ -934,14 +937,14 @@ void cell_to_cell_youngs_modulus( Cryocell* pMe, Cell* pOther, std::vector<doubl
   
   return;
 }
-void simple_pressure_hookes_law(Cryocell* pMe, Cell* pOther, std::vector<double> *return_force){
+void membrane_pressure_hookes_law(Cryocell* pMe, Cell* pOther, std::vector<double> *return_force){
     double spring_constant=pMe->custom_data["spring_k"];
-    double simple_pressure=pMe->custom_data["simple_pressure"];
+    double membrane_pressure=pMe->custom_data["membrane_pressure"];
     std::vector<double> displacement= pMe->position-pOther->position;//force exerted on me
     double rest_length= norm(displacement)-pOther->phenotype.geometry.radius-pMe->phenotype.geometry.radius;
     double delta_x=std::fabs(rest_length); //force points from me to neighbor
     std::vector<double> unit_vec=1/norm(displacement)*displacement; 
-    std::vector<double> force=(spring_constant*(delta_x)*simple_pressure)*unit_vec;
+    std::vector<double> force=(spring_constant*(delta_x)*membrane_pressure)*unit_vec;
     *return_force=force;
   return;
 }
@@ -1119,7 +1122,7 @@ void create_output_mechanics_csv()
   std::ofstream ofs;
     std::string filename= "./output/cell-mechanics.csv";
 	  ofs.open(filename, std::ofstream::out | std::ofstream::trunc);
-    ofs<<"cell,"<<"neighbor,"<<"time,"<<"x,y,z,"<<"radius,"<<"spring_k,"<<"spring_length,"<<"net_force_x,"<<"net_force_y,"<<"net_force_z,"<<"simple_pressure,"<<"rest_length"<< "\n";
+    ofs<<"cell,"<<"neighbor,"<<"time,"<<"x,y,z,"<<"radius,"<<"spring_k,"<<"spring_length,"<<"net_force_x,"<<"net_force_y,"<<"net_force_z,"<<"membrane_pressure,"<<"rest_length"<< "\n";
     ofs.close();
 }
 void output_mechanics_csv()
@@ -1132,8 +1135,8 @@ void output_mechanics_csv()
     Cell* pC=static_cast<Cell*>(cCell);
     std::string filename= "./output/cell-mechanics.csv";
 	  ofs.open(filename, std::ofstream::out | std::ofstream::app);
-    // ofs<<"cell,"<<"time,"<<"radius,"<<"spring_k,"<<"spring_length,"<<"net_force,"<<"simple_pressure,"<<"rest_length"<< "\n";
-    ofs<<cCell->index<<","<<"NA" <<","<<PhysiCell_globals.current_time<<","<< cCell->position[0]<<","<< cCell->position[1]<<","<< cCell->position[2]<<","<<cCell->phenotype.geometry.radius<<","<<cCell->custom_data["spring_k"]<<","<<"NA,"<<cCell->net_force[0]<<","<<cCell->net_force[1]<<","<<cCell->net_force[2]<<","<<cCell->custom_data["simple_pressure"]<<",NA"<<"\n";
+    // ofs<<"cell,"<<"time,"<<"radius,"<<"spring_k,"<<"spring_length,"<<"net_force,"<<"membrane_pressure,"<<"rest_length"<< "\n";
+    ofs<<cCell->index<<","<<"NA" <<","<<PhysiCell_globals.current_time<<","<< cCell->position[0]<<","<< cCell->position[1]<<","<< cCell->position[2]<<","<<cCell->phenotype.geometry.radius<<","<<cCell->custom_data["spring_k"]<<","<<"NA,"<<cCell->net_force[0]<<","<<cCell->net_force[1]<<","<<cCell->net_force[2]<<","<<cCell->custom_data["membrane_pressure"]<<",NA"<<"\n";
     for(size_t j=0; j<all_springs.size();j++)
     {
       Spring* nSpring_ptr=all_springs[j];
@@ -1142,14 +1145,14 @@ void output_mechanics_csv()
         Cell* pCell=nSpring_ptr->m_neighbor;
 
         double spring_length=norm(pCell->position-cCell->position)-pCell->phenotype.geometry.radius-cCell->phenotype.geometry.radius;
-        ofs<<cCell->index<<","<<pCell->index<<","<<PhysiCell_globals.current_time<<","<< pCell->position[0]<<","<< pCell->position[1]<<","<< pCell->position[2]<<","<<pCell->phenotype.geometry.radius<<","<<cCell->custom_data["spring_k"]<<","<<spring_length<<","<<nSpring_ptr->m_force[0]<<","<<nSpring_ptr->m_force[1]<<","<<nSpring_ptr->m_force[2]<<","<<cCell->custom_data["simple_pressure"]<<","<<nSpring_ptr->m_rest_length<<"\n";
+        ofs<<cCell->index<<","<<pCell->index<<","<<PhysiCell_globals.current_time<<","<< pCell->position[0]<<","<< pCell->position[1]<<","<< pCell->position[2]<<","<<pCell->phenotype.geometry.radius<<","<<cCell->custom_data["spring_k"]<<","<<spring_length<<","<<nSpring_ptr->m_force[0]<<","<<nSpring_ptr->m_force[1]<<","<<nSpring_ptr->m_force[2]<<","<<cCell->custom_data["membrane_pressure"]<<","<<nSpring_ptr->m_rest_length<<"\n";
       }
     }
     for(size_t k=0; k<cCell->extra_neighbors.size(); k++)
     {
       Cell* pCell=cCell->extra_neighbors[k];
       double spring_length=norm(pCell->position-cCell->position)-pCell->phenotype.geometry.radius-cCell->phenotype.geometry.radius;
-      ofs<<cCell->index<<","<<pCell->index<<","<<PhysiCell_globals.current_time<<","<< pCell->position[0]<<","<< pCell->position[1]<<","<< pCell->position[2]<<","<<pCell->phenotype.geometry.radius<<","<<cCell->custom_data["spring_k"]<<","<<spring_length<<","<<"NA,NA,NA"<<","<<cCell->custom_data["simple_pressure"]<<",NA"<<"\n";
+      ofs<<cCell->index<<","<<pCell->index<<","<<PhysiCell_globals.current_time<<","<< pCell->position[0]<<","<< pCell->position[1]<<","<< pCell->position[2]<<","<<pCell->phenotype.geometry.radius<<","<<cCell->custom_data["spring_k"]<<","<<spring_length<<","<<"NA,NA,NA"<<","<<cCell->custom_data["membrane_pressure"]<<",NA"<<"\n";
     }
     // for(size_t m=0; m<all_point_springs.size(); m++)
     // {
@@ -1158,7 +1161,7 @@ void output_mechanics_csv()
     //   if(nSpring_ptr->m_me==pC)
     //   {
     //     double spring_length= nSpring_ptr->m_spring_length;
-    //     ofs<<cCell->index<<","<<"-1"<<","<<PhysiCell_globals.current_time<<","<< pC->position[0]<<","<< pC->position[1]<<","<< pC->position[2]<<","<<pC->phenotype.geometry.radius<<","<<nSpring_ptr->m_spring_constant<<","<<spring_length<<","<<nSpring_ptr->m_force[0]<<","<<nSpring_ptr->m_force[1]<<","<<nSpring_ptr->m_force[2]<<","<<cCell->custom_data["simple_pressure"]<<","<<nSpring_ptr->m_rest_length<<"\n";
+    //     ofs<<cCell->index<<","<<"-1"<<","<<PhysiCell_globals.current_time<<","<< pC->position[0]<<","<< pC->position[1]<<","<< pC->position[2]<<","<<pC->phenotype.geometry.radius<<","<<nSpring_ptr->m_spring_constant<<","<<spring_length<<","<<nSpring_ptr->m_force[0]<<","<<nSpring_ptr->m_force[1]<<","<<nSpring_ptr->m_force[2]<<","<<cCell->custom_data["membrane_pressure"]<<","<<nSpring_ptr->m_rest_length<<"\n";
     //   }
     // }
     ofs.close();

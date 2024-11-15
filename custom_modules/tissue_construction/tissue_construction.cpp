@@ -1,7 +1,6 @@
 #include "./tissue_construction.h"
 #include <cmath>
 //#define _USE_MATH_DEFINES
-
 std::vector<std::vector<double>> create_spheroid_2D(double cell_radius, double sphere_radius) 
 {
   std::vector<std::vector<double>> cells;
@@ -181,10 +180,89 @@ std::vector<std::vector<double>> seven_cells(double cell_radius)
   cells.push_back(back);
   return cells;
 }
-//Functions to check that cells are not passing into the oocyte or through the BM these are constraints on the allowed force
-void outter_constraint(){
+//continuous and stepwise loading
+//
 
+std::vector<double> current_condition_concentration;
+// double minute_rate=0.0;
+// int changing_solute_index=1;
+void change_concentration(double dist_to_boundary, std::vector<double> new_concentrations)
+{
+  current_condition_concentration=new_concentrations;
+  // #pragma omp parallel
+  // {
+    // #pragma omp for nowait
+      for( int i=0; i < microenvironment.number_of_voxels() ; i++ )//
+      {
+        double private_dist_to_boundary= dist_to_boundary;
+        std::vector<double> private_new_concentration= new_concentrations;
+        std::vector<double> center_point{0.0,0.0,0.0};
+        Voxel* v1=&microenvironment.voxels(i);
+        double dist_to_voxel= norm(v1->center);
+        if(dist_to_voxel>=private_dist_to_boundary)
+        { 
+          microenvironment.update_dirichlet_node(i,private_new_concentration);
+          microenvironment.density_vector(i)=private_new_concentration; // probably redundant
+        }
+        else
+        {
+          microenvironment.remove_dirichlet_node(i);
+        }
+      }
+  // }
+  std::cout<<PhysiCell_globals.current_time<<", NEW CONCENTRATION: "<< new_concentrations<<"\n";
+  std::cout<<"CURRENT CONCENTRATION: "<< current_condition_concentration<<"\n";
+  return;
 }
-void inner_constraint(){
 
+
+void stop_condition(int condition_solute, double end_concentration)
+{
+
+
+  // bool stop=false;
+ 
+  if(current_condition_concentration[condition_solute]==end_concentration)
+  {//stop
+
+    std::cout<<"TEST CONCENTRATION: "<< current_condition_concentration<<"\n";
+    PhysiCell_settings.max_time=PhysiCell_globals.current_time-diffusion_dt;
+  }
+  else {
+    
+    std::cout<<"TEST CONCENTRATION: "<< current_condition_concentration<<"\n";
+    PhysiCell_settings.max_time=PhysiCell_globals.current_time+diffusion_dt;
+  }
+  return;
+}
+
+
+std::vector<double> new_concentration= default_microenvironment_options.Dirichlet_condition_vector;
+void continuous_loading(double dist_to_boundary, double rate_per_minute, double end_concentration, int changing_solute_index)
+{
+  double loading_rate_in_sec=rate_per_minute/60;
+  double loading_rate_per_dt= loading_rate_in_sec*diffusion_dt;
+  if(PhysiCell_globals.current_time<diffusion_dt)
+  {
+    new_concentration[changing_solute_index]=0.0;
+
+  }
+  if(new_concentration[changing_solute_index]<=end_concentration)
+  {
+    change_concentration(dist_to_boundary, new_concentration);
+    new_concentration[changing_solute_index]+=loading_rate_per_dt;
+  }
+  return;
+}
+
+
+// multistep loading with equal steps
+void step_loading( double dist_to_boundary, double concentration_step_time, std::vector<double> new_step_concentration)
+{
+  if( fabs( PhysiCell_globals.current_time - concentration_step_time ) < 0.01 * diffusion_dt )
+  {
+      change_concentration(dist_to_boundary, new_step_concentration);		
+
+  }
+  return;
 }

@@ -43,7 +43,7 @@ public:
   ~Spring();
   void calculate_spring_force();
   
-  void hookes_law_simple_pressure(double spring_length, double simple_pressure);
+  void hookes_law_membrane_pressure(double spring_length, double membrane_pressure);
   void hookes_law(double spring_length);
   void calculate_youngs_modulus(double spring_length);
   void update_force_vector(std::vector<double> *my_return_force, std::vector<double> *neighbor_return_force);
@@ -104,7 +104,7 @@ public:
   ~Point_Spring();
 
   void calculate_spring_force();
-  void hookes_law_simple_pressure(double spring_length, double simple_pressure);
+  void hookes_law_membrane_pressure(double spring_length, double membrane_pressure);
   void hookes_law(double spring_length);
   // void calculate_youngs_modulus(double spring_length);
   void update_force_vector(std::vector<double> *my_return_force);
@@ -121,10 +121,18 @@ void calculate_point_spring_velocity();
 Spring* find_spring( Cell* me, Cell* neighbor);
 
 
+void output_TZP_csv(double k_oocyte, double k_granulosa, double k_basement);
 
+void create_output_TZP_csv();
+
+void outter_constraint(double outter_bound);
+
+void inner_constraint(double inner_bound);
 
 
 extern std::vector<Spring*> all_springs;
 extern std::vector<Point_Spring*> all_point_springs;
 
+extern double GRANULOSA_K;
+extern double OOCYTE_K;
 #endif //__SPRING_H__

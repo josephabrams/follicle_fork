@@ -13,7 +13,7 @@
 # See VERSION.txt or call get_PhysiCell_version() to get the current version  #
 #     x.y.z. Call display_citations() to get detailed information on all cite-#
 #     able software used in your PhysiCell application.                       #
-#                                                                             #
+#       #
 # Because PhysiCell extensively uses BioFVM, we suggest you also cite BioFVM  #
 #     as below:                                                               #
 #                                                                             #
@@ -74,6 +74,7 @@
 // #include "multivoxel/multivoxel_neighborhood.h"
 #include "spring_class/spring_class.h"
 #include "tissue_construction/tissue_construction.h"
+
 void create_cell_types( void )
 {
 	// set the random seed 
@@ -86,7 +87,7 @@ void create_cell_types( void )
 	//    This is a good place to set default functions. 
 	*/ 
 	
-	initialize_default_cell_definition(); 
+	initialize_default_cell_definition();//start with default and turn off the parts we don't need or have customized 
 	cell_defaults.phenotype.secretion.sync_to_microenvironment( &microenvironment ); 
 	
 	cell_defaults.functions.volume_update_function = NULL;
@@ -166,9 +167,14 @@ void setup_tissue( void )
   // std::vector<std::vector<double>> cell_positions= create_spherical_shell(cell_spacing, follicle_radius, initial_oocyte_radius);//
   // std::vector<std::vector<double>> cell_positions= twoD_symmetric_test_cells(40);//
   std::vector<double> rod_start{40.0, 0.0, 0.0};
+  double test_radius=initial_oocyte_radius+5;
+  std::vector<std::vector<double>> cell_positions=twoD_symmetric_test_cells(test_radius);
+
+  // std::vector<std::vector<double>> cell_positions= x_test_rod(initial_granulosa_radius,rod_start,10); 
     // std::vector<std::vector<double>> cell_positions= x_test_rod(initial_granulosa_radius,rod_start,10); 
     // std::vector<std::vector<double>> cell_positions= two_cells(initial_granulosa_radius); 
-    std::vector<std::vector<double>> cell_positions= four_cells(initial_granulosa_radius); 
+    // std::vector<std::vector<double>> cell_positions= four_cells(initial_granulosa_radius); 
+  // std::vector<std::vector<double>> cell_positions= seven_cells(initial_granulosa_radius); 
   std::cout<<"THERE ARE "<< cell_definitions_by_index.size()<< " TYPES OF AGENTS!\n";
   for( int k=0; k < cell_definitions_by_index.size() ; k++ ) 
   {
@@ -176,12 +182,12 @@ void setup_tissue( void )
       std::cout << "Placing cells of type " << pCD->name << " ... " << std::endl;
       if(pCD->name=="oocyte")
       {
-          // Cell* pC_oocyte; 
-          // pC_oocyte=create_Cryocell(*pCD); 
-          // pC_oocyte->assign_position( center_position );
-          // pC_oocyte->set_radius(pC_oocyte->custom_data["initial_cell_radius"]);
+          Cell* pC_oocyte; 
+          pC_oocyte=create_Cryocell(*pCD); 
+          pC_oocyte->assign_position( center_position );
+          pC_oocyte->set_radius(pC_oocyte->custom_data["initial_cell_radius"]);
           // pC_oocyte->velocity=initial_velocity;
-          // pC_oocyte->set_previous_velocity(0.0,0.0,0.0); 
+          pC_oocyte->set_previous_velocity(0.0,0.0,0.0); 
           // std::cout<< pC_oocyte->custom_data["initial_cell_radius"]<<"\n";
       }
       if(pCD->name=="granulosa") {
@@ -208,6 +214,42 @@ void setup_tissue( void )
             
 	
   return; 
+}
+void set_spring_constants_for_HPC(double granulosa_k, double oocyte_k, double basement_k)
+{
+  BASEMENT_K=basement_k;
+  OOCYTE_K=oocyte_k;
+  GRANULOSA_K=granulosa_k;
+  for(int i=0; i<(*all_cells).size(); i++)
+  {
+      Cell* pCell=(*all_cells)[i];
+      if( pCell->type_name=="oocyte")
+      {
+        pCell->custom_data["spring_k"]=oocyte_k;
+      }
+      if(pCell->type_name=="granulosa")
+      {
+        pCell->custom_data["spring_k"]=granulosa_k;
+      }
+  }
+ return; 
+}
+void set_simple_pressure_scale(double granulosa_pressure_scale, double oocyte_pressure_scale)
+{
+
+  for(int i=0; i<(*all_cells).size(); i++)
+  {
+      Cell* pCell=(*all_cells)[i];
+      if( pCell->type_name=="oocyte")
+      {
+        pCell->custom_data["simple_pressure"]=oocyte_pressure_scale;
+      }
+      if(pCell->type_name=="granulosa")
+      {
+        pCell->custom_data["simple_pressure"]=granulosa_pressure_scale;
+      }
+  }
+  return;
 }
 void custom_contact_function(Cell* pCell, Phenotype& phenotype,Cell* pCell_neighbor, Phenotype& neighbor_phenotype, double dt)
 {
@@ -291,7 +333,15 @@ void test_function()
 }
 void custom_function( Cell* pCell, Phenotype& phenotype , double dt )
 {
-  if(PhysiCell_globals.current_time<dt)
+  // #pragma omp critical
+  // {
+  //   if(pCell->state.simple_pressure>0.0)
+  //   {
+  //     std::cout<<"SIMPLE PRESSURE: "<< pCell->state.simple_pressure<<"\n";
+  //   } 
+  //     std::cout<<"STANDARD NEIGHBOR SIZE: "<< pCell->state.neighbors.size()<<"\n";
+  // }
+    if(PhysiCell_globals.current_time<dt)
   {
     // pCell->velocity={0.1,0.0,0.0};
 

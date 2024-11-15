@@ -37,8 +37,14 @@ std::vector<std::vector<double>> seven_cells(double cell_radius);
 /*void setup_secondary_stage_follicle(void);*/
 /*void setup_toy_granulosa_model(void);*/
 
+void change_concentration(double dist_to_boundary, std::vector<double> new_concentrations);
+
+void stop_condition(int condition_solute, double end_concentration);
+
+void continuous_loading(double dist_to_boundary, double rate_per_minute, double end_concentration, int changing_solute_index);
 
 
+void step_loading( double dist_to_boundary, double concentration_step_time, std::vector<double> new_step_concentration);
 
 
 #endif //__TISSUE_CONSTRUCTION_H__
