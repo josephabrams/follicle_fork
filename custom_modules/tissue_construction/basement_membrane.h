@@ -27,6 +27,8 @@ void python_plot_BM(double inner_radius, double outter_radius);
 void python_plot_BM( std::vector<double> center, double inner_radius, double outter_radius, std::vector<int>& bm_voxels);
 
 void python_plot_BM_cells(double inner_radius, double outter_radius);
+
+void python_plot_BM_all_cells(double inner_radius, double outter_radius);
 void find_multivoxel_neighbors_region(std::vector<int> &voxel_region, std::vector<Cell*> *return_neighbors, double outter_radius, double inner_radius);
 
 

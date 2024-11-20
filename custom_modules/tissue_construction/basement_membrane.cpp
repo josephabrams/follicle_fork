@@ -1,6 +1,7 @@
 #include "./basement_membrane.h"
 #include <algorithm>
 #include <cmath>
+#include <string>
 // #include "../multivoxel/multivoxel_functions.h"
 using namespace BioFVM;
 using namespace PhysiCell;
@@ -159,6 +160,82 @@ void python_plot_BM_cells(double inner_radius, double outter_radius){
 
 
 }
+void python_plot_BM_all_cells(double inner_radius, double outter_radius){
+  std::vector<double> center{0.0, 0.0, 0.0};
+  
+    double region_middle=(inner_radius+outter_radius)/2;
+    double voxel_length=default_microenvironment_options.dx;
+    std::string file= "./output/basement_membrane_all_cells"+std::to_string(PhysiCell_globals.current_time)+".py";
+    std::ofstream ofs;
+    ofs.open (file, std::ofstream::out | std::ofstream::trunc);
+    ofs<<"import numpy as np\n"<<"import matplotlib.pyplot as plt\n"<<"import matplotlib.patches as mpatches\n";
+    ofs<<"xy_artists = [\n";
+    for(int i=0; i<basement_membrane_voxels.size(); i++)
+    {
+      // std::cout<<"bounding_box size: "<< bounding_box_by_index.size()<<"\n\n";
+      
+      std::vector <double> voxel_position=microenvironment.voxels(basement_membrane_voxels[i]).center;
+      if(std::fabs(voxel_position[2])<default_microenvironment_options.dx)
+      {
+        std::vector <double> bottom_corner={voxel_position[0]-(voxel_length/2),voxel_position[1]-(voxel_length/2)};      
+        ofs<<"\tmpatches.Rectangle(("<<bottom_corner[0]<<", "<<bottom_corner[1]<<"), "<<voxel_length<<","<< voxel_length << ", alpha=0.5, ec=\"red\", fc=\'green\'),\n";
+      
+      }
+    }
+    double voxel_size= default_microenvironment_options.dx;
+    ofs<<"\tmpatches.Circle(("<<center[0]<<", "<<center[1]<<"), radius="<<inner_radius<<",alpha=0.2, ec=\"black\", fc=\'none\', linewidth=2.0 ),\n";
+    ofs<<"\tmpatches.Circle(("<<center[0]<<", "<<center[1]<<"), radius="<<outter_radius<<",alpha=0.2, ec=\"black\", fc=\'none\', linewidth=2.0 ),\n";
+    
+    ofs<<"\tmpatches.Circle(("<<center[0]<<", "<<center[1]<<"), radius="<<region_middle<<",alpha=0.2, ec=\"red\", fc=\'None\', linewidth=5.0),\n";
+    for(int j=0; j<all_point_springs.size(); j++)
+    {
+      // std::cout<<"bounding_box size: "<< bounding_box_by_index.size()<<"\n\n";
+      Point_Spring* PS_ptr=all_point_springs[j];
+      std::vector <double> cell_position=PS_ptr->m_me->position;
+      if(std::fabs(cell_position[2])<default_microenvironment_options.dx)
+      {
+        ofs<<"\tmpatches.Circle(("<<cell_position[0]<<", "<<cell_position[1]<<"), radius="<<PS_ptr->m_me->phenotype.geometry.radius<<",alpha=0.2, ec=\"black\", fc=\'black\'),\n";
+      
+      }
+    }
+
+    for(int k=0; k<basement_initial_neighbors.size(); k++)
+    {
+      // std::cout<<"bounding_box size: "<< bounding_box_by_index.size()<<"\n\n";
+      Cell* pCell=basement_initial_neighbors[k];
+      std::vector <double> cell_position=pCell->position;
+      if(std::fabs(cell_position[2])<default_microenvironment_options.dx)
+      {
+        ofs<<"# index: "<<pCell->index<<"\n";
+        ofs<<"\tmpatches.Circle(("<<cell_position[0]<<", "<<cell_position[1]<<"), radius="<<pCell->phenotype.geometry.radius<<",alpha=0.2, ec=\"blue\", fc=\'blue\'),\n";
+      
+      }
+    }
+
+    for(int m=0; m<basement_neighbors.size(); m++)
+    {
+      // std::cout<<"bounding_box size: "<< bounding_box_by_index.size()<<"\n\n";
+      Cell* pCell=basement_neighbors[m];
+      std::vector <double> cell_position=pCell->position;
+      if(std::fabs(cell_position[2])<default_microenvironment_options.dx)
+      {
+        ofs<<"# index: "<<pCell->index<<"\n";
+        ofs<<"\tmpatches.Circle(("<<cell_position[0]<<", "<<cell_position[1]<<"), radius="<<pCell->phenotype.geometry.radius<<",alpha=0.9, ec=\"purple\", fc=\'purple\'),\n";
+         
+      }
+    }
+
+
+    ofs<<"]\n";
+    ofs<<"fig,ax=plt.subplots()\n"<<"for i in xy_artists:\n"<<"\tax.add_patch(i)\n"<<"ax.autoscale_view()\n"<<"ax.set_aspect('equal', 'box')\n"<<"plt.show()";
+    ofs.close();
+  // }
+  return;
+
+
+
+
+}
 //
 void find_multivoxel_neighbors_region(std::vector<int> &voxel_region, std::vector<Cell*> *return_neighbors, double outter_radius, double inner_radius){
   
@@ -223,11 +300,31 @@ void create_BM_springs(double outter_radius, double inner_radius)
 void update_BM_neighbors(double outter_radius, double inner_radius)
 {
 
-  std::vector<Cell*> remaining_neighbors;
+  std::vector<Cell*> remaining_neighbors={};
   std::vector<Cell*> current_neighbors={};
   find_multivoxel_neighbors_region(basement_membrane_voxels, &current_neighbors, outter_radius, inner_radius);
-  std::set_difference(basement_initial_neighbors.begin(),basement_initial_neighbors.end(), current_neighbors.begin(),current_neighbors.end(), std::inserter(remaining_neighbors, remaining_neighbors.end()));
+  std::set_difference(current_neighbors.begin(),current_neighbors.end(), basement_initial_neighbors.begin(),basement_initial_neighbors.end(), std::inserter(remaining_neighbors, remaining_neighbors.end()));
   basement_neighbors=remaining_neighbors;
+  //
+  // std::string file= "./output/update_BM_neighbors"+std::to_string(PhysiCell_globals.current_time)+".csv";
+  // std::ofstream ofs;
+  // ofs.open (file, std::ofstream::out | std::ofstream::trunc);
+  // for(int i=0; i<basement_initial_neighbors.size(); i++)
+  // {
+  //   ofs<< "initial: "<<basement_initial_neighbors[i]->index<<"\n";
+  // }
+  // for(int j=0; j<current_neighbors.size(); j++)
+  // {
+  //   ofs<<"current: "<< current_neighbors[j]->index<<"\n";
+  // }
+  // for(int k=0; k<basement_neighbors.size(); k++)
+  // {
+  //   ofs<<"bm: "<< basement_neighbors[k]->index<<"\n";
+  // }
+  // ofs.close();
+  // std::cout<<"initial_neighbors_size: "<< basement_initial_neighbors.size()<<"\n";
+
+  // std::cout<<"basement_neighbors size: "<< basement_neighbors.size()<<"\n";
 }
 //not thread safe to run in parallel - could be made so by updating all spring_lengths seperately
 void advance_BM_springs(double outter_radius, double inner_radius)
@@ -258,6 +355,7 @@ void advance_BM_springs(double outter_radius, double inner_radius)
     Cryocell* cCell=static_cast<Cryocell*>(pCell);
     if(norm(cCell->position)+cCell->phenotype.geometry.radius>= bm_midpoint )
     {
+      std::cout<< "BM CROSSED!!!\n";
       double spring_length= ((inner_radius+outter_radius)/2) - (norm(cCell->position)+cCell->phenotype.geometry.radius);
       double delta_x=std::fabs(spring_length); //force points from me to neighbor
       std::vector<double> unit_vec=(1/norm(cCell->position))*cCell->position;

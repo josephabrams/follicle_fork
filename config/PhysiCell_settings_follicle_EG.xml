@@ -87,7 +87,7 @@
 	</domain>
 	
 	<overall>
-		<max_time units="min">10</max_time> <!-- 5 days * 24 h * 60 min -->
+		<max_time units="min">300</max_time> <!-- 5 days * 24 h * 60 min -->
 		<time_units>min</time_units>
 		<space_units>micron</space_units>
 	
@@ -324,7 +324,7 @@
         <k_granulosa units="/um^2/sec" conserved="false">0.2</k_granulosa>
         <k_oocyte units="/um^2/sec" conserved="false">0.7</k_oocyte>
         <spring_k units="/um^2/sec" conserved="false">0.7</spring_k>
-        <membrane_pressure units="/um^2/sec" conserved="false">1.1</membrane_pressure>
+        <membrane_pressure units="/um^2/sec" conserved="false">0.25</membrane_pressure>
         <youngs_modulus units="needed" conserved="false"> 3100</youngs_modulus><!-- from Liu et al. 2012-->
         <poisson_ratio units="needed" conserved="false"> 0.5</poisson_ratio>
         <!-- <oocyte_Lp_EG type="double" units="um/sec/atm" description="Karlsson et al">0.016667</oocyte_Lp_EG> -->
@@ -438,7 +438,7 @@
         <k_granulosa units="/um^2/sec" conserved="false">0.2</k_granulosa>
         <k_oocyte units="/um^2/sec" conserved="false">0.7</k_oocyte>
         <spring_k units="/um^2/sec" conserved="false">0.7</spring_k>
-        <membrane_pressure units="/um^2/sec" conserved="false">1.1</membrane_pressure>
+        <membrane_pressure units="/um^2/sec" conserved="false">0.25</membrane_pressure>
         <youngs_modulus units="needed" conserved="false"> 385.58</youngs_modulus> <!-- from Jalali et al. 2015 -->
         <poisson_ratio units="needed" conserved="false"> 0.5</poisson_ratio>
         </custom_data>

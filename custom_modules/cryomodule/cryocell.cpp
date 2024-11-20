@@ -1122,7 +1122,7 @@ void create_output_mechanics_csv()
   std::ofstream ofs;
     std::string filename= "./output/cell-mechanics.csv";
 	  ofs.open(filename, std::ofstream::out | std::ofstream::trunc);
-    ofs<<"cell,"<<"neighbor,"<<"time,"<<"x,y,z,"<<"radius,"<<"spring_k,"<<"spring_length,"<<"net_force_x,"<<"net_force_y,"<<"net_force_z,"<<"membrane_pressure,"<<"rest_length"<< "\n";
+    ofs<<"cell,"<<"connection_type,"<<"neighbor,"<<"time,"<<"x,y,z,"<<"radius,"<<"spring_k,"<<"spring_length,"<<"net_force_x,"<<"net_force_y,"<<"net_force_z,"<<"membrane_pressure,"<<"rest_length"<< "\n";
     ofs.close();
 }
 void output_mechanics_csv()
@@ -1136,7 +1136,7 @@ void output_mechanics_csv()
     std::string filename= "./output/cell-mechanics.csv";
 	  ofs.open(filename, std::ofstream::out | std::ofstream::app);
     // ofs<<"cell,"<<"time,"<<"radius,"<<"spring_k,"<<"spring_length,"<<"net_force,"<<"membrane_pressure,"<<"rest_length"<< "\n";
-    ofs<<cCell->index<<","<<"NA" <<","<<PhysiCell_globals.current_time<<","<< cCell->position[0]<<","<< cCell->position[1]<<","<< cCell->position[2]<<","<<cCell->phenotype.geometry.radius<<","<<cCell->custom_data["spring_k"]<<","<<"NA,"<<cCell->net_force[0]<<","<<cCell->net_force[1]<<","<<cCell->net_force[2]<<","<<cCell->custom_data["membrane_pressure"]<<",NA"<<"\n";
+    ofs<<cCell->index<<","<<"self" <<","<<"NA" <<","<<PhysiCell_globals.current_time<<","<< cCell->position[0]<<","<< cCell->position[1]<<","<< cCell->position[2]<<","<<cCell->phenotype.geometry.radius<<","<<cCell->custom_data["spring_k"]<<","<<"NA,"<<cCell->net_force[0]<<","<<cCell->net_force[1]<<","<<cCell->net_force[2]<<","<<cCell->custom_data["membrane_pressure"]<<",NA"<<"\n";
     for(size_t j=0; j<all_springs.size();j++)
     {
       Spring* nSpring_ptr=all_springs[j];
@@ -1145,14 +1145,14 @@ void output_mechanics_csv()
         Cell* pCell=nSpring_ptr->m_neighbor;
 
         double spring_length=norm(pCell->position-cCell->position)-pCell->phenotype.geometry.radius-cCell->phenotype.geometry.radius;
-        ofs<<cCell->index<<","<<pCell->index<<","<<PhysiCell_globals.current_time<<","<< pCell->position[0]<<","<< pCell->position[1]<<","<< pCell->position[2]<<","<<pCell->phenotype.geometry.radius<<","<<cCell->custom_data["spring_k"]<<","<<spring_length<<","<<nSpring_ptr->m_force[0]<<","<<nSpring_ptr->m_force[1]<<","<<nSpring_ptr->m_force[2]<<","<<cCell->custom_data["membrane_pressure"]<<","<<nSpring_ptr->m_rest_length<<"\n";
+        ofs<<cCell->index<<","<<"spring"<<","<<pCell->index<<","<<PhysiCell_globals.current_time<<","<< pCell->position[0]<<","<< pCell->position[1]<<","<< pCell->position[2]<<","<<pCell->phenotype.geometry.radius<<","<<nSpring_ptr->m_spring_constant<<","<<spring_length<<","<<nSpring_ptr->m_force[0]<<","<<nSpring_ptr->m_force[1]<<","<<nSpring_ptr->m_force[2]<<","<<cCell->custom_data["membrane_pressure"]<<","<<nSpring_ptr->m_rest_length<<"\n";
       }
     }
     for(size_t k=0; k<cCell->extra_neighbors.size(); k++)
     {
       Cell* pCell=cCell->extra_neighbors[k];
       double spring_length=norm(pCell->position-cCell->position)-pCell->phenotype.geometry.radius-cCell->phenotype.geometry.radius;
-      ofs<<cCell->index<<","<<pCell->index<<","<<PhysiCell_globals.current_time<<","<< pCell->position[0]<<","<< pCell->position[1]<<","<< pCell->position[2]<<","<<pCell->phenotype.geometry.radius<<","<<cCell->custom_data["spring_k"]<<","<<spring_length<<","<<"NA,NA,NA"<<","<<cCell->custom_data["membrane_pressure"]<<",NA"<<"\n";
+      ofs<<cCell->index<<","<<"extra"<<","<<pCell->index<<","<<PhysiCell_globals.current_time<<","<< pCell->position[0]<<","<< pCell->position[1]<<","<< pCell->position[2]<<","<<pCell->phenotype.geometry.radius<<","<<cCell->custom_data["spring_k"]<<","<<spring_length<<","<<"NA,NA,NA"<<","<<cCell->custom_data["membrane_pressure"]<<",NA"<<"\n";
     }
     // for(size_t m=0; m<all_point_springs.size(); m++)
     // {

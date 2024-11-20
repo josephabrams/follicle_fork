@@ -151,24 +151,22 @@ int TZP_count()
 }
 void Spring::test_TZPs()
 {
-  if(!m_is_TZP)
+  if(m_is_TZP && m_is_broken==false)
   {
-    return;
-  }
-  else {
+
     double spring_length=norm(m_neighbor->position-m_me->position)-m_neighbor->phenotype.geometry.radius-m_me->phenotype.geometry.radius;
     double delta_x=spring_length-m_rest_length;
-    tzp_count++;
-    if(delta_x>parameters.doubles("max_TZP_length"))
+    
+    if(std::fabs(delta_x)>parameters.doubles("max_TZP_length"))
     {
       m_spring_constant=0.0;
       m_is_broken=true;
-      this->remove_spring();
     }
-    
-  
+    else {
+      tzp_count++;
+    }
   }
-  
+ return; 
 }
 void Spring::remove_spring()
 {
@@ -176,13 +174,13 @@ void Spring::remove_spring()
 	auto result = std::find( std::begin(all_springs),std::end(all_springs),this );
   if(result != std::end(all_springs))
   {
-    if(this->m_is_TZP){
-      tzp_count--;
-    }
-    Spring* temp_ptr= all_springs[ all_springs.size()-1 ];
-    all_springs[result-all_springs.begin()+1] = temp_ptr;
-    all_springs[all_springs.size()-1]=this;
-		all_springs.pop_back();	
+    // if(this->m_is_TZP){
+      // tzp_count--;
+    // }
+    Spring* temp_ptr= all_springs[ all_springs.size()-1 ];//save value at end
+    all_springs[all_springs.size()-1]=this;//move this to end
+    all_springs[result-all_springs.begin()+1] = temp_ptr;//put temp value at location of this
+		all_springs.pop_back();	//remove the spring at the end
   }
   else {
     std::cout<<"WARNING! Tried to remove spring that wasn't in list.\n";
@@ -191,10 +189,15 @@ void Spring::remove_spring()
 }
 Spring* create_spring( Cell* me, Cell* neighbor, double rest_length, double spring_constant, bool is_TZP ){
   Spring* nSpring=new Spring(me, neighbor, rest_length, spring_constant, is_TZP);
-  if(me->type_name=="oocyte" || me->type==0)
+  //make sure TZPs are correctly labelled
+
+  if(me->type_name=="oocyte")
   {
-    is_TZP=true;
+    nSpring->m_is_TZP=true;
     std::cout<<"TZP made!"<<"\n";
+  }
+  else {
+  nSpring->m_is_TZP=false;
   }
   all_springs.push_back(nSpring);
   return nSpring;
@@ -219,11 +222,21 @@ void calculate_spring_velocity()
 void TZPs()
 {
   tzp_count=0;
+  // std::vector<Spring*> broken;
+  std::cout <<"ALL SPRINGS SIZE: "<<all_springs.size()<<"\n";
   for(int i=0; i<all_springs.size(); i++)
   {
     Spring* pSpring=all_springs[i];
     pSpring->test_TZPs();
   }
+  // std::cout<< "broken spring size: "<< broken.size()<<"\n";
+  // for(int j=0; j<broken.size(); j++)
+  // {
+    // Spring* pSpring=broken[j];
+    // pSpring->remove_spring();
+  // }
+
+  // std::cout <<"ALL SPRINGS SIZE AFTER REMOVAL: "<<all_springs.size()<<"\n";
 }
 // Spring_Connections::Spring_Connections()
 // {

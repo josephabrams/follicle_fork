@@ -141,32 +141,28 @@ int main( int argc, char* argv[] )
 	
 	/* Users typically start modifying here. START USERMODS */ 
 	create_cell_types();
-	
+	//------
 	setup_tissue();
-
-  set_spring_constants_for_HPC(0.1, 0.2, 0.3);
-	/* Users typically stop modifying here. END USERMODS */
-  // setup_addons();	
-	// set MultiCellDS save options 
+  //granulosa_k, oocyte_k, basement_k
+  set_spring_constants_for_HPC(0.1, 0.1, 0.0);
+  //--------
   //SET INITIAL CONNECTIONS! -- I'm connected to my neighbors at time zero
   update_initial_neighbors();
   //turn into spring CONNECTIONS
   update_springs();
-  // double BM_inner_radius=40;
-  // double BM_outter_radius=50;
-  // std::vector <double> BM_center{0.0, 0.0, 0.0};
+  double BM_inner_radius=83;
+  double BM_outter_radius=112;
+  std::vector <double> BM_center{0.0, 0.0, 0.0};
 
-  // get_basement_membrane_voxels(BM_center, BM_inner_radius, BM_outter_radius, &basement_membrane_voxels );
-  // get_initial_BM_neighbors(BM_outter_radius, BM_inner_radius);
-  // create_BM_springs(BM_outter_radius, BM_inner_radius);
+  get_basement_membrane_voxels(BM_center, BM_inner_radius, BM_outter_radius, &basement_membrane_voxels );
+  get_initial_BM_neighbors(BM_outter_radius, BM_inner_radius);
+  create_BM_springs(BM_outter_radius, BM_inner_radius);
   // python_plot_BM(BM_inner_radius,BM_outter_radius);
-  // python_plot_BM_cells(BM_inner_radius, BM_outter_radius);
+  python_plot_BM_cells(BM_inner_radius, BM_outter_radius);
   //
   TZPs();
   int initial_tzp_count=TZP_count();
   std::cout<<"TZP_count: "<<initial_tzp_count<<"\n";
-
-  set_spring_constants_for_HPC(1.1, 2.2, 3.3);
   create_output_TZP_csv();
   // std::cout<<"Point springs size: "<<all_point_springs.size()<<"\n";
   create_output_mechanics_csv();
@@ -277,9 +273,10 @@ int main( int argc, char* argv[] )
 
       update_net_force();
       
-      // update_BM_neighbors(BM_outter_radius, BM_inner_radius);
-      // advance_BM_springs(BM_outter_radius, BM_inner_radius);
+      update_BM_neighbors(BM_outter_radius, BM_inner_radius);
+      advance_BM_springs(BM_outter_radius, BM_inner_radius);
       output_mechanics_csv();
+      // python_plot_BM_all_cells(BM_inner_radius, BM_outter_radius);
       update_velocity(); 
       TZPs();
       
@@ -295,6 +292,7 @@ int main( int argc, char* argv[] )
 			log_output(PhysiCell_globals.current_time, PhysiCell_globals.full_output_index, microenvironment, report_file);
 			report_file.close();
 		}
+
     // clean_up_Addons();
 	}
 	catch( const std::exception& e )
