@@ -1,5 +1,3 @@
-
-
 #ifndef __SPRING_H__
 #define __SPRING_H__
 
@@ -14,7 +12,7 @@
 using namespace PhysiCell;
 using namespace BioFVM;
 
-//for future use
+//prototype for future version
 /*
 class Youngs_Modulus{
 private:
@@ -132,7 +130,9 @@ void inner_constraint(double inner_bound);
 
 extern std::vector<Spring*> all_springs;
 extern std::vector<Point_Spring*> all_point_springs;
-
+//external variables for passing parameters into main() when running script on HPC
 extern double GRANULOSA_K;
 extern double OOCYTE_K;
+extern int TZP_COUNT;
+extern int INIT_TZP_COUNT;
 #endif //__SPRING_H__

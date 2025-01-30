@@ -92,13 +92,32 @@ using namespace PhysiCell;
 int main( int argc, char* argv[] )
 {
   // load and parse settings file(s)
-	
+	double load_k_oocyte=0.0;
+  double load_k_granulosa=0.0;
+  double load_k_basement=0.0;
+  std::string run_num_str;
 	bool XML_status = false; 
 	char copy_command [1024]; 
 	if( argc > 1 )
 	{
-		XML_status = load_PhysiCell_config_file( argv[1] ); 
-		sprintf( copy_command , "cp %s %s" , argv[1] , PhysiCell_settings.folder.c_str() ); 
+
+		XML_status = load_PhysiCell_config_file( "./config/PhysiCell_settings_follicle_EG.xml" );
+		sprintf( copy_command , "cp ./config/PhysiCell_settings_follicle_EG.xml %s" , PhysiCell_settings.folder.c_str() ); 
+		// XML_status = load_PhysiCell_config_file( argv[1] ); 
+		// sprintf( copy_command , "cp %s %s" , argv[1] , PhysiCell_settings.folder.c_str() );
+
+    // if(argc==3)
+    // {
+      // std::string k_oocyte_str= argv[2];
+      // std::string k_granulosa_str= argv[3];
+      // std::string k_basement_str=argv[4];
+      run_num_str=argv[1];
+      // load_k_oocyte= std::stod(k_oocyte_str);
+      // load_k_granulosa= std::stod(k_granulosa_str);
+      // load_k_basement= std::stod(k_basement_str);
+      // run_number=std::stoi(run_num_str);
+      // std::cout<<" FORCE PARAM: "<< k_oocyte<<", "<<k_granulosa<<", "<<k_basement<<"\n";
+    // }
 	}
 	else
 	{
@@ -127,7 +146,7 @@ int main( int argc, char* argv[] )
 	omp_set_num_threads(PhysiCell_settings.omp_num_threads);
 	
 	// time setup 
-	std::string time_units = "min"; 
+	std::string time_units = "sec"; 
 
 	/* Microenvironment setup */ 
 	
@@ -136,7 +155,7 @@ int main( int argc, char* argv[] )
 	/* PhysiCell setup */ 
  	
 	// set mechanics voxel size, and match the data structure to BioFVM
-	double mechanics_voxel_size = 30; 
+	double mechanics_voxel_size = 10; 
 	Cell_Container* cell_container = create_cell_container_for_microenvironment( microenvironment, mechanics_voxel_size );
 	
 	/* Users typically start modifying here. START USERMODS */ 
@@ -144,7 +163,7 @@ int main( int argc, char* argv[] )
 	//------
 	setup_tissue();
   //granulosa_k, oocyte_k, basement_k
-  set_spring_constants_for_HPC(0.1, 0.1, 0.0);
+  set_spring_constants_for_HPC(1, 2, 0.1);
   //--------
   //SET INITIAL CONNECTIONS! -- I'm connected to my neighbors at time zero
   update_initial_neighbors();
@@ -158,14 +177,14 @@ int main( int argc, char* argv[] )
   get_initial_BM_neighbors(BM_outter_radius, BM_inner_radius);
   create_BM_springs(BM_outter_radius, BM_inner_radius);
   // python_plot_BM(BM_inner_radius,BM_outter_radius);
-  python_plot_BM_cells(BM_inner_radius, BM_outter_radius);
+  // python_plot_BM_cells(BM_inner_radius, BM_outter_radius);
   //
   TZPs();
   int initial_tzp_count=TZP_count();
-  std::cout<<"TZP_count: "<<initial_tzp_count<<"\n";
+  // std::cout<<"TZP_count: "<<initial_tzp_count<<"\n";
   create_output_TZP_csv();
   // std::cout<<"Point springs size: "<<all_point_springs.size()<<"\n";
-  create_output_mechanics_csv();
+  create_output_mechanics_csv(run_num_str);
 	set_save_biofvm_mesh_as_matlab( true ); 
 	set_save_biofvm_data_as_matlab( true ); 
 	set_save_biofvm_cell_data( true ); 
@@ -251,7 +270,7 @@ int main( int argc, char* argv[] )
 			// update the microenvironment
       microenvironment.simulate_diffusion_decay( diffusion_dt );
 			
-      output_TZP_csv(OOCYTE_K, GRANULOSA_K, BASEMENT_K);
+      // output_TZP_csv(OOCYTE_K, GRANULOSA_K, BASEMENT_K);
 			// run PhysiCell 
 			((Cell_Container *)microenvironment.agent_container)->update_all_cells( PhysiCell_globals.current_time );
       //example of multistep loading
@@ -265,25 +284,26 @@ int main( int argc, char* argv[] )
       // double step_time_3=99.9;
       // std::vector<double> concentration_3{2.2,2.2};
       // step_loading( dist_to_boundary, step_time_3, concentration_3);
+      //-----
       update_all_cells_voxels();	
       two_p_forward_step(diffusion_dt);
       two_p_update_volume();
       update_multivoxel_neighboorhood();
-      
-
+      //-----
       update_net_force();
-      
       update_BM_neighbors(BM_outter_radius, BM_inner_radius);
       advance_BM_springs(BM_outter_radius, BM_inner_radius);
-      output_mechanics_csv();
+      //-----
+      //
+      output_mechanics_csv(run_num_str);
       // python_plot_BM_all_cells(BM_inner_radius, BM_outter_radius);
       update_velocity(); 
       TZPs();
-      
+      //-----
       std::cout<<"TZP_count: "<<TZP_count()<<"\n";
-      double TZP_score=(double)TZP_count()/(double)initial_tzp_count;
-      std::cout<<"TZP_score: "<<TZP_score<<"\n";
-      std::cout<<"Point springs size: "<<all_point_springs.size()<<"\n";
+      // double TZP_score=(double)TZP_count()/(double)initial_tzp_count;
+      // std::cout<<"TZP_score: "<<TZP_score<<"\n";
+      // std::cout<<"Point springs size: "<<all_point_springs.size()<<"\n";
       PhysiCell_globals.current_time += diffusion_dt;
 		}
 		

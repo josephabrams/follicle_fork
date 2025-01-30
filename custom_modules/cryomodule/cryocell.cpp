@@ -208,7 +208,6 @@ void Cryocell::update_cell_voxels(){
   // #pragma omp critical
   // {
 
-    this->cell_voxels.clear();
     this->cell_voxels.assign(new_voxels.begin(),new_voxels.end());
     this->cryocell_state.uptake_voxels.assign(new_voxels.begin(),new_voxels.end());///these are the same for now, set in two places
     
@@ -233,12 +232,14 @@ void Cryocell::update_neighbor_voxels(){ //not currently used possible feature f
   return;
 }
 void update_all_cells_voxels()
-{ //TODO: this is slower with parallel??
-  // #pragma omp parallel
-    // #pragma omp for nowait
+{ //TODO: must be a way to make this faster but might not be needed
+  #pragma omp parallel
+    #pragma omp for //changed to wait
     for(int i=0; i<(all_cryocells.size());i++)
     {
       Cryocell* cCell=(all_cryocells)[i];
+      
+      cCell->cell_voxels.clear();
       cCell->update_cell_voxels();
     }
   /*#pragma omp parallel*/
@@ -253,12 +254,12 @@ void update_all_cells_voxels()
   return;
 }
 //go through all cell voxels and calculate the average concentration in the microenvironment voxels 
-void get_concentration_at_boundary()
+void get_concentration_at_boundary() 
 {
   int num_of_solutes=microenvironment.number_of_densities();
   #pragma omp parallel
   {
-    #pragma omp for nowait
+    #pragma omp for
     for(int i=0; i<all_cryocells.size(); i++)
     {
       Cryocell* cCell=all_cryocells[i];   
@@ -279,7 +280,6 @@ void get_concentration_at_boundary()
             sum[k]+=voxel_center[k];
           }
         }
-      }
       #pragma omp critical
       {
         for (int k =0; k<num_of_solutes; k++)
@@ -288,7 +288,7 @@ void get_concentration_at_boundary()
         }
         cCell->cryo_concentrations.exterior_molarity.assign(average.begin(),average.end());
       }
-      
+      } 
     }
   }
   return;
@@ -299,7 +299,7 @@ void get_exterior_molalities(){
   int num_of_solutes=microenvironment.number_of_densities();
   #pragma omp parallel
   {
-    #pragma omp for nowait
+    #pragma omp for
     for(int i=0; i<all_cryocells.size(); i++)
     {
       Cryocell* cCell=all_cryocells[i];
@@ -318,7 +318,7 @@ void get_exterior_molalities(){
       {
         exterior_component_molality->assign(temp_molalities.begin(),temp_molalities.end());
       }
-    }
+     }
   }
   return;
 }
@@ -328,7 +328,7 @@ void get_exterior_osmolalities(){
   int num_of_solutes=microenvironment.number_of_densities();
   #pragma omp parallel 
   {
-    #pragma omp for nowait
+    #pragma omp for
     for(int i=0; i<all_cryocells.size(); i++)
     {
       Cryocell* cCell=all_cryocells[i];
@@ -373,7 +373,7 @@ void get_interior_molalities(){
   int num_of_solutes=microenvironment.number_of_densities();
   #pragma omp parallel
   {
-    #pragma omp for nowait
+    #pragma omp for
     for(int i=0; i<all_cryocells.size(); i++)
     {
       Cryocell* cCell=all_cryocells[i];
@@ -401,8 +401,8 @@ void get_interior_osmolalities(){
 
   int num_of_solutes=microenvironment.number_of_densities();
   #pragma omp parallel 
-  {
-    #pragma omp for nowait
+ {
+   #pragma omp for
     for(int i=0; i<all_cryocells.size(); i++)
     {
       Cryocell* cCell=all_cryocells[i];
@@ -438,7 +438,7 @@ void get_interior_osmolalities(){
         *interior_osmolality=temp_osmolality;
       }
     }
-  }
+ }
   return;
 }
 
@@ -455,7 +455,7 @@ void update_interior_concentrations(){
 void calculate_derivatives(){
   #pragma omp parallel 
   {
-    #pragma omp for nowait
+    #pragma omp for
     for(int i=0; i<all_cryocells.size(); i++)
     {
       Cryocell* cCell=all_cryocells[i];
@@ -480,10 +480,10 @@ void calculate_derivatives(){
   }
 }
 
-void advance_osmosis(double dt){
+void advance_osmosis(double dt){ 
   #pragma omp parallel
   {
-    #pragma omp for nowait
+    #pragma omp for
     for(int i=0; i<all_cryocells.size(); i++)
     {
       Cryocell* cCell = all_cryocells[i];
@@ -517,7 +517,7 @@ void calculate_uptakes(double dt){
   //solute_uptake= next_solute_moles-solute_moles;
   #pragma omp parallel 
   {
-    #pragma omp for nowait
+    #pragma omp for
     for(int i=0; i<all_cryocells.size(); i++)
     {
       Cryocell* cCell = all_cryocells[i];
@@ -547,7 +547,7 @@ void update_next_step(double dt){
 // set uptake voxels to my voxels- might update in later version
   #pragma omp parallel 
   {
-    #pragma omp for nowait
+    #pragma omp for
     for(int i=0; i<all_cryocells.size(); i++)
     {
       Cryocell* cCell = all_cryocells[i];
@@ -585,7 +585,7 @@ void calculate_per_voxel_uptake()
 {
   #pragma omp parallel
   {
-    #pragma omp for nowait
+    #pragma omp for
     for(int i=0; i<all_cryocells.size(); i++)
     {
       double voxel_volume=default_microenvironment_options.dx*default_microenvironment_options.dx*default_microenvironment_options.dx;
@@ -680,11 +680,18 @@ void uptake_in_one_voxel(int &voxel, double& water_uptake_per_voxel, std::vector
   return;
 }
 */
-void advance_uptake()
+void advance_uptake()//serial 6 TODO: make this threadsafe at some point so it isnt so slow, I think the race condition is writing to the density_vector
 {
-  #pragma omp parallel 
-  {  
-    #pragma omp for nowait
+  
+      // Cryocell* cCell = all_cryocells[0];
+      // Microenvironment* m= (cCell->get_microenvironment());
+      // m->density_vector((*uptake_voxels)[j])=shared_density_vector;//safety shmafety
+      // std::vector<std::vector<double>> shared_density_vector;
+
+  // #pragma omp parallel 
+  // { 
+    // std::vector<double> private_density_vector;
+    // #pragma omp for
     for(int i = 0; i < all_cryocells.size(); i++) {
       Cryocell* cCell = all_cryocells[i];
       std::vector<int>* uptake_voxels = &(cCell->cryocell_state.uptake_voxels);
@@ -743,23 +750,25 @@ void advance_uptake()
         {
           /*std::cout<<"moles_in_voxel: "<< moles_in_voxel<<"\n";*/
           /*std::cout<<"new density: "<< new_density<<"\n\n";*/
+
           m->density_vector((*uptake_voxels)[j])=new_density;//safety shmafety
         }
 
       }
-    }
+   // }
   }
+
   return;
 }
 
-void uptake(double dt) //deprecate, this is unneeded and unused
-{
-
-  /*calculate_per_voxel_uptake();*/
-  //advance_uptake();
-  return;
-
-}
+// void uptake(double dt) //deprecate, this is unneeded and unused
+// {
+//
+//   /*calculate_per_voxel_uptake();*/
+//   //advance_uptake();
+//   return;
+//
+// }
 
   //the following function runs in main.cpp
 void two_p_forward_step(double dt){
@@ -791,7 +800,8 @@ update_next_step(dt);
 return;
 }
 void update_multivoxel_neighboorhood(){
- 
+  #pragma omp parallel
+    #pragma omp for
     for(int i=0; i<all_cryocells.size(); i++)
     {
       Cryocell* cCell = all_cryocells[i];
@@ -950,7 +960,9 @@ void membrane_pressure_hookes_law(Cryocell* pMe, Cell* pOther, std::vector<doubl
 }
 void update_net_force(){
   //reset net force here
-  std::cout<<"All springs size: "<< all_springs.size()<<"\n";
+  // std::cout<<"All springs size: "<< all_springs.size()<<"\n";
+  #pragma omp parallel
+  #pragma omp for
   for(int j=0; j<all_springs.size();j++)
   {
     Spring* pSpring=all_springs[j];
@@ -1116,16 +1128,16 @@ void two_p_update_volume() //TODO: check if parallel is faster
 }
 
 
-void create_output_mechanics_csv()
+void create_output_mechanics_csv(std::string run_num)
 {
 
   std::ofstream ofs;
-    std::string filename= "./output/cell-mechanics.csv";
+    std::string filename= "./output/cell-mechanics-"+run_num+".csv";
 	  ofs.open(filename, std::ofstream::out | std::ofstream::trunc);
     ofs<<"cell,"<<"connection_type,"<<"neighbor,"<<"time,"<<"x,y,z,"<<"radius,"<<"spring_k,"<<"spring_length,"<<"net_force_x,"<<"net_force_y,"<<"net_force_z,"<<"membrane_pressure,"<<"rest_length"<< "\n";
     ofs.close();
 }
-void output_mechanics_csv()
+void output_mechanics_csv(std::string run_num)
 {
 
   std::ofstream ofs;
@@ -1133,7 +1145,9 @@ void output_mechanics_csv()
   {
     Cryocell* cCell=all_cryocells[i];
     Cell* pC=static_cast<Cell*>(cCell);
-    std::string filename= "./output/cell-mechanics.csv";
+
+    std::string filename= "./output/cell-mechanics-"+run_num+".csv";
+    // std::string filename= "./output/cell-mechanics.csv";
 	  ofs.open(filename, std::ofstream::out | std::ofstream::app);
     // ofs<<"cell,"<<"time,"<<"radius,"<<"spring_k,"<<"spring_length,"<<"net_force,"<<"membrane_pressure,"<<"rest_length"<< "\n";
     ofs<<cCell->index<<","<<"self" <<","<<"NA" <<","<<PhysiCell_globals.current_time<<","<< cCell->position[0]<<","<< cCell->position[1]<<","<< cCell->position[2]<<","<<cCell->phenotype.geometry.radius<<","<<cCell->custom_data["spring_k"]<<","<<"NA,"<<cCell->net_force[0]<<","<<cCell->net_force[1]<<","<<cCell->net_force[2]<<","<<cCell->custom_data["membrane_pressure"]<<",NA"<<"\n";

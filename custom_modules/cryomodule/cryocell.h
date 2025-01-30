@@ -135,7 +135,7 @@ void calculate_per_voxel_uptake();
 void uptake_in_one_voxel(int &voxel, double& water_uptake_per_voxel, std::vector<double>& solute_uptake_per_voxel);
 
 void advance_uptake();
-void uptake(double dt);
+// void uptake(double dt);
 void two_p_forward_step(double dt);
 
 void update_multivoxel_neighboorhood();
@@ -166,7 +166,10 @@ void two_p_update_volume();
 
 /*std::vector<PhysiCell::Cell_Definition*>* getMultivoxelCellDefinitions();*/
 //files for testing mechanics
-void create_output_mechanics_csv();
-void output_mechanics_csv();
+//
+void create_output_mechanics_csv(std::string run_num);
+void output_mechanics_csv(std::string run_num);
+// void create_output_mechanics_csv();
+// void output_mechanics_csv();
 extern std::vector<Cryocell*> all_cryocells;
 #endif

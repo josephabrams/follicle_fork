@@ -6,6 +6,8 @@
 std::vector<Spring*> all_springs;
 std::vector<Point_Spring*> all_point_springs;
 static int tzp_count=0;
+int TZP_COUNT=0;
+int INIT_TZP_COUNT=0;
 Spring::Spring(Cell* me, Cell* neighbor, double rest_length, double spring_constant, bool is_TZP )
     : m_me{me}, m_neighbor{neighbor}, m_rest_length{rest_length}, m_spring_constant{spring_constant}, m_is_TZP{is_TZP} {
   m_force.resize(3,0.0);
@@ -110,6 +112,8 @@ void Spring::update_force_vector(std::vector<double> *my_return_force, std::vect
     m_force={0.0, 0.0, 0.0};
   }
   //apply force
+  #pragma omp critical
+  {
   axpy(my_return_force, 1.0, m_force);
   if(m_is_TZP)//oocyte is so big connection is one way so force has to be applied to both cells
   {
@@ -117,7 +121,8 @@ void Spring::update_force_vector(std::vector<double> *my_return_force, std::vect
   }
   //zero force for next step done in cryocell update velocity
   // m_force={0.0, 0.0, 0.0};
-}
+  }
+  }
 void Spring::update_spring_velocity()//for when using only springs!!!
 {
   //calculate acceleration for me and neighbor using volume as a proxy for mass
@@ -147,7 +152,7 @@ void Spring::update_spring_velocity()//for when using only springs!!!
 }
 int TZP_count()
 {
-  return tzp_count;
+  return TZP_COUNT;
 }
 void Spring::test_TZPs()
 {
@@ -163,7 +168,7 @@ void Spring::test_TZPs()
       m_is_broken=true;
     }
     else {
-      tzp_count++;
+      TZP_COUNT++;
     }
   }
  return; 
@@ -175,7 +180,7 @@ void Spring::remove_spring()
   if(result != std::end(all_springs))
   {
     // if(this->m_is_TZP){
-      // tzp_count--;
+      // TZP_COUNT--;
     // }
     Spring* temp_ptr= all_springs[ all_springs.size()-1 ];//save value at end
     all_springs[all_springs.size()-1]=this;//move this to end
@@ -221,9 +226,9 @@ void calculate_spring_velocity()
 }
 void TZPs()
 {
-  tzp_count=0;
+  TZP_COUNT=0;
   // std::vector<Spring*> broken;
-  std::cout <<"ALL SPRINGS SIZE: "<<all_springs.size()<<"\n";
+  // std::cout <<"ALL SPRINGS SIZE: "<<all_springs.size()<<"\n";
   for(int i=0; i<all_springs.size(); i++)
   {
     Spring* pSpring=all_springs[i];
@@ -393,11 +398,14 @@ void Point_Spring::hookes_law(double spring_length)
 
 void Point_Spring::update_force_vector(std::vector<double> *my_return_force)
 {
-  if(std::fabs(norm(m_force))<1e-16)
+  #pragma omp critical
   {
-    m_force={0.0, 0.0, 0.0};
+    if(std::fabs(norm(m_force))<1e-16)
+    {
+      m_force={0.0, 0.0, 0.0};
+    }
+    axpy(my_return_force, 1.0, m_force);
   }
-  axpy(my_return_force, 1.0, m_force);
 }
 void Point_Spring::update_spring_velocity()//for when using only springs!!!
 {
@@ -479,13 +487,12 @@ Spring* find_spring( Cell* me, Cell* neighbor)
 
 }
 
-int initial_tzp_count=0;
 void output_TZP_csv(double k_oocyte, double k_granulosa, double k_basement)
 {
   std::string simulation_condition= "";
   std::string condition_vector="";
   TZPs();
-  double tzp_score=(double)(tzp_count)/double(initial_tzp_count);
+  double tzp_score=(double)(TZP_COUNT)/(double)(INIT_TZP_COUNT);
   
   for(int i=0; i<microenvironment.number_of_densities()-1; i++)
   {
@@ -505,7 +512,7 @@ void create_output_TZP_csv()
 {
   TZPs();
   std::string condition_vector_column="";
-  initial_tzp_count=TZP_count();
+  INIT_TZP_COUNT=TZP_count();
   std::ofstream ofs;
   for(int i=0; i<microenvironment.number_of_densities(); i++)
   {
@@ -526,7 +533,7 @@ void outter_constraint(double outter_bound){
     Cell* test_pCell=(*all_cells)[i];
     if(norm(test_pCell->position)>outter_bound)
     {
-      tzp_count=2*(*all_cells).size();
+      TZP_COUNT=2*(*all_cells).size();
     }
 
   }
@@ -538,7 +545,7 @@ void inner_constraint(double inner_bound){
     Cell* test_pCell=(*all_cells)[i];
     if( test_pCell->type_name!="oocyte" && norm(test_pCell->position)<inner_bound )
     {
-      tzp_count=2*(*all_cells).size();
+      TZP_COUNT=2*(*all_cells).size();
     }
 
   }

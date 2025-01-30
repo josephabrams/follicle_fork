@@ -96,7 +96,7 @@ void create_cell_types( void )
 
 	cell_defaults.functions.update_migration_bias = NULL; 
 	cell_defaults.functions.update_phenotype = NULL;  
-	cell_defaults.functions.custom_cell_rule = custom_function; 
+	cell_defaults.functions.custom_cell_rule = NULL;//custom_function; //NULL; 
 	// cell_defaults.functions.contact_function = custom_contact_function; 
 	
 	cell_defaults.functions.add_cell_basement_membrane_interactions = NULL; 
@@ -234,7 +234,7 @@ void set_spring_constants_for_HPC(double granulosa_k, double oocyte_k, double ba
   }
  return; 
 }
-void set_simple_pressure_scale(double granulosa_pressure_scale, double oocyte_pressure_scale)
+void set_membrane_pressure_scale(double granulosa_pressure_scale, double oocyte_pressure_scale)
 {
 
   for(int i=0; i<(*all_cells).size(); i++)
@@ -242,11 +242,11 @@ void set_simple_pressure_scale(double granulosa_pressure_scale, double oocyte_pr
       Cell* pCell=(*all_cells)[i];
       if( pCell->type_name=="oocyte")
       {
-        pCell->custom_data["simple_pressure"]=oocyte_pressure_scale;
+        pCell->custom_data["membrane_pressure"]=oocyte_pressure_scale;
       }
       if(pCell->type_name=="granulosa")
       {
-        pCell->custom_data["simple_pressure"]=granulosa_pressure_scale;
+        pCell->custom_data["membrane_pressure"]=granulosa_pressure_scale;
       }
   }
   return;
@@ -333,95 +333,96 @@ void test_function()
 }
 void custom_function( Cell* pCell, Phenotype& phenotype , double dt )
 {
-  // #pragma omp critical
-  // {
-  //   if(pCell->state.simple_pressure>0.0)
-  //   {
-  //     std::cout<<"SIMPLE PRESSURE: "<< pCell->state.simple_pressure<<"\n";
-  //   } 
-  //     std::cout<<"STANDARD NEIGHBOR SIZE: "<< pCell->state.neighbors.size()<<"\n";
-  // }
-    if(PhysiCell_globals.current_time<dt)
-  {
-    // pCell->velocity={0.1,0.0,0.0};
-
-  }
-  if(pCell->custom_data["is_cryocell"]==1 && pCell->type_name=="oocyte")
+//   // #pragma omp critical
+//   // {
+//   //   if(pCell->state.simple_pressure>0.0)
+//   //   {
+//   //     std::cout<<"SIMPLE PRESSURE: "<< pCell->state.simple_pressure<<"\n";
+//   //   } 
+//   //     std::cout<<"STANDARD NEIGHBOR SIZE: "<< pCell->state.neighbors.size()<<"\n";
+//   // }
+//     if(PhysiCell_globals.current_time<dt)
+//   {
+//     // pCell->velocity={0.1,0.0,0.0};
+//
+//   }
+  if(pCell->custom_data["is_cryocell"]==1 && pCell->type_name=="oocyte" && PhysiCell_globals.current_time<1.0)
   {
     #pragma omp critical
     {
     Cryocell* cCell=static_cast<Cryocell*>(pCell);
-    // std::cout<< "POSITION: "<< cCell->position<< "\n";
-    // std::cout<< "Old position: "<< cCell->old_position<< "\n";
-    // std::cout<< "NET FORCE: "<< cCell->net_force<< "\n";
-    // std::cout<< "Velocity: "<< cCell->velocity<<"\n"; 
-      // std::cout<<"Volume:" <<pCell->phenotype.volume.total<<"\n";
-      // std::cout<<"cell type: "<<cCell->type_name<<"\n";
-      // std::cout<<"volume: "<<cCell->phenotype.volume.total<<"\n";
-      // std::cout<<"number of cryocells: "<<all_cryocells.size()<<"\n";
-      // std::cout<<"water volume: "<<cCell->cryocell_state.water_volume<<"\n";
-      // std::cout<<"interior molarity: "<< cCell->cryo_concentrations.interior_molarity<<"\n";
-      // std::cout<<"interior molality: "<< cCell->cryo_concentrations.interior_component_molality<<"\n";
-      // std::cout<<"interior osmolality: "<< cCell->cryo_concentrations.interior_osmolality<<"\n";
-      // std::cout<<"exterior molarity: "<< cCell->cryo_concentrations.exterior_molarity<<"\n";
-      // std::cout<<"surface_area: "<< cCell->cryocell_state.surface_area<<"\n";
-      // std::cout<<"exterior osmolality: "<< cCell->cryo_concentrations.exterior_osmolality<<"\n";
-      // std::cout<<"Lp: "<< cCell->cryo_parameters.Lp<<"\n";
-      // std::cout<<"Ps: "<< cCell->cryo_parameters.Ps<<"\n";
-      // std::cout<<"Next water: "<< cCell->cryocell_state.next_water_volume<<"\n";
-      // std::cout<<"Next solute: "<< cCell->cryocell_state.next_solute_moles<<"\n";
-      // std::cout<<"number of uptake voxels: "<<cCell->cryocell_state.uptake_voxels.size()<<"\n";
-      // std::cout<<"dN: "<< cCell->cryo_parameters.dN<<"\n\n";
-      // std::cout<<"dVw: "<<cCell->cryo_parameters.dVw<<"\n\n\n";
-      // std::cout<<"solute_uptake: "<<cCell->cryocell_state.solute_uptake<<"\n";
-      // std::cout<<"water_uptake: "<<cCell->cryocell_state.water_uptake<<"\n";
-      // std::cout<<"solute_uptake_per_voxel: "<<cCell->cryocell_state.solute_uptake_per_voxel<<"\n";
-      // std::cout<<"water_uptake_per_voxel: "<<cCell->cryocell_state.water_uptake_per_voxel<<"\n\n\n";
-      std::string plot1="neighbor_plot-";
-      // python_plot_cell_and_voxels(cCell, dt,cCell->cell_voxels,plot1);
-      // std::string plot2="uptake-voxels-";
-      // python_plot_cell_and_voxels(pCell, dt,cCell->cryocell_state.uptake_voxels,plot2);
-
-	    // double Zmin = microenvironment.mesh.bounding_box[2]; 
-	    // double Zmax = microenvironment.mesh.bounding_box[5]; 
-      double z_height=microenvironment.mesh.dz/2;
-      double Zmin= 4*z_height*-1; 
-      double Zmax= 4*z_height; 
+//     // std::cout<< "POSITION: "<< cCell->position<< "\n";
+//     // std::cout<< "Old position: "<< cCell->old_position<< "\n";
+//     // std::cout<< "NET FORCE: "<< cCell->net_force<< "\n";
+//     // std::cout<< "Velocity: "<< cCell->velocity<<"\n"; 
+//       // std::cout<<"Volume:" <<pCell->phenotype.volume.total<<"\n";
+//       // std::cout<<"cell type: "<<cCell->type_name<<"\n";
+//       // std::cout<<"volume: "<<cCell->phenotype.volume.total<<"\n";
+//       // std::cout<<"number of cryocells: "<<all_cryocells.size()<<"\n";
+//       // std::cout<<"water volume: "<<cCell->cryocell_state.water_volume<<"\n";
+//       // std::cout<<"interior molarity: "<< cCell->cryo_concentrations.interior_molarity<<"\n";
+//       // std::cout<<"interior molality: "<< cCell->cryo_concentrations.interior_component_molality<<"\n";
+//       // std::cout<<"interior osmolality: "<< cCell->cryo_concentrations.interior_osmolality<<"\n";
+//       // std::cout<<"exterior molarity: "<< cCell->cryo_concentrations.exterior_molarity<<"\n";
+//       // std::cout<<"surface_area: "<< cCell->cryocell_state.surface_area<<"\n";
+//       // std::cout<<"exterior osmolality: "<< cCell->cryo_concentrations.exterior_osmolality<<"\n";
+//       // std::cout<<"Lp: "<< cCell->cryo_parameters.Lp<<"\n";
+//       // std::cout<<"Ps: "<< cCell->cryo_parameters.Ps<<"\n";
+//       // std::cout<<"Next water: "<< cCell->cryocell_state.next_water_volume<<"\n";
+//       // std::cout<<"Next solute: "<< cCell->cryocell_state.next_solute_moles<<"\n";
+//       // std::cout<<"number of uptake voxels: "<<cCell->cryocell_state.uptake_voxels.size()<<"\n";
+//       // std::cout<<"dN: "<< cCell->cryo_parameters.dN<<"\n\n";
+//       // std::cout<<"dVw: "<<cCell->cryo_parameters.dVw<<"\n\n\n";
+//       // std::cout<<"solute_uptake: "<<cCell->cryocell_state.solute_uptake<<"\n";
+//       // std::cout<<"water_uptake: "<<cCell->cryocell_state.water_uptake<<"\n";
+//       // std::cout<<"solute_uptake_per_voxel: "<<cCell->cryocell_state.solute_uptake_per_voxel<<"\n";
+//       // std::cout<<"water_uptake_per_voxel: "<<cCell->cryocell_state.water_uptake_per_voxel<<"\n\n\n";
+      std::string plot1="single_layer_plot-";
+//       // python_plot_cell_and_voxels(cCell, dt,cCell->cell_voxels,plot1);
+      std::string plot2="uptake-voxels-";
+      python_plot_cell_and_voxels(pCell, dt,cCell->cryocell_state.uptake_voxels,plot2);
+//
+	    double Zmin = microenvironment.mesh.bounding_box[2]; 
+// 	    // double Zmax = microenvironment.mesh.bounding_box[5]; 
+//       double z_height=microenvironment.mesh.dz/2;
+//       double Zmin= 4*z_height*-1; 
+//       double Zmax= 4*z_height; 
       double zz=Zmin;
-      std::vector<Cell*>nn=cCell->all_neighbors;
-      // std::cout<<"NEIGHBORS SIZE: "<< nn.size()<<"\n";
-      // std::cout<<"SPRING CONNECTIONS SIZE: "<< cCell->spring_connections.neighbor_springs.size()<<"\n";
-      while(zz<Zmax)
-      {
-        // python_plot_cell_and_voxels_single_layer(cCell,dt, cCell->cell_voxels, plot1, zz);
-          // python_plot_cell_with_Neighbors(cCell, dt, cCell->cell_voxels, plot1, zz, nn);       
-        zz+=z_height;
-      }
+//       std::vector<Cell*>nn=cCell->all_neighbors;
+//       // std::cout<<"NEIGHBORS SIZE: "<< nn.size()<<"\n";
+//       // std::cout<<"SPRING CONNECTIONS SIZE: "<< cCell->spring_connections.neighbor_springs.size()<<"\n";
+//       while(zz<Zmax)
+//       {
+        python_plot_cell_and_voxels_single_layer(cCell,dt, cCell->cell_voxels, plot1, zz);
+//           // python_plot_cell_with_Neighbors(cCell, dt, cCell->cell_voxels, plot1, zz, nn);       
+//         zz+=z_height;
+//       }
     }
   }
-/*{*/
-/*  std::vector<int> test_box{};*/
-/*  std::vector<int> test_box2{};*/
-/**/
-/*  std::vector<int> test_box3{};*/
-/*    // diffusion_bounding_box(pCell, &test_box);*/
-/*  std::vector<double> radius(3,pCell->phenotype.geometry.radius);*/
-/*  double voxel_length=default_microenvironment_options.dx;*/
-/*  general_voxel_bounding_box(&test_box, pCell->position, radius,voxel_length, pCell->get_microenvironment()->mesh);*/
-/*  std::vector<int> return_box{}; */
-/*  get_intersecting_voxels(pCell,test_box,&return_box);*/
-/*  std::string plot2="intersecting-neighbour-voxels-";*/
-/*  std::vector<int> neighbor_voxels{};*/
-/*  Cell* me=(*all_cells)[0];*/
-/*  Cell* neighbor=(*all_cells)[1];*/
-/**/
-/*  general_voxel_bounding_box(&test_box2, me->position, radius,voxel_length, me->get_microenvironment()->mesh);*/
-/*  general_voxel_bounding_box(&test_box3, neighbor->position, radius,voxel_length, neighbor->get_microenvironment()->mesh);*/
-/*  intersecting_neighbor_voxels(me, neighbor, test_box2,test_box3, &neighbor_voxels);*/
-/**/
-  /*#pragma omp critical*/
-/*  python_plot_two_cells_and_voxels(me,neighbor, dt,neighbor_voxels,plot2);*/
-return; } 
+// /*{*/
+// /*  std::vector<int> test_box{};*/
+// /*  std::vector<int> test_box2{};*/
+// /**/
+// /*  std::vector<int> test_box3{};*/
+// /*    // diffusion_bounding_box(pCell, &test_box);*/
+// /*  std::vector<double> radius(3,pCell->phenotype.geometry.radius);*/
+// /*  double voxel_length=default_microenvironment_options.dx;*/
+// /*  general_voxel_bounding_box(&test_box, pCell->position, radius,voxel_length, pCell->get_microenvironment()->mesh);*/
+// /*  std::vector<int> return_box{}; */
+// /*  get_intersecting_voxels(pCell,test_box,&return_box);*/
+// /*  std::string plot2="intersecting-neighbour-voxels-";*/
+// /*  std::vector<int> neighbor_voxels{};*/
+// /*  Cell* me=(*all_cells)[0];*/
+// /*  Cell* neighbor=(*all_cells)[1];*/
+// /**/
+// /*  general_voxel_bounding_box(&test_box2, me->position, radius,voxel_length, me->get_microenvironment()->mesh);*/
+// /*  general_voxel_bounding_box(&test_box3, neighbor->position, radius,voxel_length, neighbor->get_microenvironment()->mesh);*/
+// /*  intersecting_neighbor_voxels(me, neighbor, test_box2,test_box3, &neighbor_voxels);*/
+// /**/
+//   /*#pragma omp critical*/
+// /*  python_plot_two_cells_and_voxels(me,neighbor, dt,neighbor_voxels,plot2);*/
+  return; 
+} 
 
 void contact_function( Cell* pMe, Phenotype& phenoMe , Cell* pOther, Phenotype& phenoOther , double dt )
 { return; } 

@@ -62,7 +62,8 @@ PhysiMeSS_OBJECTS := PhysiMeSS.o PhysiMeSS_agent.o PhysiMeSS_fibre.o PhysiMeSS_c
 
 PhysiCell_custom_module_OBJECTS := custom.o addon_factory.o base_addon.o addon.o addon_example.o quaternion.o \
 quaternion_addon.o debug_log.o addon_division_tracker.o multivoxel_functions.o ABFM.o cryocell.o conversions.o \
-volume_change.o tissue_construction.o custom_coloring.o spring_class.o multivoxel_neighborhood.o basement_membrane.o
+volume_change.o tissue_construction.o custom_coloring.o spring_class.o multivoxel_neighborhood.o basement_membrane.o\
+cryocell_functions.o
 
 
 pugixml_OBJECTS := pugixml.o
@@ -225,6 +226,8 @@ ABFM.o: ./custom_modules/cryomodule/ABFM.cpp
 	$(COMPILE_COMMAND) -c ./custom_modules/cryomodule/ABFM.cpp
 cryocell.o: ./custom_modules/cryomodule/cryocell.cpp
 	$(COMPILE_COMMAND) -c ./custom_modules/cryomodule/cryocell.cpp
+cryocell_functions.o: ./custom_modules/cryomodule/cryocell_functions.cpp
+	$(COMPILE_COMMAND) -c ./custom_modules/cryomodule/cryocell_functions.cpp
 conversions.o: ./custom_modules/cryomodule/conversions.cpp
 	$(COMPILE_COMMAND) -c ./custom_modules/cryomodule/conversions.cpp
 

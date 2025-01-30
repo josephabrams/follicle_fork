@@ -104,15 +104,14 @@ void get_voxel_corners(std::vector<double> &voxel_center, std::vector<std::vecto
   double zz=default_microenvironment_options.dz/2.0;
   double yy=default_microenvironment_options.dy/2.0;
   double xx=default_microenvironment_options.dx/2.0;
-  std::vector <std::vector <double>> corners(4,std::vector<double>(3,0.0));
+  std::vector <std::vector <double>> corners(return_corners.size(),std::vector<double>(3,0.0));
+
   int count=0;
   for (int i = -1; i < 2; i+=2)
   {
     for (int j = -1; j < 2; j+=2)
     {
       if(!default_microenvironment_options.simulate_2D){
-        #pragma omp critical
-        corners.resize(8,std::vector<double>(3,0.0));
         for (int k = -1; k < 2; k+=2)
         {
           std::vector<double> temp_point={xx*i,yy*j,zz*k};
@@ -241,7 +240,7 @@ void get_intersecting_voxels(Cell* pCell,std::vector<int>& bounding_voxels,std::
     // }
     std::vector<int> intersecting_voxels{};
     // #pragma omp private(intersecting_voxels);
-    for (size_t i = 0; i < (bounding_voxels).size(); i++)
+    for (int i = 0; i < (bounding_voxels).size(); i++)
     {
       
       // std::vector<int> intersecting_voxels_private{};
@@ -250,49 +249,48 @@ void get_intersecting_voxels(Cell* pCell,std::vector<int>& bounding_voxels,std::
       std::vector<std::vector <double>> test_x_edges(2,std::vector<double>(3,0.0));
       std::vector<std::vector <double>> test_y_edges(2,std::vector<double>(3,0.0));
       std::vector<std::vector <double>> test_z_edges(2,std::vector<double>(3,0.0));
-
+    //
       if(default_microenvironment_options.simulate_2D)
       {
-        // #pragma omp critical
+    //     // #pragma omp critical
         test_corners.resize(4,std::vector<double>(3,0.0));
       }
-      // std::vector<std::vector <double>> test_faces(6,std::vector<double>(3,0.0));
       get_voxel_corners(test_voxel_center,test_corners);
       get_voxel_edges(test_voxel_center,test_x_edges,test_y_edges,test_z_edges);
       int sum=0;
       int face_count=0;
-      if(sum==0 && face_count==0&&test_voxel_center==pCell->get_microenvironment()->nearest_voxel(pCell->position).center)
+      if(sum==0 && face_count==0 && test_voxel_center==pCell->get_microenvironment()->nearest_voxel(pCell->position).center)
       {
-                    intersecting_voxels.push_back(bounding_voxels[i]);
-                    sum=1;
+        intersecting_voxels.push_back(bounding_voxels[i]);
+        sum=1;
       }
 
-      else if(sum==0&&face_count==0&&corner_intersect(pCell,test_corners,sum))
+      else if(sum==0 && face_count==0 &&corner_intersect(pCell,test_corners,sum))
       {
-       intersecting_voxels.push_back(bounding_voxels[i]);
+        intersecting_voxels.push_back(bounding_voxels[i]);
       }
       else if(sum==0 && face_count==0 && edge_intersect(pCell, test_x_edges,face_count))
       {        
-       intersecting_voxels.push_back(bounding_voxels[i]); 
+        intersecting_voxels.push_back(bounding_voxels[i]); 
       }
       else if(sum==0 && face_count==0 && edge_intersect(pCell, test_y_edges,face_count))
       {        
-       intersecting_voxels.push_back(bounding_voxels[i]);
+        intersecting_voxels.push_back(bounding_voxels[i]);
       }
       else if(!default_microenvironment_options.simulate_2D && sum==0 &&face_count==0 && edge_intersect(pCell, test_z_edges,face_count)){
         intersecting_voxels.push_back(bounding_voxels[i]);
       }
     }
-    // #pragma omp critical
-    // {   
-      // std::vector<int>::iterator it;
-      // it = std::unique (intersecting_voxels.begin(), intersecting_voxels.end());   // 10 20 30 20 10 ?  ?  ?  ?
-      // intersecting_voxels.resize( std::distance(intersecting_voxels.begin(),it) ); 
-        
+    // // #pragma omp critical
+    // // {   
+    //   // std::vector<int>::iterator it;
+    //   // it = std::unique (intersecting_voxels.begin(), intersecting_voxels.end());   // 10 20 30 20 10 ?  ?  ?  ?
+    //   // intersecting_voxels.resize( std::distance(intersecting_voxels.begin(),it) ); 
+    //
       return_intersecting_voxel_indicies->assign(intersecting_voxels.begin(),intersecting_voxels.end());
     // std::cout<< "returing voxels size: "<< return_intersecting_voxel_indicies->size()<<"\n\n";
     // }
-    
+    // } 
     return;
 }
 
@@ -526,7 +524,7 @@ void python_plot_cell_and_voxels_single_layer(Cell* pCell, double dt, std::vecto
 
       // std::cout<<"bounding_box size: "<< bounding_box_by_index.size()<<"\n\n";
       std::vector <double> voxel_position=microenvironment.voxels(bounding_box_by_index[i]).center;
-      ofs<<"\t#("<<voxel_position[0]<<", "<<voxel_position[1]<<", "<< voxel_position[2] <<"), \n";
+      ofs<<"\t#,    "<<bounding_box_by_index[i]<<", "<<voxel_position[0]<<", "<<voxel_position[1]<<", "<< voxel_position[2] <<"\n";
       if(std::abs(voxel_position[2]-z_height)<=0.1)
       {
         std::vector <double> bottom_corner={voxel_position[0]-(voxel_length/2),voxel_position[1]-(voxel_length/2)};      
@@ -618,3 +616,142 @@ void python_plot_two_cells_and_voxels(Cell* pCell, Cell* pNeighbor, double dt, s
   }
   return;
 }
+
+// void update_cryocell_voxels(){
+//
+//    double Xmin = microenvironment.mesh.bounding_box[0]; 
+// 	 double Ymin = microenvironment.mesh.bounding_box[1]; 
+// 	 double Zmin = microenvironment.mesh.bounding_box[2]; 
+// 	//
+// 	 double Xmax = microenvironment.mesh.bounding_box[3]; 
+// 	 double Ymax = microenvironment.mesh.bounding_box[4]; 
+// 	 double Zmax = microenvironment.mesh.bounding_box[5]; 
+//
+//     std::vector<int> bounding_box_by_index;
+//   #pragma omp parallel
+//
+//     std::vector<int> bounding_box_by_index_private;
+//     #pragma omp for nowait
+//     for(int i=0; i<(all_cryocells.size());i++)// loop through all cryocells
+//     {
+//       Cryocell* cCell=(all_cryocells)[i];
+//       std::vector<int> new_voxels{};
+//       std::vector<int> general_box{};
+//
+//       std::vector<double> radius(3,this->phenotype.geometry.radius);
+//       double voxel_length=default_microenvironment_options.dx;
+//       std::vector<double> center= cCell->pos
+//       // general_voxel_bounding_box(&general_box, this->position, radius,voxel_length, this->get_microenvironment()->mesh);
+//       BioFVM::Cartesian_Mesh &a_mesh= cCell->get_microenvironment()->mesh;
+//       std::vector<double> voxel_dimensions(3,voxel_length);
+//       std::vector<double> lower_point{0.0,0.0,0.0};
+//       std::vector<double> upper_point{0.0,0.0,0.0};
+//     //figure out the dimensions of the bounding box
+//       lower_point=center-(half_dimensions)-voxel_dimensions;
+//       upper_point=center+(half_dimensions)+voxel_dimensions;
+//
+//       if(Xmin>lower_point[0]){
+//         lower_point[0]=Xmin+(0.5*voxel_length);
+//       }
+//       if(Ymin>lower_point[1]){
+//         lower_point[1]=Ymin+(0.5*voxel_length);
+//       }
+//
+//       if(Zmin>lower_point[2]){
+//         lower_point[2]=Zmin+(0.5*voxel_length);
+//       }
+//       if(Xmax<upper_point[0]){
+//         upper_point[0]=Xmax-(0.5*voxel_length);
+//       }
+//       if(Ymax<upper_point[1]){
+//         upper_point[1]=Ymax-(0.5*voxel_length);
+//       }
+//       if(Zmax<upper_point[0]){
+//         upper_point[2]=Zmax-(0.5*voxel_length);
+//       }
+//       std::vector<double> voxel_start= microenvironment.nearest_voxel(lower_point).center;
+//       std::vector<double> voxel_end= microenvironment.nearest_voxel(upper_point).center;
+//       int x_count= (int)(std::ceil((voxel_start[0]-voxel_end[0])/voxel_length));
+//       int y_count= (int)(std::ceil((voxel_start[1]-voxel_end[1])/voxel_length));
+//       int z_count= (int)(std::ceil((voxel_start[2]-voxel_end[2])/voxel_length));
+//       for (int i =0; i<x_count; i++){
+//         double x_coord=voxel_start[0]+i*voxel_length;
+//         for(int j=0; j<y_count; j++){
+//           double y_coord=voxel_start[1]+j*voxel_length;
+//           for( int k=0; k<z_count; k++){
+//             double z_coord=voxel_start[2]+k*voxel_length;
+//                 std::vector<double> voxel_position {x_coord,y_coord,z_coord};
+//                 bounding_box_by_index.push_back(a_mesh.nearest_voxel_index(voxel_position)); 
+//           }
+//         }
+//       }
+//
+//
+//       for (double x=voxel_start[0];x<voxel_end[0]; x+=voxel_length){
+//           for (double y=voxel_start[1];y<voxel_end[1]; y+=voxel_length){
+//             else{
+//
+//               int z_end= (int)(std::ceil(voxel_start[2]-voxel_end[2]));
+//               for (double z=voxel_start[2];z<voxel_end[2]; z+=voxel_length){
+//                 // std::cout<<"("<<x<<", "<<y<<", "<<z<< ")"<<"\n";
+//                 std::vector<double> voxel_position {x,y,z};
+//                 bounding_box_by_index.push_back(a_mesh.nearest_voxel_index(voxel_position)); 
+//               }
+//             }
+//           }
+//         }
+//     }
+//     // #pragma omp parallel for collapse(3)
+//     // {
+//       // std::vector<int> bounding_box_by_index_private;
+//       // #pragma omp for
+//         for (double x=voxel_start[0];x<voxel_end[0]; x+=voxel_length){
+//           for (double y=voxel_start[1];y<voxel_end[1]; y+=voxel_length){
+//             if(default_microenvironment_options.simulate_2D){
+//                 // std::cout<<"("<<x<<", "<<y<<")"<<"\n";
+//                 std::vector<double> voxel_position {x,y,0};
+//                 bounding_box_by_index.push_back(a_mesh.nearest_voxel_index(voxel_position)); 
+//             }
+//             else{
+//               for (double z=voxel_start[2];z<voxel_end[2]; z+=voxel_length){
+//                 // std::cout<<"("<<x<<", "<<y<<", "<<z<< ")"<<"\n";
+//                 std::vector<double> voxel_position {x,y,z};
+//                 bounding_box_by_index.push_back(a_mesh.nearest_voxel_index(voxel_position)); 
+//               }
+//             }
+//           }
+//         }
+//         // #pragma omp critical
+//         // {
+//
+//           // std::vector<int>::iterator it;
+//           // it = std::unique (bounding_box_by_index.begin(), bounding_box_by_index.end());   // 10 20 30 20 10 ?  ?  ?  ?
+//           // bounding_box_by_index.resize( std::distance(bounding_box_by_index.begin(),it) );
+//         //std::cout<<"bounding_box_by_index : "<<bounding_box_by_index<<"\n\n";
+//           // bounding_box_by_index.insert(bounding_box_by_index.end(), bounding_box_by_index_private.begin(), bounding_box_by_index_private.end());
+//           return_bounding_box->assign(bounding_box_by_index.begin(),bounding_box_by_index.end());
+//           // std::cout<<"return_bounding_box ("<< (*return_bounding_box).size()<<"): "<<*return_bounding_box<<"\n";
+//           // if((*return_bounding_box).size()==0){
+//             // std::cout<<"return_bounding_box ("<< (*return_bounding_box).size()<<"): "<<*return_bounding_box<<"\n\n";
+//             // if(voxel_end[0]<voxel_start[0] || voxel_end[1]<voxel_start[1] || voxel_end[2]<voxel_end[2]){
+//               // std::cout<<"center "<< center <<"\n";
+//               // std::cout<<"start voxel: "<< voxel_start <<"\n";
+//               // std::cout<<"end voxel: "<< voxel_end <<"\n\n";
+//               // std::cout<<"lower_point: "<< lower_point <<"\n";
+//               // std::cout<<"upper_point: "<< upper_point <<"\n\n\n\n";
+//             // }
+//           // }
+//         // }
+//     // }
+//       get_intersecting_voxels(this,general_box,&new_voxels);
+//       #pragma omp critical
+//       {
+//
+//         this->cell_voxels.assign(new_voxels.begin(),new_voxels.end());
+//         this->cryocell_state.uptake_voxels.assign(new_voxels.begin(),new_voxels.end());///these are the same for now, set in two places
+//
+//       }
+//     }
+//
+//   return;
+// }
