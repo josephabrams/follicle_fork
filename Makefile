@@ -1,5 +1,5 @@
 VERSION := $(shell grep . VERSION.txt | cut -f1 -d:)
-PROGRAM_NAME := liver_spheroid
+PROGRAM_NAME := overian_follicle
 
 CC := g++
 # CC := g++-mp-7 # typical macports compiler name

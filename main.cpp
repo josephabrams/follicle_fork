@@ -101,23 +101,23 @@ int main( int argc, char* argv[] )
 	if( argc > 1 )
 	{
 
-		XML_status = load_PhysiCell_config_file( "./config/PhysiCell_settings_follicle_EG.xml" );
-		sprintf( copy_command , "cp ./config/PhysiCell_settings_follicle_EG.xml %s" , PhysiCell_settings.folder.c_str() ); 
-		// XML_status = load_PhysiCell_config_file( argv[1] ); 
-		// sprintf( copy_command , "cp %s %s" , argv[1] , PhysiCell_settings.folder.c_str() );
+		// XML_status = load_PhysiCell_config_file( "./config/PhysiCell_settings_follicle_EG.xml" );
+		// sprintf( copy_command , "cp ./config/PhysiCell_settings_follicle_EG.xml %s" , PhysiCell_settings.folder.c_str() ); 
+		XML_status = load_PhysiCell_config_file( argv[1] ); 
+		sprintf( copy_command , "cp %s %s" , argv[1] , PhysiCell_settings.folder.c_str() );
 
-    // if(argc==3)
-    // {
-      // std::string k_oocyte_str= argv[2];
-      // std::string k_granulosa_str= argv[3];
-      // std::string k_basement_str=argv[4];
-      run_num_str=argv[1];
-      // load_k_oocyte= std::stod(k_oocyte_str);
-      // load_k_granulosa= std::stod(k_granulosa_str);
-      // load_k_basement= std::stod(k_basement_str);
+    if(argc==5)
+    {
+      std::string k_oocyte_str= argv[2];
+      std::string k_granulosa_str= argv[3];
+      std::string k_basement_str=argv[4];
+      run_num_str=argv[5];
+      load_k_oocyte= std::stod(k_oocyte_str);
+      load_k_granulosa= std::stod(k_granulosa_str);
+      load_k_basement= std::stod(k_basement_str);
       // run_number=std::stoi(run_num_str);
-      // std::cout<<" FORCE PARAM: "<< k_oocyte<<", "<<k_granulosa<<", "<<k_basement<<"\n";
-    // }
+      std::cout<<" FORCE PARAM: "<< load_k_oocyte<<", "<<load_k_granulosa<<", "<<load_k_basement<<"\n";
+    }
 	}
 	else
 	{
@@ -163,7 +163,7 @@ int main( int argc, char* argv[] )
 	//------
 	setup_tissue();
   //granulosa_k, oocyte_k, basement_k
-  set_spring_constants_for_HPC(1, 2, 0.1);
+  set_spring_constants_for_HPC(load_k_granulosa, load_k_oocyte, load_k_basement);
   //--------
   //SET INITIAL CONNECTIONS! -- I'm connected to my neighbors at time zero
   update_initial_neighbors();
