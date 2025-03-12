@@ -206,8 +206,8 @@ int main( int argc, char* argv[] )
 	std::vector<std::string> (*cell_coloring_function)(Cell*) = my_coloring_function; 
 	
 	sprintf( filename , "%s/initial.svg" , PhysiCell_settings.folder.c_str() ); 
-	SVG_plot( filename , microenvironment, 0.0 , PhysiCell_globals.current_time, cell_coloring_function );
-	
+	// SVG_plot( filename , microenvironment, 0.0 , PhysiCell_globals.current_time, cell_coloring_function );
+	Custom_SVG_plot( filename , microenvironment, 0.0 , PhysiCell_globals.current_time, cell_coloring_function );
 	sprintf( filename , "%s/legend.svg" , PhysiCell_settings.folder.c_str() ); 
 	create_plot_legend( filename , cell_coloring_function ); 
 	
@@ -295,7 +295,7 @@ int main( int argc, char* argv[] )
       advance_BM_springs(BM_outter_radius, BM_inner_radius);
       //-----
       //
-      output_mechanics_csv(run_num_str);
+      // output_mechanics_csv(run_num_str);
       // python_plot_BM_all_cells(BM_inner_radius, BM_outter_radius);
       update_velocity(); 
       TZPs();

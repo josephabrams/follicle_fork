@@ -1,5 +1,5 @@
 VERSION := $(shell grep . VERSION.txt | cut -f1 -d:)
-PROGRAM_NAME := follicle
+PROGRAM_NAME := project
 
 CC := g++
 # CC := g++-mp-7 # typical macports compiler name
@@ -58,18 +58,12 @@ PhysiCell_pugixml.o PhysiCell_settings.o PhysiCell_geometry.o
 
 # put your custom objects here (they should be in the custom_modules directory)
 
-PhysiMeSS_OBJECTS := PhysiMeSS.o PhysiMeSS_agent.o PhysiMeSS_fibre.o PhysiMeSS_cell.o
-
-PhysiCell_custom_module_OBJECTS := custom.o addon_factory.o base_addon.o addon.o addon_example.o quaternion.o \
-quaternion_addon.o debug_log.o addon_division_tracker.o multivoxel_functions.o ABFM.o cryocell.o conversions.o \
-volume_change.o tissue_construction.o custom_coloring.o spring_class.o multivoxel_neighborhood.o basement_membrane.o\
-cryocell_functions.o
-
+PhysiCell_custom_module_OBJECTS := custom.o
 
 pugixml_OBJECTS := pugixml.o
 
 PhysiCell_OBJECTS := $(BioFVM_OBJECTS)  $(pugixml_OBJECTS) $(PhysiCell_core_OBJECTS) $(PhysiCell_module_OBJECTS)
-ALL_OBJECTS := $(PhysiCell_OBJECTS) $(PhysiMeSS_OBJECTS) $(PhysiCell_custom_module_OBJECTS)
+ALL_OBJECTS := $(PhysiCell_OBJECTS) $(PhysiCell_custom_module_OBJECTS)
 
 # compile the project 
 
@@ -171,81 +165,15 @@ PhysiCell_basic_signaling.o: ./core/PhysiCell_basic_signaling.cpp
 	
 PhysiCell_geometry.o: ./modules/PhysiCell_geometry.cpp
 	$(COMPILE_COMMAND) -c ./modules/PhysiCell_geometry.cpp 
-
-
-# PhysiMeSS
-PhysiMeSS.o: ./addons/PhysiMeSS/PhysiMeSS.cpp 
-	$(COMPILE_COMMAND) -c ./addons/PhysiMeSS/PhysiMeSS.cpp
-
-PhysiMeSS_agent.o: ./addons/PhysiMeSS/PhysiMeSS_agent.cpp 
-	$(COMPILE_COMMAND) -c ./addons/PhysiMeSS/PhysiMeSS_agent.cpp
-
-PhysiMeSS_fibre.o: ./addons/PhysiMeSS/PhysiMeSS_fibre.cpp 
-	$(COMPILE_COMMAND) -c ./addons/PhysiMeSS/PhysiMeSS_fibre.cpp
-
-PhysiMeSS_cell.o: ./addons/PhysiMeSS/PhysiMeSS_cell.cpp 
-	$(COMPILE_COMMAND) -c ./addons/PhysiMeSS/PhysiMeSS_cell.cpp
-
+	
 # user-defined PhysiCell modules
 
 custom.o: ./custom_modules/custom.cpp 
 	$(COMPILE_COMMAND) -c ./custom_modules/custom.cpp
 
-base_addon.o: ./custom_modules/addons/base_addon.cpp
-	$(COMPILE_COMMAND) -c ./custom_modules/base_addon.cpp 
-
-addon_factory.o: ./custom_modules/addons/addon_factory.cpp
-	$(COMPILE_COMMAND) -c ./custom_modules/addon_factory.cpp
-
-addon.o: ./custom_modules/addons/addon.cpp
-	$(COMPILE_COMMAND) -c ./custom_modules/addon.cpp 
-
-addon_example.o: ./custom_modules/addons/addon_example.cpp
-	$(COMPILE_COMMAND) -c ./custom_modules/addon_example.cpp 
-
-quaternion.o: ./custom_modules/addons/quaternion.cpp
-	$(COMPILE_COMMAND) -c ./custom_modules/quaternion.cpp 
-
-quaternion_addon.o: ./custom_modules/addons/quaternion_addon.cpp
-	$(COMPILE_COMMAND) -c ./custom_modules/quaternion_addon.cpp
-
-debug_log.o: ./custom_modules/addons/debug_log.cpp
-	$(COMPILE_COMMAND) -c ./custom_modules/addons/debug_log.cpp 
-
-addon_division_tracker.o: ./custom_modules/addons/addon_division_tracker.cpp
-	$(COMPILE_COMMAND) -c ./custom_modules/addons/addon_division_tracker.cpp 
-
-# --- for liver spheroid testing ---
-# multivoxel_functions
-multivoxel_functions.o: ./custom_modules/multivoxel/multivoxel_functions.cpp
-	$(COMPILE_COMMAND) -c ./custom_modules/multivoxel/multivoxel_functions.cpp
-multivoxel_neighborhood.o: ./custom_modules/multivoxel/multivoxel_neighborhood.cpp
-	$(COMPILE_COMMAND) -c ./custom_modules/multivoxel/multivoxel_neighborhood.cpp
-# cryomodule
-ABFM.o: ./custom_modules/cryomodule/ABFM.cpp
-	$(COMPILE_COMMAND) -c ./custom_modules/cryomodule/ABFM.cpp
-cryocell.o: ./custom_modules/cryomodule/cryocell.cpp
-	$(COMPILE_COMMAND) -c ./custom_modules/cryomodule/cryocell.cpp
-cryocell_functions.o: ./custom_modules/cryomodule/cryocell_functions.cpp
-	$(COMPILE_COMMAND) -c ./custom_modules/cryomodule/cryocell_functions.cpp
-conversions.o: ./custom_modules/cryomodule/conversions.cpp
-	$(COMPILE_COMMAND) -c ./custom_modules/cryomodule/conversions.cpp
-
-volume_change.o: ./custom_modules/cryomodule/volume_change.cpp
-	$(COMPILE_COMMAND) -c ./custom_modules/cryomodule/volume_change.cpp
-tissue_construction.o: ./custom_modules/tissue_construction/tissue_construction.cpp
-	$(COMPILE_COMMAND) -c ./custom_modules/tissue_construction/tissue_construction.cpp
-custom_coloring.o: ./custom_modules/custom_coloring.cpp
-	$(COMPILE_COMMAND) -c ./custom_modules/custom_coloring.cpp
-
-spring_class.o: ./custom_modules/spring_class/spring_class.cpp
-	$(COMPILE_COMMAND) -c ./custom_modules/spring_class/spring_class.cpp
-
-basement_membrane.o: ./custom_modules/tissue_construction/basement_membrane.cpp
-	$(COMPILE_COMMAND) -c ./custom_modules/tissue_construction/basement_membrane.cpp
 # cleanup
 
-reset-reset:
+reset:
 	rm -f *.cpp 
 	cp ./sample_projects/Makefile-default Makefile 
 	rm -f ./custom_modules/*
@@ -361,25 +289,6 @@ load:
 	cp ./user_projects/$(PROJ)/Makefile .
 	cp ./user_projects/$(PROJ)/config/* ./config/ 
 	cp ./user_projects/$(PROJ)/custom_modules/* ./custom_modules/ 
-
-pack:
-	@echo " "
-	@echo "Preparing project $(PROJ) for sharing ... "
-	@echo " " 
-	cd ./user_projects && zip -r $(PROJ).zip $(PROJ)
-	@echo " "
-	@echo "Share ./user_projects/$(PROJ).zip ... "
-	@echo "Other users can unzip $(PROJ).zip in their ./user_projects, compile, and run."
-	@echo " " 
-
-unpack:
-	@echo " "
-	@echo "Preparing shared project $(PROJ).zip for use ... "
-	@echo " " 
-	cd ./user_projects && unzip $(PROJ).zip 
-	@echo " "
-	@echo "Load this project via make load PROJ=$(PROJ) ... "
-	@echo " " 	
 
 list-user-projects:
 	@echo "user projects::"
