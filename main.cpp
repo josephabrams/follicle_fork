@@ -106,17 +106,20 @@ int main( int argc, char* argv[] )
 		XML_status = load_PhysiCell_config_file( argv[1] ); 
 		sprintf( copy_command , "cp %s %s" , argv[1] , PhysiCell_settings.folder.c_str() );
 
-    if(argc==5)
+    if(argc>4)
     {
       std::string k_oocyte_str= argv[2];
       std::string k_granulosa_str= argv[3];
       std::string k_basement_str=argv[4];
-      run_num_str=argv[5];
+      // run_num_str=argv[5];
+      // load_k_oocyte= 0.1;
+      // load_k_granulosa= 0.2;
+      // load_k_basement= 0.3;
       load_k_oocyte= std::stod(k_oocyte_str);
       load_k_granulosa= std::stod(k_granulosa_str);
       load_k_basement= std::stod(k_basement_str);
       // run_number=std::stoi(run_num_str);
-      std::cout<<" FORCE PARAM: "<< load_k_oocyte<<", "<<load_k_granulosa<<", "<<load_k_basement<<"\n";
+      std::cout<<" FORCE PARAM: "<< k_oocyte_str<<", "<<k_granulosa_str<<", "<<k_basement_str<<"\n";
     }
 	}
 	else
@@ -295,7 +298,7 @@ int main( int argc, char* argv[] )
       advance_BM_springs(BM_outter_radius, BM_inner_radius);
       //-----
       //
-      output_mechanics_csv(run_num_str);
+      // output_mechanics_csv(run_num_str);
       // python_plot_BM_all_cells(BM_inner_radius, BM_outter_radius);
       update_velocity(); 
       TZPs();

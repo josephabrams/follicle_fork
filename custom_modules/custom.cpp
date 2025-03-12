@@ -393,7 +393,7 @@ void custom_function( Cell* pCell, Phenotype& phenotype , double dt )
 //       // std::cout<<"SPRING CONNECTIONS SIZE: "<< cCell->spring_connections.neighbor_springs.size()<<"\n";
 //       while(zz<Zmax)
 //       {
-        python_plot_cell_and_voxels_single_layer(cCell,dt, cCell->cell_voxels, plot1, zz);
+        // python_plot_cell_and_voxels_single_layer(cCell,dt, cCell->cell_voxels, plot1, zz);
 //           // python_plot_cell_with_Neighbors(cCell, dt, cCell->cell_voxels, plot1, zz, nn);       
 //         zz+=z_height;
 //       }

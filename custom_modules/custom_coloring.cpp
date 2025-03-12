@@ -260,7 +260,6 @@ void Custom_SVG_plot( std::string filename , Microenvironment& M, double z_slice
 		
 	}
 	os << "  </g>" << std::endl; 
-	
 	// plot intersecting BM points
 	/* 
 	 for( int i=0 ; i < BasementMembraneNodes.size() ; i++ )
@@ -285,6 +284,18 @@ void Custom_SVG_plot( std::string filename , Microenvironment& M, double z_slice
 	
 	// end of the <g ID="tissue">
 	os << " </g>" << std::endl; 
+	// plot circular boundary
+  double boundary_center_x=0.0;
+  double boundary_center_y=0.0;
+  std::string bm_color= "rgb(0,0,0)";
+  std::string bm_fill= "none";
+  // double BM_inner_radius=83;
+  // double BM_outter_radius=112;
+	double inner_radius =83.0; 
+	double outter_radius =112.0; 
+   Write_SVG_circle( os,boundary_center_x-X_lower, boundary_center_y+top_margin-Y_lower, inner_radius , 1.0 , bm_color , bm_fill ); 
+   Write_SVG_circle( os,boundary_center_x-X_lower, boundary_center_y+top_margin-Y_lower, outter_radius , 1.0 , bm_color , bm_fill ); 
+
  
 	// draw a scale bar
  
@@ -346,6 +357,9 @@ void Custom_SVG_plot( std::string filename , Microenvironment& M, double z_slice
 
 			std::vector< std::string > output = substrate_coloring_function(concentration_sample, max_conc, min_conc );
 
+      // load_k_oocyte= std::stod(k_oocyte_str);
+      // load_k_granulosa= std::stod(k_granulosa_str);
+      // load_k_basement= std::stod(k_basement_str);
 			double upper_left_y = sub_rect_height * i; // here I set the position of each rectangole
 
 			Write_SVG_rect(os, upper_left_x, top_margin + upper_left_y, 25.0, sub_rect_height, 0.002 * plot_height , "none", output[0]); //drawing each piece of the barplot

@@ -349,7 +349,7 @@ void advance_BM_springs(double outter_radius, double inner_radius)
   //if a cell overlaps the midpoint exert force inward, if a cell passes beyond the BM it will no longer be a neighbor
   for(int j=0; j<basement_neighbors.size(); j++)
   {
-    std::cout<< "WARNING!!NON-INITIAL NEIGHBOR MADE CONTACT WITH THE BM!\n";
+    // std::cout<< "WARNING!!NON-INITIAL NEIGHBOR MADE CONTACT WITH THE BM!\n";
     double bm_midpoint=((inner_radius+outter_radius)/2);
     Cell* pCell=basement_neighbors[j];
     Cryocell* cCell=static_cast<Cryocell*>(pCell);
