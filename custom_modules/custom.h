@@ -95,6 +95,11 @@ void custom_function( Cell* pCell, Phenotype& phenotype , double dt );
 // void attach_new_cells();
 void contact_function( Cell* pMe, Phenotype& phenoMe , Cell* pOther, Phenotype& phenoOther , double dt ); 
 
+
+Cell* instantiate_physimess_cell();
+Cell* instantiate_physimess_fibre();
+// Cell* instantiate_physimess_cell_custom_degrade();
 bool arrest(Cell* pCell, Phenotype &phenotype, double dt);
 void custom_arrest_function(double arrest_time, double dt);
+std::vector<double> orientation_from_angle(double angle_1, double angle_2);
 

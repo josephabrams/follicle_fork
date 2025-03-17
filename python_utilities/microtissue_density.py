@@ -20,9 +20,13 @@ class Cell:
         self.overlap = False
         self.area=0
         self.cell_array=cell_array
+        self.volume=0
     def get_area(self):
         self.area=3.14159*self.radius ** 2
         return self.area
+    def get_volume(self):
+        self.volume=(4/3)*3.14159*self.radius ** 3
+        return self.volume
     def is_overlap(self):
         for cell in self.cell_array:
             extra_spacing=0
@@ -51,9 +55,13 @@ class Fiber:
         self.width = 2*radius
         self.height = length
         self.angle = angle
+        self.volume=0
     def get_area(self):
         self.area=self.width*self.height
         return self.area
+    def get_volume(self):
+        self.volume=self.length*3.1159*self.radius**2
+        return self.volume
     # def is_overlap(self):
     #     for i in range(len(self.cell_array)):
     #         spacing=max(self.radius,self.cell_array[i][1])*uniform(0,0.5)
@@ -332,6 +340,21 @@ def plot_fibers(ax, list_of_fibers,artists):
 #     ax.set_ylim(0, 6)
 #     ax.set_aspect("equal")
 #     plt.show()
+def generate_csv(cell_list, fiber_list):
+    with open("cell_list.csv", "w") as f:
+        label_string=f'x,y,z,type,volume,custom:length,custom:angle'
+        label_string=label_string+"\n"
+        f.write(label_string)
+        for cell in cell_list:
+            volume=cell.get_volume()
+            cell_string=f"{cell.position[0]},{cell.position[1]},0,granulosa,{volume},1,0"
+            cell_string=cell_string+"\n"
+            f.write(cell_string)
+        for fiber in fiber_list:
+            volume=fiber.get_volume()
+            fiber_string=f'{fiber.position[0]},{fiber.position[1]},0,matrix,{volume},{fiber.length},{fiber.angle}'
+            fiber_string=fiber_string+"\n"
+            f.write(fiber_string)
 def main():
     # test_nodes=[(0,-0.5),(0,-1),(0,-1.5),(-2,1),(0,-2),(0,-2.5),(0,-3),(0,-3.5),(0,-4),(0,0),(0,0.5),(0,1),(0,1.5),(-2,1),(0,2),(0,2.5),(0,3),(0,3.5),(0,4)]
     # test_centroid=[(-1,1.5)]
@@ -369,6 +392,7 @@ def main():
     print("free area",remaining_area)
     print("packing density", packing_density)
     # print(list_of_circles)
+    generate_csv(list_of_circles,list_of_fibers)
     fig, ax = plt.subplots()
     plt.xlim(-500,500)
     plt.ylim(-500,500)

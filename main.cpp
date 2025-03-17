@@ -101,8 +101,8 @@ int main( int argc, char* argv[] )
 	if( argc > 1 )
 	{
 
-		XML_status = load_PhysiCell_config_file( "./config/PhysiCell_settings_follicle_EG.xml" );
-		sprintf( copy_command , "cp ./config/PhysiCell_settings_follicle_EG.xml %s" , PhysiCell_settings.folder.c_str() ); 
+		XML_status = load_PhysiCell_config_file( "./config/PhysiCell_settings_microtissue.xml" );
+		sprintf( copy_command , "cp ./config/PhysiCell_settings_microtissue.xml %s" , PhysiCell_settings.folder.c_str() ); 
 		// XML_status = load_PhysiCell_config_file( argv[1] ); 
 		// sprintf( copy_command , "cp %s %s" , argv[1] , PhysiCell_settings.folder.c_str() );
 
@@ -121,8 +121,8 @@ int main( int argc, char* argv[] )
 	}
 	else
 	{
-		XML_status = load_PhysiCell_config_file( "./config/PhysiCell_settings_follicle_EG.xml" );
-		sprintf( copy_command , "cp ./config/PhysiCell_settings_follicle_EG.xml %s" , PhysiCell_settings.folder.c_str() ); 
+		XML_status = load_PhysiCell_config_file( "./config/PhysiCell_settings_microtissue.xml" );
+		sprintf( copy_command , "cp ./config/PhysiCell_settings_microstissue.xml %s" , PhysiCell_settings.folder.c_str() ); 
 		// XML_status = load_PhysiCell_config_file( "./config/PhysiCell_settings_follicle_GLY.xml" );
 		// sprintf( copy_command , "cp ./config/PhysiCell_settings_follicle_GLY.xml %s" , PhysiCell_settings.folder.c_str() ); 
 		// XML_status = load_PhysiCell_config_file( "./config/PhysiCell_settings_follicle_1xPBS.xml" );
@@ -175,16 +175,16 @@ int main( int argc, char* argv[] )
 
   get_basement_membrane_voxels(BM_center, BM_inner_radius, BM_outter_radius, &basement_membrane_voxels );
   get_initial_BM_neighbors(BM_outter_radius, BM_inner_radius);
-  create_BM_springs(BM_outter_radius, BM_inner_radius);
+  // create_BM_springs(BM_outter_radius, BM_inner_radius);
   // python_plot_BM(BM_inner_radius,BM_outter_radius);
   // python_plot_BM_cells(BM_inner_radius, BM_outter_radius);
   //
-  TZPs();
-  int initial_tzp_count=TZP_count();
+  // TZPs();
+  // int initial_tzp_count=TZP_count();
   // std::cout<<"TZP_count: "<<initial_tzp_count<<"\n";
-  create_output_TZP_csv();
+  // create_output_TZP_csv();
   // std::cout<<"Point springs size: "<<all_point_springs.size()<<"\n";
-  create_output_mechanics_csv(run_num_str);
+  // create_output_mechanics_csv(run_num_str);
 	set_save_biofvm_mesh_as_matlab( true ); 
 	set_save_biofvm_data_as_matlab( true ); 
 	set_save_biofvm_cell_data( true ); 
@@ -291,16 +291,16 @@ int main( int argc, char* argv[] )
       update_multivoxel_neighboorhood();
       //-----
       update_net_force();
-      update_BM_neighbors(BM_outter_radius, BM_inner_radius);
-      advance_BM_springs(BM_outter_radius, BM_inner_radius);
+      // update_BM_neighbors(BM_outter_radius, BM_inner_radius);
+      // advance_BM_springs(BM_outter_radius, BM_inner_radius);
       //-----
       //
       // output_mechanics_csv(run_num_str);
       // python_plot_BM_all_cells(BM_inner_radius, BM_outter_radius);
       update_velocity(); 
-      TZPs();
+      // TZPs();
       //-----
-      std::cout<<"TZP_count: "<<TZP_count()<<"\n";
+      // std::cout<<"TZP_count: "<<TZP_count()<<"\n";
       // double TZP_score=(double)TZP_count()/(double)initial_tzp_count;
       // std::cout<<"TZP_score: "<<TZP_score<<"\n";
       // std::cout<<"Point springs size: "<<all_point_springs.size()<<"\n";

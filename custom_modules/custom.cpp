@@ -105,8 +105,15 @@ void create_cell_types( void )
 	initialize_cell_definitions_from_pugixml(); 
 	build_cell_definitions_maps(); 
 	setup_signal_behavior_dictionaries(); 	
-	setup_cell_rules(); 
-	// cell_defaults.functions.update_phenotype = phenotype_function; 
+	setup_cell_rules();
+  for (auto* pCD: *getFibreCellDefinitions()){
+		pCD->functions.instantiate_cell = instantiate_physimess_fibre;
+		pCD->functions.plot_agent_SVG = fibre_agent_SVG;
+		pCD->functions.plot_agent_legend = fibre_agent_legend;
+    pCD->functions.custom_cell_rule=custom_function;
+	  pCD->functions.update_velocity = physimess_update_cell_velocity;
+    }
+  	// cell_defaults.functions.update_phenotype = phenotype_function; 
 	// cell_defaults.functions.custom_cell_rule = custom_function; 
 	// cell_defaults.functions.contact_function = contact_function; 
   // should be instantiated correctly on creation	
@@ -151,7 +158,7 @@ void setup_tissue( void )
 	
 	// create some of each type of cell 
 	
-  // load_cells_from_pugixml();
+  load_cells_from_pugixml();
   //
   //
 
@@ -180,39 +187,58 @@ void setup_tissue( void )
   {
       Cell_Definition *pCD = cell_definitions_by_index[k];
       std::cout << "Placing cells of type " << pCD->name << " ... " << std::endl;
-      if(pCD->name=="oocyte")
-      {
-          Cell* pC_oocyte; 
-          pC_oocyte=create_Cryocell(*pCD); 
-          pC_oocyte->assign_position( center_position );
-          pC_oocyte->set_radius(pC_oocyte->custom_data["initial_cell_radius"]);
-          // pC_oocyte->velocity=initial_velocity;
-          pC_oocyte->set_previous_velocity(0.0,0.0,0.0); 
-          // std::cout<< pC_oocyte->custom_data["initial_cell_radius"]<<"\n";
-      }
-      if(pCD->name=="granulosa") {
-          for(int i=0; i<cell_positions.size(); i++)
-          {
-            Cell* pC_granulosa; 
-            pC_granulosa=create_Cryocell(*pCD); 
-            pC_granulosa->assign_position( cell_positions[i] );
-            pC_granulosa->set_radius(initial_granulosa_radius);
-            pC_granulosa->velocity=initial_velocity;
-            pC_granulosa->set_previous_velocity(0.0,0.0,0.0); 
-            Cryocell* cCell=static_cast<Cryocell*>(pC_granulosa);
-              void (*func)(Cell*, Phenotype&, double);
-            // std::cout<<cCell<< " and  "<< pC_granulosa;
-            // for(int i=0; i<pC_granulosa->custom_data.variables.size();i++)
-            // { 
-            //   std::cout<< pC_granulosa->custom_data[i]<<"\n";
-            //
-            // }
-          }
-      // 
-      }
+      // if(pCD->name=="oocyte")
+      // {
+      //     Cell* pC_oocyte; 
+      //     pC_oocyte=create_Cryocell(*pCD); 
+      //     pC_oocyte->assign_position( center_position );
+      //     pC_oocyte->set_radius(pC_oocyte->custom_data["initial_cell_radius"]);
+      //     // pC_oocyte->velocity=initial_velocity;
+      //     pC_oocyte->set_previous_velocity(0.0,0.0,0.0); 
+      //     // std::cout<< pC_oocyte->custom_data["initial_cell_radius"]<<"\n";
+      // }
+      // if(pCD->name=="granulosa") {
+      //     for(int i=0; i<cell_positions.size(); i++)
+      //     {
+      //       Cell* pC_granulosa; 
+      //       pC_granulosa=create_Cryocell(*pCD); 
+      //       pC_granulosa->assign_position( cell_positions[i] );
+      //       pC_granulosa->set_radius(initial_granulosa_radius);
+      //       pC_granulosa->velocity=initial_velocity;
+      //       pC_granulosa->set_previous_velocity(0.0,0.0,0.0); 
+      //       Cryocell* cCell=static_cast<Cryocell*>(pC_granulosa);
+      //         void (*func)(Cell*, Phenotype&, double);
+      //       // std::cout<<cCell<< " and  "<< pC_granulosa;
+      //       // for(int i=0; i<pC_granulosa->custom_data.variables.size();i++)
+      //       // { 
+      //       //   std::cout<< pC_granulosa->custom_data[i]<<"\n";
+      //       //
+      //       // }
+      //     }
+      // // 
+      // }
   } 
             
-	
+for( int i=0; i < (*all_cells).size(); i++ ){
+
+        if (isFibre((*all_cells)[i]))
+        {
+            /* fibre positions are given by csv
+               assign fibre orientation and test whether out of bounds */
+      //      isFibreFromFile = true;
+          PhysiMeSS_Fibre* pF = static_cast<PhysiMeSS_Fibre*>((*all_cells)[i]);
+          pF->set_length(((*all_cells)[i])->custom_data["length"]);
+          std::vector<double> orientation=orientation_from_angle(((*all_cells)[i])->custom_data["angle"],0);
+          ((*all_cells)[i])->state.orientation=orientation;
+          static_cast<PhysiMeSS_Fibre*>((*all_cells)[i])->register_fibre_voxels();
+          static_cast<PhysiMeSS_Fibre*>((*all_cells)[i])->find_agent_voxels();
+          static_cast<PhysiMeSS_Fibre*>((*all_cells)[i])->find_agent_neighbors();
+          if(std::abs(uniform_random())>0.8)
+          {
+            static_cast<PhysiMeSS_Fibre*>((*all_cells)[i])->add_crosslinks();
+          }
+        } 
+    }	
   return; 
 }
 void set_spring_constants_for_HPC(double granulosa_k, double oocyte_k, double basement_k)
@@ -423,7 +449,9 @@ void custom_function( Cell* pCell, Phenotype& phenotype , double dt )
 // /*  python_plot_two_cells_and_voxels(me,neighbor, dt,neighbor_voxels,plot2);*/
   return; 
 } 
-
+Cell* instantiate_physimess_cell() { return new PhysiMeSS_Cell; }
+Cell* instantiate_physimess_fibre() { return new PhysiMeSS_Fibre; }
+// Cell* instantiate_physimess_cell_custom_degrade() { return new PhysiMeSS_Cell_Custom_Degrade; }
 void contact_function( Cell* pMe, Phenotype& phenoMe , Cell* pOther, Phenotype& phenoOther , double dt )
 { return; } 
 
@@ -474,3 +502,14 @@ void force_of_youngs_modulus( Cell* pMe, Phenotype& phenoMe , Cell* pOther, Phen
   return;
 }
 
+std::vector<double> orientation_from_angle(double angle_1, double angle_2){
+  double deg2rad=3.14159265/180;
+  angle_1=angle_1*deg2rad;
+  angle_2=angle_2*deg2rad;
+  double x_corrd= cos(angle_1)*cos(angle_2);
+  double y_corrd= sin(angle_1)*cos(angle_2);
+  double z_coord= sin(angle_2);
+  std::vector<double> result(3,0.0);
+  result={x_corrd,y_corrd,z_coord};
+  return result;
+}
