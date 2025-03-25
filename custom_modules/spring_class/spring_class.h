@@ -119,9 +119,9 @@ void calculate_point_spring_velocity();
 Spring* find_spring( Cell* me, Cell* neighbor);
 
 
-void output_TZP_csv(double k_oocyte, double k_granulosa, double k_basement);
+void output_TZP_csv(double k_oocyte, double k_granulosa, double k_basement, std::string sim_num);
 
-void create_output_TZP_csv();
+void create_output_TZP_csv(std::string sim_num);
 
 void outter_constraint(double outter_bound);
 

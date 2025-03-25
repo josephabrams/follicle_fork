@@ -487,7 +487,7 @@ Spring* find_spring( Cell* me, Cell* neighbor)
 
 }
 
-void output_TZP_csv(double k_oocyte, double k_granulosa, double k_basement)
+void output_TZP_csv(double k_oocyte, double k_granulosa, double k_basement, std::string sim_num)
 {
   std::string simulation_condition= "";
   std::string condition_vector="";
@@ -502,13 +502,14 @@ void output_TZP_csv(double k_oocyte, double k_granulosa, double k_basement)
   simulation_condition+=(microenvironment.density_names[microenvironment.number_of_densities()-1]);
   condition_vector+=(std::to_string(default_microenvironment_options.Dirichlet_condition_vector[microenvironment.number_of_densities()-1]));
   std::ofstream ofs;
-  ofs.open ("./output/TZP_score.csv", std::ofstream::out | std::ofstream::app);
+  std::string filename="./output/TZP_score_"+sim_num+"_.csv";
+  ofs.open (filename, std::ofstream::out | std::ofstream::app);
   ofs << simulation_condition<<","<< condition_vector<<","<<PhysiCell_globals.current_time<<", "<< tzp_score<<", "<<k_oocyte<<","<< k_granulosa<<","<<k_basement<<"\n";
   ofs.close();
 }
 
 
-void create_output_TZP_csv()
+void create_output_TZP_csv( std::string sim_num)
 {
   TZPs();
   std::string condition_vector_column="";
@@ -518,7 +519,8 @@ void create_output_TZP_csv()
   {
     condition_vector_column+=("condition_vector_"+std::to_string(i)+",");
   }
-  std::string filename= "./output/TZP_score.csv";
+  std::string filename="./output/TZP_score_"+sim_num+"_.csv";
+  // std::string filename= "./output/TZP_score.csv";
   ofs.open(filename, std::ofstream::out | std::ofstream::trunc);
   ofs << "simulation_condition"<<","<< condition_vector_column <<"current_time"<<","<< "tzp_score"<<","<<"k_oocyte"<<","<< "k_granulosa"<<","<<"k_basement"<<"\n";
   ofs.close();

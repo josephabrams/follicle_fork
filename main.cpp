@@ -106,7 +106,7 @@ int main( int argc, char* argv[] )
 		XML_status = load_PhysiCell_config_file( argv[1] ); 
 		sprintf( copy_command , "cp %s %s" , argv[1] , PhysiCell_settings.folder.c_str() );
 
-    if(argc>4)
+    if(argc>3)
     {
       std::string k_oocyte_str= argv[2];
       std::string k_granulosa_str= argv[3];
@@ -118,6 +118,7 @@ int main( int argc, char* argv[] )
       load_k_oocyte= std::stod(k_oocyte_str);
       load_k_granulosa= std::stod(k_granulosa_str);
       load_k_basement= std::stod(k_basement_str);
+      run_num_str=argv[5];
       // run_number=std::stoi(run_num_str);
       std::cout<<" FORCE PARAM: "<< k_oocyte_str<<", "<<k_granulosa_str<<", "<<k_basement_str<<"\n";
     }
@@ -185,7 +186,7 @@ int main( int argc, char* argv[] )
   TZPs();
   int initial_tzp_count=TZP_count();
   // std::cout<<"TZP_count: "<<initial_tzp_count<<"\n";
-  create_output_TZP_csv();
+  create_output_TZP_csv( run_num_str);
   // std::cout<<"Point springs size: "<<all_point_springs.size()<<"\n";
   create_output_mechanics_csv(run_num_str);
 	set_save_biofvm_mesh_as_matlab( true ); 
@@ -272,8 +273,7 @@ int main( int argc, char* argv[] )
 			
 			// update the microenvironment
       microenvironment.simulate_diffusion_decay( diffusion_dt );
-			
-      // output_TZP_csv(OOCYTE_K, GRANULOSA_K, BASEMENT_K);
+      std::cout<<"force param: "<< load_k_oocyte<< load_k_basement <<load_k_granulosa<<"\n";	
 			// run PhysiCell 
 			((Cell_Container *)microenvironment.agent_container)->update_all_cells( PhysiCell_globals.current_time );
       //example of multistep loading
@@ -303,7 +303,7 @@ int main( int argc, char* argv[] )
       update_velocity(); 
       TZPs();
       //-----
-      std::cout<<"TZP_count: "<<TZP_count()<<"\n";
+      // std::cout<<"TZP_count: "<<TZP_count()<<"\n";
       // double TZP_score=(double)TZP_count()/(double)initial_tzp_count;
       // std::cout<<"TZP_score: "<<TZP_score<<"\n";
       // std::cout<<"Point springs size: "<<all_point_springs.size()<<"\n";
@@ -323,6 +323,7 @@ int main( int argc, char* argv[] )
 		std::cout << e.what(); // information from length_error printed
 	}
 	
+    output_TZP_csv(OOCYTE_K, GRANULOSA_K, BASEMENT_K, run_num_str);
 	// save a final simulation snapshot 
 	
 	sprintf( filename , "%s/final" , PhysiCell_settings.folder.c_str() ); 

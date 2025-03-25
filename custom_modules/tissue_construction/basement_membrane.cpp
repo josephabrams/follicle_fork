@@ -292,7 +292,7 @@ void create_BM_springs(double outter_radius, double inner_radius)
     Cell* BM_neighbor=basement_initial_neighbors[i];  
     double rest_length=((inner_radius+outter_radius)/2) - (norm(BM_neighbor->position)+BM_neighbor->phenotype.geometry.radius);
     double spring_constant=BASEMENT_K;//BM_neighbor->custom_data["spring_k"];
-    std::cout<<"SPRING CONSTANT: "<< spring_constant<<"\n";
+    // std::cout<<"SPRING CONSTANT: "<< spring_constant<<"\n";
     create_point_spring(BM_neighbor, rest_length, spring_constant); 
   }
   return;
