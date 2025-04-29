@@ -2,35 +2,45 @@ DEBUG:root:studio.py: config file is ./config/PhysiCell_settings_microtissue.xml
 DEBUG:root:studio.py: open_as_cb():  filePath is valid
 DEBUG:root:len(config_file) = 43
 DEBUG:root:done with args.config
-DEBUG:root:exec pgm is follicle
+DEBUG:root:exec pgm is ./follicle
 DEBUG:root:self.current_dir = /home/joseph/projects/follicle_fork
 DEBUG:root:cell_def_tab.py: ------- fill_substrates_comboboxes
 DEBUG:root: --> NaCl
 DEBUG:root: --> EG
+DEBUG:root: --> contractility_signaling
 DEBUG:root:cell_def_tab.py: ------- fill_substrate_colormap_comboboxes
 DEBUG:root:=======================  microenv populate_tree  ======================= 
 DEBUG:root:dc_ic_units =  fmol/um^3
 DEBUG:root:dc_bc_units = fmol/um^3
-DEBUG:root:bv = <Element 'boundary_value' at 0x76269197bc90>
+DEBUG:root:bv = <Element 'boundary_value' at 0x710cd69aade0>
 DEBUG:root:   -------- NaCl:  dirichlet_xmin = 0
-DEBUG:root:bv = <Element 'boundary_value' at 0x76269197bce0>
-DEBUG:root:bv = <Element 'boundary_value' at 0x76269197bd30>
-DEBUG:root:bv = <Element 'boundary_value' at 0x76269197bd80>
-DEBUG:root:bv = <Element 'boundary_value' at 0x76269197bdd0>
-DEBUG:root:bv = <Element 'boundary_value' at 0x76269197be20>
+DEBUG:root:bv = <Element 'boundary_value' at 0x710cd69aae30>
+DEBUG:root:bv = <Element 'boundary_value' at 0x710cd69aae80>
+DEBUG:root:bv = <Element 'boundary_value' at 0x710cd69aaed0>
+DEBUG:root:bv = <Element 'boundary_value' at 0x710cd69aaf20>
+DEBUG:root:bv = <Element 'boundary_value' at 0x710cd69aaf70>
 DEBUG:root:dc_ic_units =  fmol/um^3
 DEBUG:root:dc_bc_units = fmol/um^3
-DEBUG:root:bv = <Element 'boundary_value' at 0x7626919ac0e0>
+DEBUG:root:bv = <Element 'boundary_value' at 0x710cd69ab1f0>
 DEBUG:root:   -------- EG:  dirichlet_xmin = 0
-DEBUG:root:bv = <Element 'boundary_value' at 0x7626919ac130>
-DEBUG:root:bv = <Element 'boundary_value' at 0x7626919ac180>
-DEBUG:root:bv = <Element 'boundary_value' at 0x7626919ac1d0>
-DEBUG:root:bv = <Element 'boundary_value' at 0x7626919ac220>
-DEBUG:root:bv = <Element 'boundary_value' at 0x7626919ac270>
-DEBUG:root:------- options: <Element 'calculate_gradients' at 0x7626919ac310>
-DEBUG:root:------- options: <Element 'track_internalized_substrates_in_each_agent' at 0x7626919ac3b0>
-DEBUG:root:------- options: <Element 'initial_condition' at 0x7626919ac400>
-DEBUG:root:------- options: <Element 'dirichlet_nodes' at 0x7626919ac4a0>
+DEBUG:root:bv = <Element 'boundary_value' at 0x710cd69ab240>
+DEBUG:root:bv = <Element 'boundary_value' at 0x710cd69ab290>
+DEBUG:root:bv = <Element 'boundary_value' at 0x710cd69ab2e0>
+DEBUG:root:bv = <Element 'boundary_value' at 0x710cd69ab330>
+DEBUG:root:bv = <Element 'boundary_value' at 0x710cd69ab380>
+DEBUG:root:dc_ic_units =  dimensionless
+DEBUG:root:dc_bc_units = dimensionless
+DEBUG:root:bv = <Element 'boundary_value' at 0x710cd69ab600>
+DEBUG:root:   -------- contractility_signaling:  dirichlet_xmin = None
+DEBUG:root:bv = <Element 'boundary_value' at 0x710cd69ab650>
+DEBUG:root:bv = <Element 'boundary_value' at 0x710cd69ab6a0>
+DEBUG:root:bv = <Element 'boundary_value' at 0x710cd69ab6f0>
+DEBUG:root:bv = <Element 'boundary_value' at 0x710cd69ab740>
+DEBUG:root:bv = <Element 'boundary_value' at 0x710cd69ab790>
+DEBUG:root:------- options: <Element 'calculate_gradients' at 0x710cd69ab830>
+DEBUG:root:------- options: <Element 'track_internalized_substrates_in_each_agent' at 0x710cd69ab8d0>
+DEBUG:root:------- options: <Element 'initial_condition' at 0x710cd69ab920>
+DEBUG:root:------- options: <Element 'dirichlet_nodes' at 0x710cd69ab9c0>
 DEBUG:root:
 
 =======================  leaving microenv populate_tree  =====================
@@ -42,6 +52,7 @@ DEBUG:root:       motility_substrate_changed_cb(): self.current_cell_def = None
 DEBUG:root:------ motility2_substrate_changed_cb(): idx = 0
 DEBUG:root:   text (subname) = NaCl
 DEBUG:root: --> EG
+DEBUG:root: --> contractility_signaling
 DEBUG:root:=======================  populate_tree_cell_defs(): ======================= 
 DEBUG:root:    cell_def_tab.param_d = {}
 DEBUG:root:
@@ -63,23 +74,23 @@ DEBUG:root:
 ===== populate_tree():  cycle
 DEBUG:root: >> cycle_path= .//cell_definition[1]//phenotype//cycle
 DEBUG:root:   cycle code= 6
-DEBUG:root:<Element 'rate' at 0x7626919ac770>
-DEBUG:root:<Element 'rate' at 0x7626919ac810>
-DEBUG:root:<Element 'rate' at 0x7626919ac8b0>
-DEBUG:root:<Element 'rate' at 0x7626919ac950>
+DEBUG:root:<Element 'rate' at 0x710cd69abc90>
+DEBUG:root:<Element 'rate' at 0x710cd69abd30>
+DEBUG:root:<Element 'rate' at 0x710cd69abdd0>
+DEBUG:root:<Element 'rate' at 0x710cd69abe70>
 DEBUG:root:---- asymmetric_division_probabilities_path = .//cell_definition[1]//phenotype//cycle//standard_asymmetric_division
 DEBUG:root:
 ===== populate_tree():  death
-DEBUG:root:death_uep=<Element 'death' at 0x7626919acc70>
+DEBUG:root:death_uep=<Element 'death' at 0x710cd6a141d0>
 DEBUG:root:-------- parsing apoptosis!
-DEBUG:root: >> pd_uep =<Element 'phase_durations' at 0x7626919ace00>
-DEBUG:root:phase_duration= <Element 'duration' at 0x7626919acea0>
+DEBUG:root: >> pd_uep =<Element 'phase_durations' at 0x710cd6a14360>
+DEBUG:root:phase_duration= <Element 'duration' at 0x710cd6a14400>
 DEBUG:root:index= 0
 DEBUG:root:-------- parsing necrosis!
-DEBUG:root: >> pd_uep =<Element 'phase_durations' at 0x7626919ad620>
-DEBUG:root:<Element 'duration' at 0x7626919ad6c0>
+DEBUG:root: >> pd_uep =<Element 'phase_durations' at 0x710cd6a14b80>
+DEBUG:root:<Element 'duration' at 0x710cd6a14c20>
 DEBUG:root:index= 0
-DEBUG:root:<Element 'duration' at 0x7626919ad760>
+DEBUG:root:<Element 'duration' at 0x710cd6a14cc0>
 DEBUG:root:index= 1
 DEBUG:root:volume_path=.//cell_definition[1]//phenotype//volume//
 DEBUG:root:
@@ -96,33 +107,36 @@ DEBUG:root:motility_path=.//cell_definition[1]//phenotype//motility//
 DEBUG:root:
 ----------- populate_tree_cell_defs.py: cell_def_name= oocyte,  cell_def_tab.param_d[cell_def_name]["motility_chemotaxis_substrate"] = NaCl
 DEBUG:root:motility_advanced_chemotaxis_path= .//cell_definition[1]//phenotype//motility//options//advanced_chemotaxis//
-DEBUG:root:chemotactic_sensitivity= {'NaCl': '0.0', 'EG': '0.0'}
+DEBUG:root:chemotactic_sensitivity= {'NaCl': '0.0', 'EG': '0.0', 'contractility_signaling': '0.0'}
 DEBUG:root:sensitivity_path= .//cell_definition[1]//phenotype//motility//options//advanced_chemotaxis//chemotactic_sensitivities
-DEBUG:root:---- found chemotactic_sensitivities: <Element 'chemotactic_sensitivities' at 0x7626919af1a0>
-DEBUG:root:subelm=<Element 'chemotactic_sensitivity' at 0x7626919af240>
+DEBUG:root:---- found chemotactic_sensitivities: <Element 'chemotactic_sensitivities' at 0x710cd6a16700>
+DEBUG:root:subelm=<Element 'chemotactic_sensitivity' at 0x710cd6a167a0>
 DEBUG:root: chemotactic_sensitivity--> NaCl = 0.0
-DEBUG:root:subelm=<Element 'chemotactic_sensitivity' at 0x7626919af2e0>
+DEBUG:root:subelm=<Element 'chemotactic_sensitivity' at 0x710cd6a16840>
 DEBUG:root: chemotactic_sensitivity--> EG = 0.0
-DEBUG:root:{'NaCl': '0.0', 'EG': '0.0'}
+DEBUG:root:subelm=<Element 'chemotactic_sensitivity' at 0x710cd6a168e0>
+DEBUG:root: chemotactic_sensitivity--> contractility_signaling = 0.0
+DEBUG:root:{'NaCl': '0.0', 'EG': '0.0', 'contractility_signaling': '0.0'}
 DEBUG:root:------ motility2_substrate_changed_cb(): idx = 0
 DEBUG:root:   text (subname) = NaCl
 DEBUG:root:    motility_advanced_chemotaxis_substrate= NaCl
-DEBUG:root:   chemotactic_sensitivity = {'NaCl': '0.0', 'EG': '0.0'}
+DEBUG:root:   chemotactic_sensitivity = {'NaCl': '0.0', 'EG': '0.0', 'contractility_signaling': '0.0'}
 DEBUG:root:----- chemo_sensitivity_changed() = 0.0
 DEBUG:root:----- chemo_sensitivity_changed(): subname = NaCl
-DEBUG:root:     chemotactic_sensitivity (dict)= {'NaCl': '0.0', 'EG': '0.0'}
+DEBUG:root:     chemotactic_sensitivity (dict)= {'NaCl': '0.0', 'EG': '0.0', 'contractility_signaling': '0.0'}
 DEBUG:root:
 ===== populate_tree():  secretion
 DEBUG:root:secretion_path = .//cell_definition[1]//phenotype//secretion
-DEBUG:root:uep_secretion = <Element 'secretion' at 0x7626919af3d0>
+DEBUG:root:uep_secretion = <Element 'secretion' at 0x710cd6a169d0>
 DEBUG:root:0) -- secretion substrate = NaCl
 DEBUG:root:1) -- secretion substrate = EG
+DEBUG:root:2) -- secretion substrate = contractility_signaling
 DEBUG:root:------ done parsing secretion:
 DEBUG:root:
 ===== populate_tree():  cell_interactions
 DEBUG:root:---- cell_interactions_path= .//cell_definition[1]//phenotype//cell_interactions
 DEBUG:root:---- found cell_interactions:
-DEBUG:root:uep2= <Element 'live_phagocytosis_rates' at 0x7626919afbf0>
+DEBUG:root:uep2= <Element 'live_phagocytosis_rates' at 0x710cd6a174c0>
 DEBUG:root: live_phagocytosis_rate= {'default': '0', 'matrix': '0.0'}
 DEBUG:root: attack_rate= {'default': '0', 'matrix': '0.0'}
 DEBUG:root: fusion_rate= {'default': '0', 'matrix': '0.0'}
@@ -140,15 +154,15 @@ DEBUG:root:
 DEBUG:root:------ done parsing intracellular:
 DEBUG:root:
 ===== populate_tree():  custom data
-DEBUG:root:uep_custom_data= <Element 'custom_data' at 0x7626919bc450>
+DEBUG:root:uep_custom_data= <Element 'custom_data' at 0x710cd6a17ce0>
 DEBUG:root:--------------- populate_tree: (empty)custom_data = {}
 DEBUG:root:var.attrib.keys() = dict_keys(['conserved', 'units', 'description'])
 DEBUG:root:populate: cell_def_name= oocyte --> custom_data: {'sample': ['1.0', False]}
 DEBUG:root:var.attrib.keys() = dict_keys(['conserved', 'units', 'description'])
-DEBUG:root:-------- conserved is true for <Element 'initial_cell_volume' at 0x7626919bc4f0>
+DEBUG:root:-------- conserved is true for <Element 'initial_cell_volume' at 0x710cd6a17d80>
 DEBUG:root:populate: cell_def_name= oocyte --> custom_data: {'sample': ['1.0', False], 'initial_cell_volume': ['817283.0', True]}
 DEBUG:root:var.attrib.keys() = dict_keys(['conserved', 'units', 'description'])
-DEBUG:root:-------- conserved is true for <Element 'initial_cell_radius' at 0x7626919bc540>
+DEBUG:root:-------- conserved is true for <Element 'initial_cell_radius' at 0x710cd6a17dd0>
 DEBUG:root:populate: cell_def_name= oocyte --> custom_data: {'sample': ['1.0', False], 'initial_cell_volume': ['817283.0', True], 'initial_cell_radius': ['58', True]}
 DEBUG:root:var.attrib.keys() = dict_keys(['conserved', 'units', 'description'])
 DEBUG:root:populate: cell_def_name= oocyte --> custom_data: {'sample': ['1.0', False], 'initial_cell_volume': ['817283.0', True], 'initial_cell_radius': ['58', True], 'Vb': ['0.288', False]}
@@ -190,23 +204,23 @@ DEBUG:root:
 ===== populate_tree():  cycle
 DEBUG:root: >> cycle_path= .//cell_definition[2]//phenotype//cycle
 DEBUG:root:   cycle code= 6
-DEBUG:root:<Element 'duration' at 0x7626919bcd10>
-DEBUG:root:<Element 'duration' at 0x7626919bcdb0>
-DEBUG:root:<Element 'duration' at 0x7626919bce50>
-DEBUG:root:<Element 'duration' at 0x7626919bcef0>
+DEBUG:root:<Element 'duration' at 0x710cd6a245e0>
+DEBUG:root:<Element 'duration' at 0x710cd6a24680>
+DEBUG:root:<Element 'duration' at 0x710cd6a24720>
+DEBUG:root:<Element 'duration' at 0x710cd6a247c0>
 DEBUG:root:---- asymmetric_division_probabilities_path = .//cell_definition[2]//phenotype//cycle//standard_asymmetric_division
 DEBUG:root:
 ===== populate_tree():  death
-DEBUG:root:death_uep=<Element 'death' at 0x7626919bd170>
+DEBUG:root:death_uep=<Element 'death' at 0x710cd6a24a40>
 DEBUG:root:-------- parsing apoptosis!
-DEBUG:root: >> pd_uep =<Element 'phase_durations' at 0x7626919bd300>
-DEBUG:root:phase_duration= <Element 'duration' at 0x7626919bd3a0>
+DEBUG:root: >> pd_uep =<Element 'phase_durations' at 0x710cd6a24bd0>
+DEBUG:root:phase_duration= <Element 'duration' at 0x710cd6a24c70>
 DEBUG:root:index= 0
 DEBUG:root:-------- parsing necrosis!
-DEBUG:root: >> pd_uep =<Element 'phase_durations' at 0x7626919bda30>
-DEBUG:root:<Element 'duration' at 0x7626919bdad0>
+DEBUG:root: >> pd_uep =<Element 'phase_durations' at 0x710cd6a25300>
+DEBUG:root:<Element 'duration' at 0x710cd6a253a0>
 DEBUG:root:index= 0
-DEBUG:root:<Element 'duration' at 0x7626919bdb70>
+DEBUG:root:<Element 'duration' at 0x710cd6a25440>
 DEBUG:root:index= 1
 DEBUG:root:volume_path=.//cell_definition[2]//phenotype//volume//
 DEBUG:root:
@@ -223,30 +237,33 @@ DEBUG:root:motility_path=.//cell_definition[2]//phenotype//motility//
 DEBUG:root:
 ----------- populate_tree_cell_defs.py: cell_def_name= granulosa,  cell_def_tab.param_d[cell_def_name]["motility_chemotaxis_substrate"] = NaCl
 DEBUG:root:motility_advanced_chemotaxis_path= .//cell_definition[2]//phenotype//motility//options//advanced_chemotaxis//
-DEBUG:root:chemotactic_sensitivity= {'NaCl': '0.0', 'EG': '0.0'}
+DEBUG:root:chemotactic_sensitivity= {'NaCl': '0.0', 'EG': '0.0', 'contractility_signaling': '0.0'}
 DEBUG:root:sensitivity_path= .//cell_definition[2]//phenotype//motility//options//advanced_chemotaxis//chemotactic_sensitivities
-DEBUG:root:---- found chemotactic_sensitivities: <Element 'chemotactic_sensitivities' at 0x7626919bf1f0>
-DEBUG:root:subelm=<Element 'chemotactic_sensitivity' at 0x7626919bf290>
+DEBUG:root:---- found chemotactic_sensitivities: <Element 'chemotactic_sensitivities' at 0x710cd6a26ac0>
+DEBUG:root:subelm=<Element 'chemotactic_sensitivity' at 0x710cd6a26b60>
 DEBUG:root: chemotactic_sensitivity--> NaCl = 0.0
-DEBUG:root:subelm=<Element 'chemotactic_sensitivity' at 0x7626919bf330>
+DEBUG:root:subelm=<Element 'chemotactic_sensitivity' at 0x710cd6a26c00>
 DEBUG:root: chemotactic_sensitivity--> EG = 0.0
-DEBUG:root:{'NaCl': '0.0', 'EG': '0.0'}
+DEBUG:root:subelm=<Element 'chemotactic_sensitivity' at 0x710cd6a26ca0>
+DEBUG:root: chemotactic_sensitivity--> contractility_signaling = 0.0
+DEBUG:root:{'NaCl': '0.0', 'EG': '0.0', 'contractility_signaling': '0.0'}
 DEBUG:root:------ motility2_substrate_changed_cb(): idx = 0
 DEBUG:root:   text (subname) = NaCl
 DEBUG:root:    motility_advanced_chemotaxis_substrate= NaCl
-DEBUG:root:   chemotactic_sensitivity = {'NaCl': '0.0', 'EG': '0.0'}
+DEBUG:root:   chemotactic_sensitivity = {'NaCl': '0.0', 'EG': '0.0', 'contractility_signaling': '0.0'}
 DEBUG:root:
 ===== populate_tree():  secretion
 DEBUG:root:secretion_path = .//cell_definition[2]//phenotype//secretion
-DEBUG:root:uep_secretion = <Element 'secretion' at 0x7626919bf420>
+DEBUG:root:uep_secretion = <Element 'secretion' at 0x710cd6a26d90>
 DEBUG:root:0) -- secretion substrate = NaCl
 DEBUG:root:1) -- secretion substrate = EG
+DEBUG:root:2) -- secretion substrate = contractility_signaling
 DEBUG:root:------ done parsing secretion:
 DEBUG:root:
 ===== populate_tree():  cell_interactions
 DEBUG:root:---- cell_interactions_path= .//cell_definition[2]//phenotype//cell_interactions
 DEBUG:root:---- found cell_interactions:
-DEBUG:root:uep2= <Element 'live_phagocytosis_rates' at 0x7626919bfb50>
+DEBUG:root:uep2= <Element 'live_phagocytosis_rates' at 0x710cd6a27790>
 DEBUG:root: live_phagocytosis_rate= {'oocyte': '0.0', 'granulosa': '0.0', 'matrix': '0.0'}
 DEBUG:root: attack_rate= {'oocyte': '0.0', 'granulosa': '0.0', 'matrix': '0.0'}
 DEBUG:root: fusion_rate= {'oocyte': '0.0', 'granulosa': '0.0', 'matrix': '0.0'}
@@ -264,15 +281,15 @@ DEBUG:root:
 DEBUG:root:------ done parsing intracellular:
 DEBUG:root:
 ===== populate_tree():  custom data
-DEBUG:root:uep_custom_data= <Element 'custom_data' at 0x7626919d4630>
+DEBUG:root:uep_custom_data= <Element 'custom_data' at 0x710cd65a8270>
 DEBUG:root:--------------- populate_tree: (empty)custom_data = {}
 DEBUG:root:var.attrib.keys() = dict_keys(['conserved', 'units', 'description'])
 DEBUG:root:populate: cell_def_name= granulosa --> custom_data: {'sample': ['1.0', False]}
 DEBUG:root:var.attrib.keys() = dict_keys(['conserved', 'units', 'description'])
-DEBUG:root:-------- conserved is true for <Element 'initial_cell_volume' at 0x7626919d46d0>
+DEBUG:root:-------- conserved is true for <Element 'initial_cell_volume' at 0x710cd65a8310>
 DEBUG:root:populate: cell_def_name= granulosa --> custom_data: {'sample': ['1.0', False], 'initial_cell_volume': ['523.6', True]}
 DEBUG:root:var.attrib.keys() = dict_keys(['conserved', 'units', 'description'])
-DEBUG:root:-------- conserved is true for <Element 'initial_cell_radius' at 0x7626919d4720>
+DEBUG:root:-------- conserved is true for <Element 'initial_cell_radius' at 0x710cd65a8360>
 DEBUG:root:populate: cell_def_name= granulosa --> custom_data: {'sample': ['1.0', False], 'initial_cell_volume': ['523.6', True], 'initial_cell_radius': ['5', True]}
 DEBUG:root:var.attrib.keys() = dict_keys(['conserved', 'units', 'description'])
 DEBUG:root:populate: cell_def_name= granulosa --> custom_data: {'sample': ['1.0', False], 'initial_cell_volume': ['523.6', True], 'initial_cell_radius': ['5', True], 'Vb': ['0.2', False]}
@@ -314,24 +331,24 @@ DEBUG:root:
 ===== populate_tree():  cycle
 DEBUG:root: >> cycle_path= .//cell_definition[3]//phenotype//cycle
 DEBUG:root:   cycle code= 6
-DEBUG:root:<Element 'duration' at 0x7626919d4e50>
-DEBUG:root:<Element 'duration' at 0x7626919d4ef0>
-DEBUG:root:<Element 'duration' at 0x7626919d4f90>
-DEBUG:root:<Element 'duration' at 0x7626919d5030>
+DEBUG:root:<Element 'duration' at 0x710cd65a8a90>
+DEBUG:root:<Element 'duration' at 0x710cd65a8b30>
+DEBUG:root:<Element 'duration' at 0x710cd65a8bd0>
+DEBUG:root:<Element 'duration' at 0x710cd65a8c70>
 DEBUG:root:---- asymmetric_division_probabilities_path = .//cell_definition[3]//phenotype//cycle//standard_asymmetric_division
 DEBUG:root:
 ===== populate_tree():  death
-DEBUG:root:death_uep=<Element 'death' at 0x7626919d52b0>
+DEBUG:root:death_uep=<Element 'death' at 0x710cd65a8ef0>
 DEBUG:root:-------- parsing apoptosis!
-DEBUG:root: >> tr_uep =<Element 'phase_transition_rates' at 0x7626919d5440>
-DEBUG:root:death: phase_transition_rates= <Element 'rate' at 0x7626919d54e0>
+DEBUG:root: >> tr_uep =<Element 'phase_transition_rates' at 0x710cd65a9080>
+DEBUG:root:death: phase_transition_rates= <Element 'rate' at 0x710cd65a9120>
 DEBUG:root:start_index= 0
 DEBUG:root:-------- parsing necrosis!
-DEBUG:root: >> tr_uep =<Element 'phase_transition_rates' at 0x7626919d5b70>
-DEBUG:root:death: phase_transition_rates= <Element 'rate' at 0x7626919d5c10>
+DEBUG:root: >> tr_uep =<Element 'phase_transition_rates' at 0x710cd65a97b0>
+DEBUG:root:death: phase_transition_rates= <Element 'rate' at 0x710cd65a9850>
 DEBUG:root:start_index= 0
 DEBUG:root: --- transition rate 01 (float) = 9000000000.0
-DEBUG:root:death: phase_transition_rates= <Element 'rate' at 0x7626919d5cb0>
+DEBUG:root:death: phase_transition_rates= <Element 'rate' at 0x710cd65a98f0>
 DEBUG:root:start_index= 1
 DEBUG:root: --- transition rate 12 (float) = 1.15741e-05
 DEBUG:root:volume_path=.//cell_definition[3]//phenotype//volume//
@@ -348,32 +365,35 @@ DEBUG:root:
 ===== populate_tree():  motility
 DEBUG:root:motility_path=.//cell_definition[3]//phenotype//motility//
 DEBUG:root:
------------ populate_tree_cell_defs.py: cell_def_name= matrix,  cell_def_tab.param_d[cell_def_name]["motility_chemotaxis_substrate"] = NaCl
+----------- populate_tree_cell_defs.py: cell_def_name= matrix,  cell_def_tab.param_d[cell_def_name]["motility_chemotaxis_substrate"] = contractility_signaling
 DEBUG:root:motility_advanced_chemotaxis_path= .//cell_definition[3]//phenotype//motility//options//advanced_chemotaxis//
-DEBUG:root:chemotactic_sensitivity= {'NaCl': '0.0', 'EG': '0.0'}
+DEBUG:root:chemotactic_sensitivity= {'NaCl': '0.0', 'EG': '0.0', 'contractility_signaling': '0.0'}
 DEBUG:root:sensitivity_path= .//cell_definition[3]//phenotype//motility//options//advanced_chemotaxis//chemotactic_sensitivities
-DEBUG:root:---- found chemotactic_sensitivities: <Element 'chemotactic_sensitivities' at 0x7626919d73d0>
-DEBUG:root:subelm=<Element 'chemotactic_sensitivity' at 0x7626919d7470>
+DEBUG:root:---- found chemotactic_sensitivities: <Element 'chemotactic_sensitivities' at 0x710cd65ab010>
+DEBUG:root:subelm=<Element 'chemotactic_sensitivity' at 0x710cd65ab0b0>
 DEBUG:root: chemotactic_sensitivity--> NaCl = 0.0
-DEBUG:root:subelm=<Element 'chemotactic_sensitivity' at 0x7626919d7510>
+DEBUG:root:subelm=<Element 'chemotactic_sensitivity' at 0x710cd65ab150>
 DEBUG:root: chemotactic_sensitivity--> EG = 0.0
-DEBUG:root:{'NaCl': '0.0', 'EG': '0.0'}
+DEBUG:root:subelm=<Element 'chemotactic_sensitivity' at 0x710cd65ab1f0>
+DEBUG:root: chemotactic_sensitivity--> contractility_signaling = 0.0
+DEBUG:root:{'NaCl': '0.0', 'EG': '0.0', 'contractility_signaling': '0.0'}
 DEBUG:root:------ motility2_substrate_changed_cb(): idx = 0
 DEBUG:root:   text (subname) = NaCl
 DEBUG:root:    motility_advanced_chemotaxis_substrate= NaCl
-DEBUG:root:   chemotactic_sensitivity = {'NaCl': '0.0', 'EG': '0.0'}
+DEBUG:root:   chemotactic_sensitivity = {'NaCl': '0.0', 'EG': '0.0', 'contractility_signaling': '0.0'}
 DEBUG:root:
 ===== populate_tree():  secretion
 DEBUG:root:secretion_path = .//cell_definition[3]//phenotype//secretion
-DEBUG:root:uep_secretion = <Element 'secretion' at 0x7626919d7600>
+DEBUG:root:uep_secretion = <Element 'secretion' at 0x710cd65ab2e0>
 DEBUG:root:0) -- secretion substrate = NaCl
 DEBUG:root:1) -- secretion substrate = EG
+DEBUG:root:2) -- secretion substrate = contractility_signaling
 DEBUG:root:------ done parsing secretion:
 DEBUG:root:
 ===== populate_tree():  cell_interactions
 DEBUG:root:---- cell_interactions_path= .//cell_definition[3]//phenotype//cell_interactions
 DEBUG:root:---- found cell_interactions:
-DEBUG:root:uep2= <Element 'live_phagocytosis_rates' at 0x7626919d7d30>
+DEBUG:root:uep2= <Element 'live_phagocytosis_rates' at 0x710cd65abce0>
 DEBUG:root: live_phagocytosis_rate= {'default': '0', 'oocyte': '0.0', 'granulosa': '0.0', 'matrix': '0.0'}
 DEBUG:root: attack_rate= {'default': '0', 'oocyte': '0.0', 'granulosa': '0.0', 'matrix': '0.0'}
 DEBUG:root: fusion_rate= {'default': '0', 'oocyte': '0.0', 'granulosa': '0.0', 'matrix': '0.0'}
@@ -391,7 +411,7 @@ DEBUG:root:
 DEBUG:root:------ done parsing intracellular:
 DEBUG:root:
 ===== populate_tree():  custom data
-DEBUG:root:uep_custom_data= <Element 'custom_data' at 0x7626919e4a90>
+DEBUG:root:uep_custom_data= <Element 'custom_data' at 0x710cd65b8a40>
 DEBUG:root:--------------- populate_tree: (empty)custom_data = {}
 DEBUG:root:var.attrib.keys() = dict_keys(['conserved', 'units', 'description'])
 DEBUG:root:populate: cell_def_name= matrix --> custom_data: {'sample': ['0.0', False]}
@@ -441,13 +461,13 @@ DEBUG:root:
 ----- update_motility_params():  cdname= oocyte
 DEBUG:root:     setting motility_substrate_dropdown (for cdname= oocyte ) = NaCl
 DEBUG:root:     setting motility2_substrate_dropdown (for cdname= oocyte ) = NaCl
-DEBUG:root:    chemotactic_sensitivity= {'NaCl': '0.0', 'EG': '0.0'}
+DEBUG:root:    chemotactic_sensitivity= {'NaCl': '0.0', 'EG': '0.0', 'contractility_signaling': '0.0'}
 DEBUG:root:new val = 0.0
 DEBUG:root:----- leave update_motility_params()
 
 DEBUG:root:update_secretion_params(): cdname = oocyte
 DEBUG:root:update_secretion_params(): self.current_secretion_substrate = NaCl
-DEBUG:root:{'NaCl': {'secretion_rate': '0.0', 'secretion_target': '0.0', 'uptake_rate': '0.0', 'net_export_rate': '0.0'}, 'EG': {'secretion_rate': None, 'secretion_target': '0.0', 'uptake_rate': '0.0', 'net_export_rate': '0.0'}}
+DEBUG:root:{'NaCl': {'secretion_rate': '0.0', 'secretion_target': '0.0', 'uptake_rate': '0.0', 'net_export_rate': '0.0'}, 'EG': {'secretion_rate': None, 'secretion_target': '0.0', 'uptake_rate': '0.0', 'net_export_rate': '0.0'}, 'contractility_signaling': {'secretion_rate': '0.0', 'secretion_target': '1.0', 'uptake_rate': '0.0', 'net_export_rate': '0.0'}}
 DEBUG:root:cell_def_tab.py: ------- fill_celltypes_comboboxes
 DEBUG:root:
 
@@ -455,44 +475,44 @@ DEBUG:root:
 DEBUG:root:studio.py: self.current_dir = /home/joseph/projects/follicle_fork
 DEBUG:root:studio.py: creating ICs, Run, and Plot tabs
 DEBUG:matplotlib.font_manager:findfont: Matching sans\-serif:style=normal:variant=normal:weight=normal:stretch=normal:size=10.0.
-DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/home/joseph/projects/follicle_fork/python_utilities/tissuegenenv/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/cmmi10.ttf', name='cmmi10', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
-DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/home/joseph/projects/follicle_fork/python_utilities/tissuegenenv/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSansMono-BoldOblique.ttf', name='DejaVu Sans Mono', style='oblique', variant='normal', weight=700, stretch='normal', size='scalable')) = 11.335
-DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/home/joseph/projects/follicle_fork/python_utilities/tissuegenenv/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSerif-BoldItalic.ttf', name='DejaVu Serif', style='italic', variant='normal', weight=700, stretch='normal', size='scalable')) = 11.335
-DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/home/joseph/projects/follicle_fork/python_utilities/tissuegenenv/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/STIXGeneral.ttf', name='STIXGeneral', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
-DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/home/joseph/projects/follicle_fork/python_utilities/tissuegenenv/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSansDisplay.ttf', name='DejaVu Sans Display', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
-DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/home/joseph/projects/follicle_fork/python_utilities/tissuegenenv/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSansMono.ttf', name='DejaVu Sans Mono', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
-DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/home/joseph/projects/follicle_fork/python_utilities/tissuegenenv/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/STIXGeneralItalic.ttf', name='STIXGeneral', style='italic', variant='normal', weight=400, stretch='normal', size='scalable')) = 11.05
-DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/home/joseph/projects/follicle_fork/python_utilities/tissuegenenv/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/STIXSizThreeSymBol.ttf', name='STIXSizeThreeSym', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
-DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/home/joseph/projects/follicle_fork/python_utilities/tissuegenenv/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/STIXNonUniBolIta.ttf', name='STIXNonUnicode', style='italic', variant='normal', weight=700, stretch='normal', size='scalable')) = 11.335
-DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/home/joseph/projects/follicle_fork/python_utilities/tissuegenenv/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSerif-Italic.ttf', name='DejaVu Serif', style='italic', variant='normal', weight=400, stretch='normal', size='scalable')) = 11.05
-DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/home/joseph/projects/follicle_fork/python_utilities/tissuegenenv/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/STIXSizTwoSymBol.ttf', name='STIXSizeTwoSym', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
-DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/home/joseph/projects/follicle_fork/python_utilities/tissuegenenv/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/STIXSizOneSymReg.ttf', name='STIXSizeOneSym', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
-DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/home/joseph/projects/follicle_fork/python_utilities/tissuegenenv/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/STIXGeneralBol.ttf', name='STIXGeneral', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
-DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/home/joseph/projects/follicle_fork/python_utilities/tissuegenenv/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSerifDisplay.ttf', name='DejaVu Serif Display', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
-DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/home/joseph/projects/follicle_fork/python_utilities/tissuegenenv/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSerif.ttf', name='DejaVu Serif', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
-DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/home/joseph/projects/follicle_fork/python_utilities/tissuegenenv/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/STIXNonUniIta.ttf', name='STIXNonUnicode', style='italic', variant='normal', weight=400, stretch='normal', size='scalable')) = 11.05
-DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/home/joseph/projects/follicle_fork/python_utilities/tissuegenenv/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/STIXSizFourSymBol.ttf', name='STIXSizeFourSym', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
-DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/home/joseph/projects/follicle_fork/python_utilities/tissuegenenv/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/STIXNonUni.ttf', name='STIXNonUnicode', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
-DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/home/joseph/projects/follicle_fork/python_utilities/tissuegenenv/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSans-Bold.ttf', name='DejaVu Sans', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 0.33499999999999996
-DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/home/joseph/projects/follicle_fork/python_utilities/tissuegenenv/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/cmb10.ttf', name='cmb10', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
-DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/home/joseph/projects/follicle_fork/python_utilities/tissuegenenv/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/cmex10.ttf', name='cmex10', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
-DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/home/joseph/projects/follicle_fork/python_utilities/tissuegenenv/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/cmsy10.ttf', name='cmsy10', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
-DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/home/joseph/projects/follicle_fork/python_utilities/tissuegenenv/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/STIXSizThreeSymReg.ttf', name='STIXSizeThreeSym', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
-DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/home/joseph/projects/follicle_fork/python_utilities/tissuegenenv/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSansMono-Bold.ttf', name='DejaVu Sans Mono', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
-DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/home/joseph/projects/follicle_fork/python_utilities/tissuegenenv/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSans-Oblique.ttf', name='DejaVu Sans', style='oblique', variant='normal', weight=400, stretch='normal', size='scalable')) = 1.05
-DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/home/joseph/projects/follicle_fork/python_utilities/tissuegenenv/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/cmtt10.ttf', name='cmtt10', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
-DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/home/joseph/projects/follicle_fork/python_utilities/tissuegenenv/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/STIXNonUniBol.ttf', name='STIXNonUnicode', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
-DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/home/joseph/projects/follicle_fork/python_utilities/tissuegenenv/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSans.ttf', name='DejaVu Sans', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 0.05
-DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/home/joseph/projects/follicle_fork/python_utilities/tissuegenenv/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/cmss10.ttf', name='cmss10', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
-DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/home/joseph/projects/follicle_fork/python_utilities/tissuegenenv/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/STIXSizFiveSymReg.ttf', name='STIXSizeFiveSym', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
-DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/home/joseph/projects/follicle_fork/python_utilities/tissuegenenv/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSansMono-Oblique.ttf', name='DejaVu Sans Mono', style='oblique', variant='normal', weight=400, stretch='normal', size='scalable')) = 11.05
-DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/home/joseph/projects/follicle_fork/python_utilities/tissuegenenv/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/STIXSizOneSymBol.ttf', name='STIXSizeOneSym', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
-DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/home/joseph/projects/follicle_fork/python_utilities/tissuegenenv/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSerif-Bold.ttf', name='DejaVu Serif', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
-DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/home/joseph/projects/follicle_fork/python_utilities/tissuegenenv/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/STIXSizTwoSymReg.ttf', name='STIXSizeTwoSym', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
-DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/home/joseph/projects/follicle_fork/python_utilities/tissuegenenv/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/cmr10.ttf', name='cmr10', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
-DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/home/joseph/projects/follicle_fork/python_utilities/tissuegenenv/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSans-BoldOblique.ttf', name='DejaVu Sans', style='oblique', variant='normal', weight=700, stretch='normal', size='scalable')) = 1.335
-DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/home/joseph/projects/follicle_fork/python_utilities/tissuegenenv/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/STIXGeneralBolIta.ttf', name='STIXGeneral', style='italic', variant='normal', weight=700, stretch='normal', size='scalable')) = 11.335
-DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/home/joseph/projects/follicle_fork/python_utilities/tissuegenenv/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/STIXSizFourSymReg.ttf', name='STIXSizeFourSym', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/usr/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/cmmi10.ttf', name='cmmi10', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/usr/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSansMono-BoldOblique.ttf', name='DejaVu Sans Mono', style='oblique', variant='normal', weight=700, stretch='normal', size='scalable')) = 11.335
+DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/usr/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSerif-BoldItalic.ttf', name='DejaVu Serif', style='italic', variant='normal', weight=700, stretch='normal', size='scalable')) = 11.335
+DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/usr/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/STIXGeneral.ttf', name='STIXGeneral', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/usr/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSansDisplay.ttf', name='DejaVu Sans Display', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/usr/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSansMono.ttf', name='DejaVu Sans Mono', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/usr/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/STIXGeneralItalic.ttf', name='STIXGeneral', style='italic', variant='normal', weight=400, stretch='normal', size='scalable')) = 11.05
+DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/usr/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/STIXSizThreeSymBol.ttf', name='STIXSizeThreeSym', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
+DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/usr/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/STIXNonUniBolIta.ttf', name='STIXNonUnicode', style='italic', variant='normal', weight=700, stretch='normal', size='scalable')) = 11.335
+DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/usr/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSerif-Italic.ttf', name='DejaVu Serif', style='italic', variant='normal', weight=400, stretch='normal', size='scalable')) = 11.05
+DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/usr/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/STIXSizTwoSymBol.ttf', name='STIXSizeTwoSym', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
+DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/usr/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/STIXSizOneSymReg.ttf', name='STIXSizeOneSym', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/usr/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/STIXGeneralBol.ttf', name='STIXGeneral', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
+DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/usr/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSerifDisplay.ttf', name='DejaVu Serif Display', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/usr/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSerif.ttf', name='DejaVu Serif', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/usr/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/STIXNonUniIta.ttf', name='STIXNonUnicode', style='italic', variant='normal', weight=400, stretch='normal', size='scalable')) = 11.05
+DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/usr/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/STIXSizFourSymBol.ttf', name='STIXSizeFourSym', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
+DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/usr/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/STIXNonUni.ttf', name='STIXNonUnicode', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/usr/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSans-Bold.ttf', name='DejaVu Sans', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 0.33499999999999996
+DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/usr/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/cmb10.ttf', name='cmb10', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/usr/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/cmex10.ttf', name='cmex10', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/usr/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/cmsy10.ttf', name='cmsy10', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/usr/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/STIXSizThreeSymReg.ttf', name='STIXSizeThreeSym', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/usr/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSansMono-Bold.ttf', name='DejaVu Sans Mono', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
+DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/usr/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSans-Oblique.ttf', name='DejaVu Sans', style='oblique', variant='normal', weight=400, stretch='normal', size='scalable')) = 1.05
+DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/usr/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/cmtt10.ttf', name='cmtt10', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/usr/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/STIXNonUniBol.ttf', name='STIXNonUnicode', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
+DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/usr/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSans.ttf', name='DejaVu Sans', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 0.05
+DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/usr/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/cmss10.ttf', name='cmss10', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/usr/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/STIXSizFiveSymReg.ttf', name='STIXSizeFiveSym', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/usr/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSansMono-Oblique.ttf', name='DejaVu Sans Mono', style='oblique', variant='normal', weight=400, stretch='normal', size='scalable')) = 11.05
+DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/usr/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/STIXSizOneSymBol.ttf', name='STIXSizeOneSym', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
+DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/usr/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSerif-Bold.ttf', name='DejaVu Serif', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
+DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/usr/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/STIXSizTwoSymReg.ttf', name='STIXSizeTwoSym', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/usr/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/cmr10.ttf', name='cmr10', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/usr/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSans-BoldOblique.ttf', name='DejaVu Sans', style='oblique', variant='normal', weight=700, stretch='normal', size='scalable')) = 1.335
+DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/usr/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/STIXGeneralBolIta.ttf', name='STIXGeneral', style='italic', variant='normal', weight=700, stretch='normal', size='scalable')) = 11.335
+DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/usr/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/STIXSizFourSymReg.ttf', name='STIXSizeFourSym', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
 DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/home/joseph/.fonts/MapleMono-SC-NF-BoldItalic.ttf', name='Maple Mono SC NF', style='italic', variant='normal', weight=700, stretch='normal', size='scalable')) = 11.335
 DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/usr/share/fonts/TTF/IosevkaNerdFontMono-HeavyItalic.ttf', name='Iosevka NFM', style='italic', variant='normal', weight=900, stretch='normal', size='scalable')) = 11.525
 DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/usr/share/fonts/gnu-free/FreeMonoBold.otf', name='FreeMono', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
@@ -954,47 +974,47 @@ DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/usr/share/fonts/
 DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/usr/share/fonts/TTF/IosevkaTermNerdFont-MediumItalic.ttf', name='IosevkaTerm NF', style='italic', variant='normal', weight=500, stretch='normal', size='scalable')) = 11.145
 DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/home/joseph/.fonts/MapleMono-BoldItalic.ttf', name='Maple Mono', style='italic', variant='normal', weight=700, stretch='normal', size='scalable')) = 11.335
 DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/usr/share/fonts/OTF/SyrCOMMardinBold.otf', name='Serto Mardin', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
-DEBUG:matplotlib.font_manager:findfont: Matching sans\-serif:style=normal:variant=normal:weight=normal:stretch=normal:size=10.0 to DejaVu Sans ('/home/joseph/projects/follicle_fork/python_utilities/tissuegenenv/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSans.ttf') with score of 0.050000.
-DEBUG:matplotlib.colorbar:locator: <matplotlib.ticker.AutoLocator object at 0x7626901855b0>
+DEBUG:matplotlib.font_manager:findfont: Matching sans\-serif:style=normal:variant=normal:weight=normal:stretch=normal:size=10.0 to DejaVu Sans ('/usr/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSans.ttf') with score of 0.050000.
+DEBUG:matplotlib.colorbar:locator: <matplotlib.ticker.AutoLocator object at 0x710cd62549d0>
 DEBUG:matplotlib.font_manager:findfont: Matching sans\-serif:style=normal:variant=normal:weight=normal:stretch=normal:size=9.0.
-DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/home/joseph/projects/follicle_fork/python_utilities/tissuegenenv/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/cmmi10.ttf', name='cmmi10', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
-DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/home/joseph/projects/follicle_fork/python_utilities/tissuegenenv/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSansMono-BoldOblique.ttf', name='DejaVu Sans Mono', style='oblique', variant='normal', weight=700, stretch='normal', size='scalable')) = 11.335
-DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/home/joseph/projects/follicle_fork/python_utilities/tissuegenenv/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSerif-BoldItalic.ttf', name='DejaVu Serif', style='italic', variant='normal', weight=700, stretch='normal', size='scalable')) = 11.335
-DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/home/joseph/projects/follicle_fork/python_utilities/tissuegenenv/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/STIXGeneral.ttf', name='STIXGeneral', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
-DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/home/joseph/projects/follicle_fork/python_utilities/tissuegenenv/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSansDisplay.ttf', name='DejaVu Sans Display', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
-DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/home/joseph/projects/follicle_fork/python_utilities/tissuegenenv/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSansMono.ttf', name='DejaVu Sans Mono', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
-DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/home/joseph/projects/follicle_fork/python_utilities/tissuegenenv/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/STIXGeneralItalic.ttf', name='STIXGeneral', style='italic', variant='normal', weight=400, stretch='normal', size='scalable')) = 11.05
-DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/home/joseph/projects/follicle_fork/python_utilities/tissuegenenv/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/STIXSizThreeSymBol.ttf', name='STIXSizeThreeSym', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
-DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/home/joseph/projects/follicle_fork/python_utilities/tissuegenenv/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/STIXNonUniBolIta.ttf', name='STIXNonUnicode', style='italic', variant='normal', weight=700, stretch='normal', size='scalable')) = 11.335
-DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/home/joseph/projects/follicle_fork/python_utilities/tissuegenenv/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSerif-Italic.ttf', name='DejaVu Serif', style='italic', variant='normal', weight=400, stretch='normal', size='scalable')) = 11.05
-DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/home/joseph/projects/follicle_fork/python_utilities/tissuegenenv/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/STIXSizTwoSymBol.ttf', name='STIXSizeTwoSym', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
-DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/home/joseph/projects/follicle_fork/python_utilities/tissuegenenv/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/STIXSizOneSymReg.ttf', name='STIXSizeOneSym', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
-DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/home/joseph/projects/follicle_fork/python_utilities/tissuegenenv/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/STIXGeneralBol.ttf', name='STIXGeneral', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
-DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/home/joseph/projects/follicle_fork/python_utilities/tissuegenenv/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSerifDisplay.ttf', name='DejaVu Serif Display', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
-DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/home/joseph/projects/follicle_fork/python_utilities/tissuegenenv/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSerif.ttf', name='DejaVu Serif', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
-DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/home/joseph/projects/follicle_fork/python_utilities/tissuegenenv/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/STIXNonUniIta.ttf', name='STIXNonUnicode', style='italic', variant='normal', weight=400, stretch='normal', size='scalable')) = 11.05
-DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/home/joseph/projects/follicle_fork/python_utilities/tissuegenenv/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/STIXSizFourSymBol.ttf', name='STIXSizeFourSym', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
-DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/home/joseph/projects/follicle_fork/python_utilities/tissuegenenv/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/STIXNonUni.ttf', name='STIXNonUnicode', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
-DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/home/joseph/projects/follicle_fork/python_utilities/tissuegenenv/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSans-Bold.ttf', name='DejaVu Sans', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 0.33499999999999996
-DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/home/joseph/projects/follicle_fork/python_utilities/tissuegenenv/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/cmb10.ttf', name='cmb10', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
-DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/home/joseph/projects/follicle_fork/python_utilities/tissuegenenv/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/cmex10.ttf', name='cmex10', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
-DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/home/joseph/projects/follicle_fork/python_utilities/tissuegenenv/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/cmsy10.ttf', name='cmsy10', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
-DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/home/joseph/projects/follicle_fork/python_utilities/tissuegenenv/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/STIXSizThreeSymReg.ttf', name='STIXSizeThreeSym', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
-DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/home/joseph/projects/follicle_fork/python_utilities/tissuegenenv/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSansMono-Bold.ttf', name='DejaVu Sans Mono', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
-DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/home/joseph/projects/follicle_fork/python_utilities/tissuegenenv/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSans-Oblique.ttf', name='DejaVu Sans', style='oblique', variant='normal', weight=400, stretch='normal', size='scalable')) = 1.05
-DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/home/joseph/projects/follicle_fork/python_utilities/tissuegenenv/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/cmtt10.ttf', name='cmtt10', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
-DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/home/joseph/projects/follicle_fork/python_utilities/tissuegenenv/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/STIXNonUniBol.ttf', name='STIXNonUnicode', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
-DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/home/joseph/projects/follicle_fork/python_utilities/tissuegenenv/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSans.ttf', name='DejaVu Sans', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 0.05
-DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/home/joseph/projects/follicle_fork/python_utilities/tissuegenenv/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/cmss10.ttf', name='cmss10', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
-DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/home/joseph/projects/follicle_fork/python_utilities/tissuegenenv/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/STIXSizFiveSymReg.ttf', name='STIXSizeFiveSym', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
-DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/home/joseph/projects/follicle_fork/python_utilities/tissuegenenv/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSansMono-Oblique.ttf', name='DejaVu Sans Mono', style='oblique', variant='normal', weight=400, stretch='normal', size='scalable')) = 11.05
-DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/home/joseph/projects/follicle_fork/python_utilities/tissuegenenv/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/STIXSizOneSymBol.ttf', name='STIXSizeOneSym', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
-DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/home/joseph/projects/follicle_fork/python_utilities/tissuegenenv/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSerif-Bold.ttf', name='DejaVu Serif', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
-DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/home/joseph/projects/follicle_fork/python_utilities/tissuegenenv/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/STIXSizTwoSymReg.ttf', name='STIXSizeTwoSym', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
-DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/home/joseph/projects/follicle_fork/python_utilities/tissuegenenv/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/cmr10.ttf', name='cmr10', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
-DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/home/joseph/projects/follicle_fork/python_utilities/tissuegenenv/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSans-BoldOblique.ttf', name='DejaVu Sans', style='oblique', variant='normal', weight=700, stretch='normal', size='scalable')) = 1.335
-DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/home/joseph/projects/follicle_fork/python_utilities/tissuegenenv/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/STIXGeneralBolIta.ttf', name='STIXGeneral', style='italic', variant='normal', weight=700, stretch='normal', size='scalable')) = 11.335
-DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/home/joseph/projects/follicle_fork/python_utilities/tissuegenenv/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/STIXSizFourSymReg.ttf', name='STIXSizeFourSym', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/usr/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/cmmi10.ttf', name='cmmi10', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/usr/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSansMono-BoldOblique.ttf', name='DejaVu Sans Mono', style='oblique', variant='normal', weight=700, stretch='normal', size='scalable')) = 11.335
+DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/usr/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSerif-BoldItalic.ttf', name='DejaVu Serif', style='italic', variant='normal', weight=700, stretch='normal', size='scalable')) = 11.335
+DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/usr/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/STIXGeneral.ttf', name='STIXGeneral', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/usr/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSansDisplay.ttf', name='DejaVu Sans Display', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/usr/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSansMono.ttf', name='DejaVu Sans Mono', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/usr/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/STIXGeneralItalic.ttf', name='STIXGeneral', style='italic', variant='normal', weight=400, stretch='normal', size='scalable')) = 11.05
+DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/usr/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/STIXSizThreeSymBol.ttf', name='STIXSizeThreeSym', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
+DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/usr/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/STIXNonUniBolIta.ttf', name='STIXNonUnicode', style='italic', variant='normal', weight=700, stretch='normal', size='scalable')) = 11.335
+DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/usr/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSerif-Italic.ttf', name='DejaVu Serif', style='italic', variant='normal', weight=400, stretch='normal', size='scalable')) = 11.05
+DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/usr/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/STIXSizTwoSymBol.ttf', name='STIXSizeTwoSym', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
+DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/usr/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/STIXSizOneSymReg.ttf', name='STIXSizeOneSym', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/usr/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/STIXGeneralBol.ttf', name='STIXGeneral', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
+DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/usr/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSerifDisplay.ttf', name='DejaVu Serif Display', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/usr/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSerif.ttf', name='DejaVu Serif', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/usr/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/STIXNonUniIta.ttf', name='STIXNonUnicode', style='italic', variant='normal', weight=400, stretch='normal', size='scalable')) = 11.05
+DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/usr/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/STIXSizFourSymBol.ttf', name='STIXSizeFourSym', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
+DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/usr/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/STIXNonUni.ttf', name='STIXNonUnicode', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/usr/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSans-Bold.ttf', name='DejaVu Sans', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 0.33499999999999996
+DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/usr/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/cmb10.ttf', name='cmb10', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/usr/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/cmex10.ttf', name='cmex10', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/usr/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/cmsy10.ttf', name='cmsy10', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/usr/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/STIXSizThreeSymReg.ttf', name='STIXSizeThreeSym', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/usr/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSansMono-Bold.ttf', name='DejaVu Sans Mono', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
+DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/usr/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSans-Oblique.ttf', name='DejaVu Sans', style='oblique', variant='normal', weight=400, stretch='normal', size='scalable')) = 1.05
+DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/usr/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/cmtt10.ttf', name='cmtt10', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/usr/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/STIXNonUniBol.ttf', name='STIXNonUnicode', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
+DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/usr/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSans.ttf', name='DejaVu Sans', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 0.05
+DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/usr/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/cmss10.ttf', name='cmss10', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/usr/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/STIXSizFiveSymReg.ttf', name='STIXSizeFiveSym', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/usr/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSansMono-Oblique.ttf', name='DejaVu Sans Mono', style='oblique', variant='normal', weight=400, stretch='normal', size='scalable')) = 11.05
+DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/usr/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/STIXSizOneSymBol.ttf', name='STIXSizeOneSym', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
+DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/usr/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSerif-Bold.ttf', name='DejaVu Serif', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
+DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/usr/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/STIXSizTwoSymReg.ttf', name='STIXSizeTwoSym', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/usr/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/cmr10.ttf', name='cmr10', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/usr/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSans-BoldOblique.ttf', name='DejaVu Sans', style='oblique', variant='normal', weight=700, stretch='normal', size='scalable')) = 1.335
+DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/usr/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/STIXGeneralBolIta.ttf', name='STIXGeneral', style='italic', variant='normal', weight=700, stretch='normal', size='scalable')) = 11.335
+DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/usr/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/STIXSizFourSymReg.ttf', name='STIXSizeFourSym', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
 DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/home/joseph/.fonts/MapleMono-SC-NF-BoldItalic.ttf', name='Maple Mono SC NF', style='italic', variant='normal', weight=700, stretch='normal', size='scalable')) = 11.335
 DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/usr/share/fonts/TTF/IosevkaNerdFontMono-HeavyItalic.ttf', name='Iosevka NFM', style='italic', variant='normal', weight=900, stretch='normal', size='scalable')) = 11.525
 DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/usr/share/fonts/gnu-free/FreeMonoBold.otf', name='FreeMono', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
@@ -1456,78 +1476,81 @@ DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/usr/share/fonts/
 DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/usr/share/fonts/TTF/IosevkaTermNerdFont-MediumItalic.ttf', name='IosevkaTerm NF', style='italic', variant='normal', weight=500, stretch='normal', size='scalable')) = 11.145
 DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/home/joseph/.fonts/MapleMono-BoldItalic.ttf', name='Maple Mono', style='italic', variant='normal', weight=700, stretch='normal', size='scalable')) = 11.335
 DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/usr/share/fonts/OTF/SyrCOMMardinBold.otf', name='Serto Mardin', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
-DEBUG:matplotlib.font_manager:findfont: Matching sans\-serif:style=normal:variant=normal:weight=normal:stretch=normal:size=9.0 to DejaVu Sans ('/home/joseph/projects/follicle_fork/python_utilities/tissuegenenv/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSans.ttf') with score of 0.050000.
+DEBUG:matplotlib.font_manager:findfont: Matching sans\-serif:style=normal:variant=normal:weight=normal:stretch=normal:size=9.0 to DejaVu Sans ('/usr/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSans.ttf') with score of 0.050000.
 DEBUG:root:ics_tab.py: fill_celltype_combobox(): ['oocyte', 'granulosa', 'matrix']
 DEBUG:root:ics_tab.py: ------- fill_substrate_combobox
 DEBUG:root: --> NaCl
-DEBUG:matplotlib.colorbar:colorbar update normal <matplotlib.colors.Normalize object at 0x7626901a1150> <matplotlib.colors.Normalize object at 0x762690191010>
-DEBUG:matplotlib.colorbar:locator: <matplotlib.ticker.AutoLocator object at 0x762691932f90>
-DEBUG:matplotlib.colorbar:colorbar update normal <matplotlib.colors.Normalize object at 0x76268af2ba10> <matplotlib.colors.Normalize object at 0x7626901a1150>
-DEBUG:matplotlib.colorbar:locator: <matplotlib.ticker.AutoLocator object at 0x7626901a1040>
+DEBUG:matplotlib.colorbar:colorbar update normal <matplotlib.colors.Normalize object at 0x710cd699a690> <matplotlib.colors.Normalize object at 0x710cd6236e40>
+DEBUG:matplotlib.colorbar:locator: <matplotlib.ticker.AutoLocator object at 0x710cd69c3ad0>
+DEBUG:matplotlib.colorbar:colorbar update normal <matplotlib.colors.Normalize object at 0x710cd60ff110> <matplotlib.colors.Normalize object at 0x710cd699a690>
+DEBUG:matplotlib.colorbar:locator: <matplotlib.ticker.AutoLocator object at 0x710cd699a580>
 DEBUG:root: --> EG
+DEBUG:root: --> contractility_signaling
 DEBUG:root:ics_tab.py: fill_celltype_combobox(): ['oocyte', 'granulosa', 'matrix']
 DEBUG:root:ics_tab.py: ------- fill_substrate_combobox
-DEBUG:matplotlib.colorbar:colorbar update normal <matplotlib.colors.Normalize object at 0x76269193f0e0> <matplotlib.colors.Normalize object at 0x76268af2ba10>
-DEBUG:matplotlib.colorbar:locator: <matplotlib.ticker.AutoLocator object at 0x7626901a0f30>
-DEBUG:matplotlib.colorbar:colorbar update normal <matplotlib.colors.Normalize object at 0x76269193ec80> <matplotlib.colors.Normalize object at 0x76269193f0e0>
-DEBUG:matplotlib.colorbar:locator: <matplotlib.ticker.AutoLocator object at 0x762691941b50>
+DEBUG:matplotlib.colorbar:colorbar update normal <matplotlib.colors.Normalize object at 0x710cd69f8c20> <matplotlib.colors.Normalize object at 0x710cd60ff110>
+DEBUG:matplotlib.colorbar:locator: <matplotlib.ticker.AutoLocator object at 0x710cd699a470>
+DEBUG:matplotlib.colorbar:colorbar update normal <matplotlib.colors.Normalize object at 0x710cd69f8e50> <matplotlib.colors.Normalize object at 0x710cd69f8c20>
+DEBUG:matplotlib.colorbar:locator: <matplotlib.ticker.AutoLocator object at 0x710cd6985850>
 DEBUG:root: --> NaCl
-DEBUG:matplotlib.colorbar:colorbar update normal <matplotlib.colors.Normalize object at 0x76269193e900> <matplotlib.colors.Normalize object at 0x76269193ec80>
-DEBUG:matplotlib.colorbar:locator: <matplotlib.ticker.AutoLocator object at 0x762694e25c50>
-DEBUG:matplotlib.colorbar:colorbar update normal <matplotlib.colors.Normalize object at 0x76269193f070> <matplotlib.colors.Normalize object at 0x76269193e900>
-DEBUG:matplotlib.colorbar:locator: <matplotlib.ticker.AutoLocator object at 0x76268af58320>
+DEBUG:matplotlib.colorbar:colorbar update normal <matplotlib.colors.Normalize object at 0x710cd69fbe70> <matplotlib.colors.Normalize object at 0x710cd69f8e50>
+DEBUG:matplotlib.colorbar:locator: <matplotlib.ticker.AutoLocator object at 0x710cd6986f50>
+DEBUG:matplotlib.colorbar:colorbar update normal <matplotlib.colors.Normalize object at 0x710cd69fb2a0> <matplotlib.colors.Normalize object at 0x710cd69fbe70>
+DEBUG:matplotlib.colorbar:locator: <matplotlib.ticker.AutoLocator object at 0x710cd6280230>
 DEBUG:root: --> EG
+DEBUG:root: --> contractility_signaling
 DEBUG:root:ics_tab.py: ------- fill_substrate_combobox
-DEBUG:matplotlib.colorbar:colorbar update normal <matplotlib.colors.Normalize object at 0x76269193dd30> <matplotlib.colors.Normalize object at 0x76269193f070>
-DEBUG:matplotlib.colorbar:locator: <matplotlib.ticker.AutoLocator object at 0x76268af58230>
-DEBUG:matplotlib.colorbar:colorbar update normal <matplotlib.colors.Normalize object at 0x76269193f5b0> <matplotlib.colors.Normalize object at 0x76269193dd30>
-DEBUG:matplotlib.colorbar:locator: <matplotlib.ticker.AutoLocator object at 0x76268af36190>
+DEBUG:matplotlib.colorbar:colorbar update normal <matplotlib.colors.Normalize object at 0x710cd69f9da0> <matplotlib.colors.Normalize object at 0x710cd69fb2a0>
+DEBUG:matplotlib.colorbar:locator: <matplotlib.ticker.AutoLocator object at 0x710cd6280500>
+DEBUG:matplotlib.colorbar:colorbar update normal <matplotlib.colors.Normalize object at 0x710cd69fbd90> <matplotlib.colors.Normalize object at 0x710cd69f9da0>
+DEBUG:matplotlib.colorbar:locator: <matplotlib.ticker.AutoLocator object at 0x710cd60f2cf0>
 DEBUG:root: --> NaCl
-DEBUG:matplotlib.colorbar:colorbar update normal <matplotlib.colors.Normalize object at 0x76269193eac0> <matplotlib.colors.Normalize object at 0x76269193f5b0>
-DEBUG:matplotlib.colorbar:locator: <matplotlib.ticker.AutoLocator object at 0x76268af36350>
-DEBUG:matplotlib.colorbar:colorbar update normal <matplotlib.colors.Normalize object at 0x76269193dd30> <matplotlib.colors.Normalize object at 0x76269193eac0>
-DEBUG:matplotlib.colorbar:locator: <matplotlib.ticker.AutoLocator object at 0x762691927450>
+DEBUG:matplotlib.colorbar:colorbar update normal <matplotlib.colors.Normalize object at 0x710cd69fa040> <matplotlib.colors.Normalize object at 0x710cd69fbd90>
+DEBUG:matplotlib.colorbar:locator: <matplotlib.ticker.AutoLocator object at 0x710cd60f2eb0>
+DEBUG:matplotlib.colorbar:colorbar update normal <matplotlib.colors.Normalize object at 0x710cd69fbe00> <matplotlib.colors.Normalize object at 0x710cd69fa040>
+DEBUG:matplotlib.colorbar:locator: <matplotlib.ticker.AutoLocator object at 0x710cd69e1bf0>
 DEBUG:root: --> EG
+DEBUG:root: --> contractility_signaling
 DEBUG:root:studio.py: calling vis_tab.substrates_cbox_changed_cb(2)
 DEBUG:matplotlib.font_manager:findfont: Matching sans\-serif:style=normal:variant=normal:weight=normal:stretch=normal:size=7.0.
-DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/home/joseph/projects/follicle_fork/python_utilities/tissuegenenv/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/cmmi10.ttf', name='cmmi10', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
-DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/home/joseph/projects/follicle_fork/python_utilities/tissuegenenv/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSansMono-BoldOblique.ttf', name='DejaVu Sans Mono', style='oblique', variant='normal', weight=700, stretch='normal', size='scalable')) = 11.335
-DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/home/joseph/projects/follicle_fork/python_utilities/tissuegenenv/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSerif-BoldItalic.ttf', name='DejaVu Serif', style='italic', variant='normal', weight=700, stretch='normal', size='scalable')) = 11.335
-DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/home/joseph/projects/follicle_fork/python_utilities/tissuegenenv/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/STIXGeneral.ttf', name='STIXGeneral', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
-DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/home/joseph/projects/follicle_fork/python_utilities/tissuegenenv/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSansDisplay.ttf', name='DejaVu Sans Display', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
-DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/home/joseph/projects/follicle_fork/python_utilities/tissuegenenv/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSansMono.ttf', name='DejaVu Sans Mono', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
-DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/home/joseph/projects/follicle_fork/python_utilities/tissuegenenv/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/STIXGeneralItalic.ttf', name='STIXGeneral', style='italic', variant='normal', weight=400, stretch='normal', size='scalable')) = 11.05
-DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/home/joseph/projects/follicle_fork/python_utilities/tissuegenenv/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/STIXSizThreeSymBol.ttf', name='STIXSizeThreeSym', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
-DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/home/joseph/projects/follicle_fork/python_utilities/tissuegenenv/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/STIXNonUniBolIta.ttf', name='STIXNonUnicode', style='italic', variant='normal', weight=700, stretch='normal', size='scalable')) = 11.335
-DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/home/joseph/projects/follicle_fork/python_utilities/tissuegenenv/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSerif-Italic.ttf', name='DejaVu Serif', style='italic', variant='normal', weight=400, stretch='normal', size='scalable')) = 11.05
-DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/home/joseph/projects/follicle_fork/python_utilities/tissuegenenv/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/STIXSizTwoSymBol.ttf', name='STIXSizeTwoSym', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
-DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/home/joseph/projects/follicle_fork/python_utilities/tissuegenenv/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/STIXSizOneSymReg.ttf', name='STIXSizeOneSym', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
-DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/home/joseph/projects/follicle_fork/python_utilities/tissuegenenv/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/STIXGeneralBol.ttf', name='STIXGeneral', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
-DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/home/joseph/projects/follicle_fork/python_utilities/tissuegenenv/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSerifDisplay.ttf', name='DejaVu Serif Display', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
-DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/home/joseph/projects/follicle_fork/python_utilities/tissuegenenv/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSerif.ttf', name='DejaVu Serif', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
-DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/home/joseph/projects/follicle_fork/python_utilities/tissuegenenv/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/STIXNonUniIta.ttf', name='STIXNonUnicode', style='italic', variant='normal', weight=400, stretch='normal', size='scalable')) = 11.05
-DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/home/joseph/projects/follicle_fork/python_utilities/tissuegenenv/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/STIXSizFourSymBol.ttf', name='STIXSizeFourSym', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
-DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/home/joseph/projects/follicle_fork/python_utilities/tissuegenenv/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/STIXNonUni.ttf', name='STIXNonUnicode', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
-DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/home/joseph/projects/follicle_fork/python_utilities/tissuegenenv/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSans-Bold.ttf', name='DejaVu Sans', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 0.33499999999999996
-DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/home/joseph/projects/follicle_fork/python_utilities/tissuegenenv/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/cmb10.ttf', name='cmb10', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
-DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/home/joseph/projects/follicle_fork/python_utilities/tissuegenenv/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/cmex10.ttf', name='cmex10', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
-DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/home/joseph/projects/follicle_fork/python_utilities/tissuegenenv/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/cmsy10.ttf', name='cmsy10', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
-DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/home/joseph/projects/follicle_fork/python_utilities/tissuegenenv/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/STIXSizThreeSymReg.ttf', name='STIXSizeThreeSym', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
-DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/home/joseph/projects/follicle_fork/python_utilities/tissuegenenv/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSansMono-Bold.ttf', name='DejaVu Sans Mono', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
-DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/home/joseph/projects/follicle_fork/python_utilities/tissuegenenv/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSans-Oblique.ttf', name='DejaVu Sans', style='oblique', variant='normal', weight=400, stretch='normal', size='scalable')) = 1.05
-DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/home/joseph/projects/follicle_fork/python_utilities/tissuegenenv/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/cmtt10.ttf', name='cmtt10', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
-DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/home/joseph/projects/follicle_fork/python_utilities/tissuegenenv/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/STIXNonUniBol.ttf', name='STIXNonUnicode', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
-DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/home/joseph/projects/follicle_fork/python_utilities/tissuegenenv/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSans.ttf', name='DejaVu Sans', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 0.05
-DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/home/joseph/projects/follicle_fork/python_utilities/tissuegenenv/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/cmss10.ttf', name='cmss10', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
-DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/home/joseph/projects/follicle_fork/python_utilities/tissuegenenv/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/STIXSizFiveSymReg.ttf', name='STIXSizeFiveSym', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
-DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/home/joseph/projects/follicle_fork/python_utilities/tissuegenenv/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSansMono-Oblique.ttf', name='DejaVu Sans Mono', style='oblique', variant='normal', weight=400, stretch='normal', size='scalable')) = 11.05
-DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/home/joseph/projects/follicle_fork/python_utilities/tissuegenenv/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/STIXSizOneSymBol.ttf', name='STIXSizeOneSym', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
-DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/home/joseph/projects/follicle_fork/python_utilities/tissuegenenv/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSerif-Bold.ttf', name='DejaVu Serif', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
-DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/home/joseph/projects/follicle_fork/python_utilities/tissuegenenv/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/STIXSizTwoSymReg.ttf', name='STIXSizeTwoSym', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
-DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/home/joseph/projects/follicle_fork/python_utilities/tissuegenenv/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/cmr10.ttf', name='cmr10', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
-DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/home/joseph/projects/follicle_fork/python_utilities/tissuegenenv/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSans-BoldOblique.ttf', name='DejaVu Sans', style='oblique', variant='normal', weight=700, stretch='normal', size='scalable')) = 1.335
-DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/home/joseph/projects/follicle_fork/python_utilities/tissuegenenv/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/STIXGeneralBolIta.ttf', name='STIXGeneral', style='italic', variant='normal', weight=700, stretch='normal', size='scalable')) = 11.335
-DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/home/joseph/projects/follicle_fork/python_utilities/tissuegenenv/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/STIXSizFourSymReg.ttf', name='STIXSizeFourSym', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/usr/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/cmmi10.ttf', name='cmmi10', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/usr/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSansMono-BoldOblique.ttf', name='DejaVu Sans Mono', style='oblique', variant='normal', weight=700, stretch='normal', size='scalable')) = 11.335
+DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/usr/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSerif-BoldItalic.ttf', name='DejaVu Serif', style='italic', variant='normal', weight=700, stretch='normal', size='scalable')) = 11.335
+DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/usr/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/STIXGeneral.ttf', name='STIXGeneral', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/usr/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSansDisplay.ttf', name='DejaVu Sans Display', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/usr/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSansMono.ttf', name='DejaVu Sans Mono', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/usr/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/STIXGeneralItalic.ttf', name='STIXGeneral', style='italic', variant='normal', weight=400, stretch='normal', size='scalable')) = 11.05
+DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/usr/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/STIXSizThreeSymBol.ttf', name='STIXSizeThreeSym', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
+DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/usr/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/STIXNonUniBolIta.ttf', name='STIXNonUnicode', style='italic', variant='normal', weight=700, stretch='normal', size='scalable')) = 11.335
+DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/usr/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSerif-Italic.ttf', name='DejaVu Serif', style='italic', variant='normal', weight=400, stretch='normal', size='scalable')) = 11.05
+DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/usr/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/STIXSizTwoSymBol.ttf', name='STIXSizeTwoSym', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
+DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/usr/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/STIXSizOneSymReg.ttf', name='STIXSizeOneSym', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/usr/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/STIXGeneralBol.ttf', name='STIXGeneral', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
+DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/usr/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSerifDisplay.ttf', name='DejaVu Serif Display', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/usr/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSerif.ttf', name='DejaVu Serif', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/usr/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/STIXNonUniIta.ttf', name='STIXNonUnicode', style='italic', variant='normal', weight=400, stretch='normal', size='scalable')) = 11.05
+DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/usr/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/STIXSizFourSymBol.ttf', name='STIXSizeFourSym', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
+DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/usr/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/STIXNonUni.ttf', name='STIXNonUnicode', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/usr/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSans-Bold.ttf', name='DejaVu Sans', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 0.33499999999999996
+DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/usr/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/cmb10.ttf', name='cmb10', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/usr/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/cmex10.ttf', name='cmex10', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/usr/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/cmsy10.ttf', name='cmsy10', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/usr/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/STIXSizThreeSymReg.ttf', name='STIXSizeThreeSym', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/usr/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSansMono-Bold.ttf', name='DejaVu Sans Mono', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
+DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/usr/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSans-Oblique.ttf', name='DejaVu Sans', style='oblique', variant='normal', weight=400, stretch='normal', size='scalable')) = 1.05
+DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/usr/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/cmtt10.ttf', name='cmtt10', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/usr/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/STIXNonUniBol.ttf', name='STIXNonUnicode', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
+DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/usr/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSans.ttf', name='DejaVu Sans', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 0.05
+DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/usr/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/cmss10.ttf', name='cmss10', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/usr/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/STIXSizFiveSymReg.ttf', name='STIXSizeFiveSym', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/usr/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSansMono-Oblique.ttf', name='DejaVu Sans Mono', style='oblique', variant='normal', weight=400, stretch='normal', size='scalable')) = 11.05
+DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/usr/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/STIXSizOneSymBol.ttf', name='STIXSizeOneSym', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
+DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/usr/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSerif-Bold.ttf', name='DejaVu Serif', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
+DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/usr/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/STIXSizTwoSymReg.ttf', name='STIXSizeTwoSym', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/usr/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/cmr10.ttf', name='cmr10', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/usr/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSans-BoldOblique.ttf', name='DejaVu Sans', style='oblique', variant='normal', weight=700, stretch='normal', size='scalable')) = 1.335
+DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/usr/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/STIXGeneralBolIta.ttf', name='STIXGeneral', style='italic', variant='normal', weight=700, stretch='normal', size='scalable')) = 11.335
+DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/usr/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/STIXSizFourSymReg.ttf', name='STIXSizeFourSym', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
 DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/home/joseph/.fonts/MapleMono-SC-NF-BoldItalic.ttf', name='Maple Mono SC NF', style='italic', variant='normal', weight=700, stretch='normal', size='scalable')) = 11.335
 DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/usr/share/fonts/TTF/IosevkaNerdFontMono-HeavyItalic.ttf', name='Iosevka NFM', style='italic', variant='normal', weight=900, stretch='normal', size='scalable')) = 11.525
 DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/usr/share/fonts/gnu-free/FreeMonoBold.otf', name='FreeMono', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
@@ -1989,309 +2012,7 @@ DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/usr/share/fonts/
 DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/usr/share/fonts/TTF/IosevkaTermNerdFont-MediumItalic.ttf', name='IosevkaTerm NF', style='italic', variant='normal', weight=500, stretch='normal', size='scalable')) = 11.145
 DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/home/joseph/.fonts/MapleMono-BoldItalic.ttf', name='Maple Mono', style='italic', variant='normal', weight=700, stretch='normal', size='scalable')) = 11.335
 DEBUG:matplotlib.font_manager:findfont: score(FontEntry(fname='/usr/share/fonts/OTF/SyrCOMMardinBold.otf', name='Serto Mardin', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
-DEBUG:matplotlib.font_manager:findfont: Matching sans\-serif:style=normal:variant=normal:weight=normal:stretch=normal:size=7.0 to DejaVu Sans ('/home/joseph/projects/follicle_fork/python_utilities/tissuegenenv/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSans.ttf') with score of 0.050000.
-DEBUG:root:
-  ---- apoptosis_phase_transition_cb: 
-DEBUG:root:apoptosis_phase_transition_cb: --> duration
-DEBUG:root:
-  ---- apoptosis_phase_transition_cb: 
-DEBUG:root:apoptosis: ------>> transition rate     
-DEBUG:root:apoptosis_phase_transition_cb: NOT duration
-DEBUG:root:
-  ---- necrosis_phase_transition_cb: 
-DEBUG:root:necrosis_phase_transition_cb: --> duration
-DEBUG:root:
-  ---- necrosis_phase_transition_cb: 
-DEBUG:root:necrosis: ------>>transition rate     
-DEBUG:root:necrosis_phase_transition_cb: NOT duration
-DEBUG:root:key 0= oocyte
-DEBUG:root:keys 1= dict_keys(['oocyte', 'granulosa', 'matrix'])
-DEBUG:root:keys 2= dict_keys(['default', 'oocyte', 'granulosa', 'matrix'])
-DEBUG:root:
------ update_motility_params():  cdname= matrix
-DEBUG:root:     setting motility_substrate_dropdown (for cdname= matrix ) = NaCl
-DEBUG:root:     setting motility2_substrate_dropdown (for cdname= matrix ) = NaCl
-DEBUG:root:    chemotactic_sensitivity= {'NaCl': '0.0', 'EG': '0.0'}
-DEBUG:root:new val = 0.0
-DEBUG:root:----- leave update_motility_params()
-
-DEBUG:root:update_secretion_params(): cdname = matrix
-DEBUG:root:update_secretion_params(): self.current_secretion_substrate = NaCl
-DEBUG:root:{'NaCl': {'secretion_rate': '0.0', 'secretion_target': '1.0', 'uptake_rate': '0.0', 'net_export_rate': '0.0'}, 'EG': {'secretion_rate': '0.0', 'secretion_target': '1.0', 'uptake_rate': '0.0', 'net_export_rate': '0.0'}}
-DEBUG:root:
-  ---- apoptosis_phase_transition_cb: 
-DEBUG:root:apoptosis_phase_transition_cb: NOT duration
-DEBUG:root:
-  ---- apoptosis_phase_transition_cb: 
-DEBUG:root:apoptosis: ------>> duration
-DEBUG:root:apoptosis_phase_transition_cb: --> duration
-DEBUG:root:
-  ---- necrosis_phase_transition_cb: 
-DEBUG:root:necrosis_phase_transition_cb: NOT duration
-DEBUG:root:
-  ---- necrosis_phase_transition_cb: 
-DEBUG:root:necrosis: ------>>duration
-DEBUG:root:necrosis_phase_transition_cb: --> duration
-DEBUG:root:key 0= oocyte
-DEBUG:root:keys 1= dict_keys(['oocyte', 'granulosa', 'matrix'])
-DEBUG:root:keys 2= dict_keys(['oocyte', 'granulosa', 'matrix'])
-DEBUG:root:
------ update_motility_params():  cdname= granulosa
-DEBUG:root:     setting motility_substrate_dropdown (for cdname= granulosa ) = NaCl
-DEBUG:root:     setting motility2_substrate_dropdown (for cdname= granulosa ) = NaCl
-DEBUG:root:    chemotactic_sensitivity= {'NaCl': '0.0', 'EG': '0.0', 'contractility_signaling': '0.0'}
-DEBUG:root:new val = 0.0
-DEBUG:root:----- leave update_motility_params()
-
-DEBUG:root:update_secretion_params(): cdname = granulosa
-DEBUG:root:update_secretion_params(): self.current_secretion_substrate = NaCl
-DEBUG:root:{'NaCl': {'secretion_rate': '0.0', 'secretion_target': '0.0', 'uptake_rate': '0.0', 'net_export_rate': '0.0'}, 'EG': {'secretion_rate': None, 'secretion_target': '0.0', 'uptake_rate': '0.0', 'net_export_rate': '0.0'}, 'contractility_signaling': {'secretion_rate': '0.0', 'secretion_target': '1.0', 'uptake_rate': '0.0', 'net_export_rate': '0.0'}}
-DEBUG:root:update_secretion_params(): cdname = granulosa
-DEBUG:root:update_secretion_params(): self.current_secretion_substrate = contractility_signaling
-DEBUG:root:{'NaCl': {'secretion_rate': '0.0', 'secretion_target': '0.0', 'uptake_rate': '0.0', 'net_export_rate': '0.0'}, 'EG': {'secretion_rate': None, 'secretion_target': '0.0', 'uptake_rate': '0.0', 'net_export_rate': '0.0'}, 'contractility_signaling': {'secretion_rate': '0.0', 'secretion_target': '1.0', 'uptake_rate': '0.0', 'net_export_rate': '0.0'}}
-DEBUG:root:
-  ---- apoptosis_phase_transition_cb: 
-DEBUG:root:apoptosis_phase_transition_cb: --> duration
-DEBUG:root:
-  ---- apoptosis_phase_transition_cb: 
-DEBUG:root:apoptosis: ------>> transition rate     
-DEBUG:root:apoptosis_phase_transition_cb: NOT duration
-DEBUG:root:
-  ---- necrosis_phase_transition_cb: 
-DEBUG:root:necrosis_phase_transition_cb: --> duration
-DEBUG:root:
-  ---- necrosis_phase_transition_cb: 
-DEBUG:root:necrosis: ------>>transition rate     
-DEBUG:root:necrosis_phase_transition_cb: NOT duration
-DEBUG:root:key 0= oocyte
-DEBUG:root:keys 1= dict_keys(['oocyte', 'granulosa', 'matrix'])
-DEBUG:root:keys 2= dict_keys(['default', 'oocyte', 'granulosa', 'matrix'])
-DEBUG:root:
------ update_motility_params():  cdname= matrix
-DEBUG:root:     setting motility_substrate_dropdown (for cdname= matrix ) = NaCl
-DEBUG:root:     setting motility2_substrate_dropdown (for cdname= matrix ) = NaCl
-DEBUG:root:    chemotactic_sensitivity= {'NaCl': '0.0', 'EG': '0.0', 'contractility_signaling': '0.0'}
-DEBUG:root:new val = 0.0
-DEBUG:root:----- leave update_motility_params()
-
-DEBUG:root:update_secretion_params(): cdname = matrix
-DEBUG:root:update_secretion_params(): self.current_secretion_substrate = contractility_signaling
-DEBUG:root:{'NaCl': {'secretion_rate': '0.0', 'secretion_target': '1.0', 'uptake_rate': '0.0', 'net_export_rate': '0.0'}, 'EG': {'secretion_rate': '0.0', 'secretion_target': '1.0', 'uptake_rate': '0.0', 'net_export_rate': '0.0'}, 'contractility_signaling': {'secretion_rate': '0.0', 'secretion_target': '1.0', 'uptake_rate': '0.0', 'net_export_rate': '0.0'}}
-DEBUG:root:------ motility_substrate_changed_cb(): idx = 2
-DEBUG:root:       motility_substrate_changed_cb(): self.current_cell_def = matrix
-DEBUG:root:                         text = contractility_signaling
-DEBUG:root:----------- microenv_tab.py: fill_xml(): ----------
-DEBUG:root:microenv_tab.py: fill_xml(): num subtrates = 3
-DEBUG:root:substrates_in_tree =['NaCl', 'EG', 'contractility_signaling']
-DEBUG:root:microrenv_tab.py: key in param_d.keys() = NaCl
-DEBUG:root:matched! NaCl
-DEBUG:root:microrenv_tab.py: key in param_d.keys() = EG
-DEBUG:root:matched! EG
-DEBUG:root:microrenv_tab.py: key in param_d.keys() = gradients
-DEBUG:root:microrenv_tab.py: key in param_d.keys() = track_in_agents
-DEBUG:root:microrenv_tab.py: key in param_d.keys() = contractility_signaling
-DEBUG:root:matched! contractility_signaling
-DEBUG:root:
-
------------ cell_def_tab.py: fill_xml(): ----------
-DEBUG:root:num cell defs = 3
-DEBUG:root:cdefs_in_tree =['oocyte', 'granulosa', 'matrix']
-DEBUG:root:
---- key in param_d.keys() = oocyte
-DEBUG:root:matched! oocyte
-DEBUG:root:--- cell_adhesion_affinity= {'default': '1', 'oocyte': '1.0', 'matrix': '1.0'}
-DEBUG:root:default  --> 1
-DEBUG:root:oocyte  --> 1.0
-DEBUG:root:matrix  --> 1.0
-DEBUG:root:
-
- ====================> fill_xml_motility(): NaCl = NaCl 
-
-
-DEBUG:root:fill_xml_motility(): {'NaCl': '0.0', 'EG': '0.0', 'contractility_signaling': '0.0'}
-DEBUG:root:NaCl  --> 0.0
-DEBUG:root:EG  --> 0.0
-DEBUG:root:contractility_signaling  --> 0.0
-DEBUG:root:
-
- ====================> fill_xml_secretion()
-
-DEBUG:root:self.substrate_list = ['NaCl', 'EG', 'contractility_signaling']
-DEBUG:root:substrate = NaCl
-DEBUG:root:substrate = EG
-DEBUG:root:substrate = contractility_signaling
-DEBUG:root:------------------- fill_xml_interactions():  cdef= oocyte
-DEBUG:root:--- live_phagocytosis_rate= {'default': '0', 'matrix': '0.0', '': '0.0'}
-DEBUG:root:  key in live_phagocytosis_rate= default
-DEBUG:root:default  --> 0
-DEBUG:root:  key in live_phagocytosis_rate= matrix
-DEBUG:root:matrix  --> 0.0
-DEBUG:root:  key in live_phagocytosis_rate= 
-DEBUG:root:--- attack_rate= {'default': '0', 'matrix': '0.0', '': '0.0'}
-DEBUG:root:default  --> 0
-DEBUG:root:matrix  --> 0.0
-DEBUG:root:--- fusion_rate= {'default': '0', 'matrix': '0.0', '': '0.0'}
-DEBUG:root:default  --> 0
-DEBUG:root:matrix  --> 0.0
-DEBUG:root:default  --> 0
-DEBUG:root:matrix  --> 0.0
-DEBUG:root:------------------- cell_def_tab.py:  fill_xml_intracellular()
-DEBUG:root:------ ["intracellular"]: for oocyte
-DEBUG:root:None
-DEBUG:root:
-
-DEBUG:root:------ ["custom_data"]: for oocyte
-DEBUG:root:------ ["initial_parameter_distributions"]: for oocyte
-DEBUG:root:
---- key in param_d.keys() = granulosa
-DEBUG:root:matched! granulosa
-DEBUG:root:--- cell_adhesion_affinity= {'oocyte': '1.0', 'granulosa': '1.0', 'matrix': '1.0'}
-DEBUG:root:oocyte  --> 1.0
-DEBUG:root:granulosa  --> 1.0
-DEBUG:root:matrix  --> 1.0
-DEBUG:root:
-
- ====================> fill_xml_motility(): NaCl = NaCl 
-
-
-DEBUG:root:fill_xml_motility(): {'NaCl': '0.0', 'EG': '0.0', 'contractility_signaling': '0.0'}
-DEBUG:root:NaCl  --> 0.0
-DEBUG:root:EG  --> 0.0
-DEBUG:root:contractility_signaling  --> 0.0
-DEBUG:root:
-
- ====================> fill_xml_secretion()
-
-DEBUG:root:self.substrate_list = ['NaCl', 'EG', 'contractility_signaling']
-DEBUG:root:substrate = NaCl
-DEBUG:root:substrate = EG
-DEBUG:root:substrate = contractility_signaling
-DEBUG:root:------------------- fill_xml_interactions():  cdef= granulosa
-DEBUG:root:--- live_phagocytosis_rate= {'oocyte': '0.0', 'granulosa': '0.0', 'matrix': '0.0'}
-DEBUG:root:  key in live_phagocytosis_rate= oocyte
-DEBUG:root:oocyte  --> 0.0
-DEBUG:root:  key in live_phagocytosis_rate= granulosa
-DEBUG:root:granulosa  --> 0.0
-DEBUG:root:  key in live_phagocytosis_rate= matrix
-DEBUG:root:matrix  --> 0.0
-DEBUG:root:--- attack_rate= {'oocyte': '0.0', 'granulosa': '0.0', 'matrix': '0.0'}
-DEBUG:root:oocyte  --> 0.0
-DEBUG:root:granulosa  --> 0.0
-DEBUG:root:matrix  --> 0.0
-DEBUG:root:--- fusion_rate= {'oocyte': '0.0', 'granulosa': '0.0', 'matrix': '0.0'}
-DEBUG:root:oocyte  --> 0.0
-DEBUG:root:granulosa  --> 0.0
-DEBUG:root:matrix  --> 0.0
-DEBUG:root:oocyte  --> 0.0
-DEBUG:root:granulosa  --> 0.0
-DEBUG:root:matrix  --> 0.0
-DEBUG:root:------------------- cell_def_tab.py:  fill_xml_intracellular()
-DEBUG:root:------ ["intracellular"]: for granulosa
-DEBUG:root:None
-DEBUG:root:
-
-DEBUG:root:------ ["custom_data"]: for granulosa
-DEBUG:root:------ ["initial_parameter_distributions"]: for granulosa
-DEBUG:root:
---- key in param_d.keys() = matrix
-DEBUG:root:matched! matrix
-DEBUG:root:--- cell_adhesion_affinity= {'default': '1', 'oocyte': '1.0', 'granulosa': '2.0', 'matrix': '1.0'}
-DEBUG:root:default  --> 1
-DEBUG:root:oocyte  --> 1.0
-DEBUG:root:granulosa  --> 2.0
-DEBUG:root:matrix  --> 1.0
-DEBUG:root:
-
- ====================> fill_xml_motility(): contractility_signaling = contractility_signaling 
-
-
-DEBUG:root:fill_xml_motility(): {'NaCl': '0.0', 'EG': '0.0', 'contractility_signaling': '0.0'}
-DEBUG:root:NaCl  --> 0.0
-DEBUG:root:EG  --> 0.0
-DEBUG:root:contractility_signaling  --> 0.0
-DEBUG:root:
-
- ====================> fill_xml_secretion()
-
-DEBUG:root:self.substrate_list = ['NaCl', 'EG', 'contractility_signaling']
-DEBUG:root:substrate = NaCl
-DEBUG:root:substrate = EG
-DEBUG:root:substrate = contractility_signaling
-DEBUG:root:------------------- fill_xml_interactions():  cdef= matrix
-DEBUG:root:--- live_phagocytosis_rate= {'default': '0', 'oocyte': '0.0', 'granulosa': '0.0', 'matrix': '0.0'}
-DEBUG:root:  key in live_phagocytosis_rate= default
-DEBUG:root:default  --> 0
-DEBUG:root:  key in live_phagocytosis_rate= oocyte
-DEBUG:root:oocyte  --> 0.0
-DEBUG:root:  key in live_phagocytosis_rate= granulosa
-DEBUG:root:granulosa  --> 0.0
-DEBUG:root:  key in live_phagocytosis_rate= matrix
-DEBUG:root:matrix  --> 0.0
-DEBUG:root:--- attack_rate= {'default': '0', 'oocyte': '0.0', 'granulosa': '0.0', 'matrix': '0.0'}
-DEBUG:root:default  --> 0
-DEBUG:root:oocyte  --> 0.0
-DEBUG:root:granulosa  --> 0.0
-DEBUG:root:matrix  --> 0.0
-DEBUG:root:--- fusion_rate= {'default': '0', 'oocyte': '0.0', 'granulosa': '0.0', 'matrix': '0.0'}
-DEBUG:root:default  --> 0
-DEBUG:root:oocyte  --> 0.0
-DEBUG:root:granulosa  --> 0.0
-DEBUG:root:matrix  --> 0.0
-DEBUG:root:default  --> 0
-DEBUG:root:oocyte  --> 0.0
-DEBUG:root:granulosa  --> 0.0
-DEBUG:root:matrix  --> 0.0
-DEBUG:root:------------------- cell_def_tab.py:  fill_xml_intracellular()
-DEBUG:root:------ ["intracellular"]: for matrix
-DEBUG:root:None
-DEBUG:root:
-
-DEBUG:root:------ ["custom_data"]: for matrix
-DEBUG:root:------ ["initial_parameter_distributions"]: for matrix
-DEBUG:root:----------- end cell_def_tab.py: fill_xml(): ----------
-DEBUG:root:
---------- user_params_tab.py:  fill_xml(): self.count = 100
-DEBUG:root:--------- found //user_parameters
-DEBUG:root:random_seed
-DEBUG:root:number_of_solutes
-DEBUG:root:initial_molarity_0
-DEBUG:root:initial_molarity_1
-DEBUG:root:number_of_cells
-DEBUG:root:number_of_fibres
-DEBUG:root:anisotropic_fibres
-DEBUG:root:initial_EG_only_molarity
-DEBUG:root:initial_GLY_only_molarity
-DEBUG:root:initial_EG_mixed_molarity
-DEBUG:root:initial_GLY_mixed_molarity
-DEBUG:root:initial_HM_molarity
-DEBUG:root:initial_1xPBS_molarity
-DEBUG:root:initial_2xPBS_molarity
-DEBUG:root:initial_5xPBS_molarity
-DEBUG:root:initial_05xPBS_molarity
-DEBUG:root:initial_EG_Karlsson_molarity
-DEBUG:root:initial_PBS_Karlsson_molarity
-DEBUG:root:initial_DMSO_Karlsson_molarity
-DEBUG:root:initial_PROH_Karlsson_molarity
-DEBUG:root:fibre_degradation
-DEBUG:root:fibre_degradation_rate
-DEBUG:root:fibre_custom_degradation
-DEBUG:root:fibre_stuck_time
-DEBUG:root:fibre_stuck_threshold
-DEBUG:root:fibre_pressure_threshold
-DEBUG:root:color_cells_by_pressure
-DEBUG:root:fibre_pushing
-DEBUG:root:fibre_sticky
-DEBUG:root:fibre_rotation
-DEBUG:root:max_TZP_length
-DEBUG:root:vel_adhesion
-DEBUG:root:vel_contact
-DEBUG:root:cell_velocity_max
-DEBUG:root:average_hepg2_radius
-DEBUG:root:average_pocket_radius
-DEBUG:root:average_oocyte_radius
-DEBUG:root:average_granulosa_radius
-DEBUG:root:bm_spring_constant
-DEBUG:root:found 39
+DEBUG:matplotlib.font_manager:findfont: Matching sans\-serif:style=normal:variant=normal:weight=normal:stretch=normal:size=7.0 to DejaVu Sans ('/usr/lib/python3.13/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSans.ttf') with score of 0.050000.
 DEBUG:root:===========  run_model_cb():  ============
 DEBUG:root:run_tab.py:  doing: mkdir output
 DEBUG:root:----------- microenv_tab.py: fill_xml(): ----------
@@ -2301,436 +2022,10 @@ DEBUG:root:microrenv_tab.py: key in param_d.keys() = NaCl
 DEBUG:root:matched! NaCl
 DEBUG:root:microrenv_tab.py: key in param_d.keys() = EG
 DEBUG:root:matched! EG
-DEBUG:root:microrenv_tab.py: key in param_d.keys() = gradients
-DEBUG:root:microrenv_tab.py: key in param_d.keys() = track_in_agents
 DEBUG:root:microrenv_tab.py: key in param_d.keys() = contractility_signaling
 DEBUG:root:matched! contractility_signaling
-DEBUG:root:
-
------------ cell_def_tab.py: fill_xml(): ----------
-DEBUG:root:num cell defs = 3
-DEBUG:root:cdefs_in_tree =['oocyte', 'granulosa', 'matrix']
-DEBUG:root:
---- key in param_d.keys() = oocyte
-DEBUG:root:matched! oocyte
-DEBUG:root:--- cell_adhesion_affinity= {'default': '1', 'oocyte': '1.0', 'matrix': '1.0'}
-DEBUG:root:default  --> 1
-DEBUG:root:oocyte  --> 1.0
-DEBUG:root:matrix  --> 1.0
-DEBUG:root:
-
- ====================> fill_xml_motility(): NaCl = NaCl 
-
-
-DEBUG:root:fill_xml_motility(): {'NaCl': '0.0', 'EG': '0.0', 'contractility_signaling': '0.0'}
-DEBUG:root:NaCl  --> 0.0
-DEBUG:root:EG  --> 0.0
-DEBUG:root:contractility_signaling  --> 0.0
-DEBUG:root:
-
- ====================> fill_xml_secretion()
-
-DEBUG:root:self.substrate_list = ['NaCl', 'EG', 'contractility_signaling']
-DEBUG:root:substrate = NaCl
-DEBUG:root:substrate = EG
-DEBUG:root:substrate = contractility_signaling
-DEBUG:root:------------------- fill_xml_interactions():  cdef= oocyte
-DEBUG:root:--- live_phagocytosis_rate= {'default': '0', 'matrix': '0.0', '': '0.0'}
-DEBUG:root:  key in live_phagocytosis_rate= default
-DEBUG:root:default  --> 0
-DEBUG:root:  key in live_phagocytosis_rate= matrix
-DEBUG:root:matrix  --> 0.0
-DEBUG:root:  key in live_phagocytosis_rate= 
-DEBUG:root:--- attack_rate= {'default': '0', 'matrix': '0.0', '': '0.0'}
-DEBUG:root:default  --> 0
-DEBUG:root:matrix  --> 0.0
-DEBUG:root:--- fusion_rate= {'default': '0', 'matrix': '0.0', '': '0.0'}
-DEBUG:root:default  --> 0
-DEBUG:root:matrix  --> 0.0
-DEBUG:root:default  --> 0
-DEBUG:root:matrix  --> 0.0
-DEBUG:root:------------------- cell_def_tab.py:  fill_xml_intracellular()
-DEBUG:root:------ ["intracellular"]: for oocyte
-DEBUG:root:None
-DEBUG:root:
-
-DEBUG:root:------ ["custom_data"]: for oocyte
-DEBUG:root:------ ["initial_parameter_distributions"]: for oocyte
-DEBUG:root:
---- key in param_d.keys() = granulosa
-DEBUG:root:matched! granulosa
-DEBUG:root:--- cell_adhesion_affinity= {'oocyte': '1.0', 'granulosa': '1.0', 'matrix': '1.0'}
-DEBUG:root:oocyte  --> 1.0
-DEBUG:root:granulosa  --> 1.0
-DEBUG:root:matrix  --> 1.0
-DEBUG:root:
-
- ====================> fill_xml_motility(): NaCl = NaCl 
-
-
-DEBUG:root:fill_xml_motility(): {'NaCl': '0.0', 'EG': '0.0', 'contractility_signaling': '0.0'}
-DEBUG:root:NaCl  --> 0.0
-DEBUG:root:EG  --> 0.0
-DEBUG:root:contractility_signaling  --> 0.0
-DEBUG:root:
-
- ====================> fill_xml_secretion()
-
-DEBUG:root:self.substrate_list = ['NaCl', 'EG', 'contractility_signaling']
-DEBUG:root:substrate = NaCl
-DEBUG:root:substrate = EG
-DEBUG:root:substrate = contractility_signaling
-DEBUG:root:------------------- fill_xml_interactions():  cdef= granulosa
-DEBUG:root:--- live_phagocytosis_rate= {'oocyte': '0.0', 'granulosa': '0.0', 'matrix': '0.0'}
-DEBUG:root:  key in live_phagocytosis_rate= oocyte
-DEBUG:root:oocyte  --> 0.0
-DEBUG:root:  key in live_phagocytosis_rate= granulosa
-DEBUG:root:granulosa  --> 0.0
-DEBUG:root:  key in live_phagocytosis_rate= matrix
-DEBUG:root:matrix  --> 0.0
-DEBUG:root:--- attack_rate= {'oocyte': '0.0', 'granulosa': '0.0', 'matrix': '0.0'}
-DEBUG:root:oocyte  --> 0.0
-DEBUG:root:granulosa  --> 0.0
-DEBUG:root:matrix  --> 0.0
-DEBUG:root:--- fusion_rate= {'oocyte': '0.0', 'granulosa': '0.0', 'matrix': '0.0'}
-DEBUG:root:oocyte  --> 0.0
-DEBUG:root:granulosa  --> 0.0
-DEBUG:root:matrix  --> 0.0
-DEBUG:root:oocyte  --> 0.0
-DEBUG:root:granulosa  --> 0.0
-DEBUG:root:matrix  --> 0.0
-DEBUG:root:------------------- cell_def_tab.py:  fill_xml_intracellular()
-DEBUG:root:------ ["intracellular"]: for granulosa
-DEBUG:root:None
-DEBUG:root:
-
-DEBUG:root:------ ["custom_data"]: for granulosa
-DEBUG:root:------ ["initial_parameter_distributions"]: for granulosa
-DEBUG:root:
---- key in param_d.keys() = matrix
-DEBUG:root:matched! matrix
-DEBUG:root:--- cell_adhesion_affinity= {'default': '1', 'oocyte': '1.0', 'granulosa': '2.0', 'matrix': '1.0'}
-DEBUG:root:default  --> 1
-DEBUG:root:oocyte  --> 1.0
-DEBUG:root:granulosa  --> 2.0
-DEBUG:root:matrix  --> 1.0
-DEBUG:root:
-
- ====================> fill_xml_motility(): contractility_signaling = contractility_signaling 
-
-
-DEBUG:root:fill_xml_motility(): {'NaCl': '0.0', 'EG': '0.0', 'contractility_signaling': '0.0'}
-DEBUG:root:NaCl  --> 0.0
-DEBUG:root:EG  --> 0.0
-DEBUG:root:contractility_signaling  --> 0.0
-DEBUG:root:
-
- ====================> fill_xml_secretion()
-
-DEBUG:root:self.substrate_list = ['NaCl', 'EG', 'contractility_signaling']
-DEBUG:root:substrate = NaCl
-DEBUG:root:substrate = EG
-DEBUG:root:substrate = contractility_signaling
-DEBUG:root:------------------- fill_xml_interactions():  cdef= matrix
-DEBUG:root:--- live_phagocytosis_rate= {'default': '0', 'oocyte': '0.0', 'granulosa': '0.0', 'matrix': '0.0'}
-DEBUG:root:  key in live_phagocytosis_rate= default
-DEBUG:root:default  --> 0
-DEBUG:root:  key in live_phagocytosis_rate= oocyte
-DEBUG:root:oocyte  --> 0.0
-DEBUG:root:  key in live_phagocytosis_rate= granulosa
-DEBUG:root:granulosa  --> 0.0
-DEBUG:root:  key in live_phagocytosis_rate= matrix
-DEBUG:root:matrix  --> 0.0
-DEBUG:root:--- attack_rate= {'default': '0', 'oocyte': '0.0', 'granulosa': '0.0', 'matrix': '0.0'}
-DEBUG:root:default  --> 0
-DEBUG:root:oocyte  --> 0.0
-DEBUG:root:granulosa  --> 0.0
-DEBUG:root:matrix  --> 0.0
-DEBUG:root:--- fusion_rate= {'default': '0', 'oocyte': '0.0', 'granulosa': '0.0', 'matrix': '0.0'}
-DEBUG:root:default  --> 0
-DEBUG:root:oocyte  --> 0.0
-DEBUG:root:granulosa  --> 0.0
-DEBUG:root:matrix  --> 0.0
-DEBUG:root:default  --> 0
-DEBUG:root:oocyte  --> 0.0
-DEBUG:root:granulosa  --> 0.0
-DEBUG:root:matrix  --> 0.0
-DEBUG:root:------------------- cell_def_tab.py:  fill_xml_intracellular()
-DEBUG:root:------ ["intracellular"]: for matrix
-DEBUG:root:None
-DEBUG:root:
-
-DEBUG:root:------ ["custom_data"]: for matrix
-DEBUG:root:------ ["initial_parameter_distributions"]: for matrix
-DEBUG:root:----------- end cell_def_tab.py: fill_xml(): ----------
-DEBUG:root:
---------- user_params_tab.py:  fill_xml(): self.count = 100
-DEBUG:root:--------- found //user_parameters
-DEBUG:root:random_seed
-DEBUG:root:number_of_solutes
-DEBUG:root:initial_molarity_0
-DEBUG:root:initial_molarity_1
-DEBUG:root:number_of_cells
-DEBUG:root:number_of_fibres
-DEBUG:root:anisotropic_fibres
-DEBUG:root:initial_EG_only_molarity
-DEBUG:root:initial_GLY_only_molarity
-DEBUG:root:initial_EG_mixed_molarity
-DEBUG:root:initial_GLY_mixed_molarity
-DEBUG:root:initial_HM_molarity
-DEBUG:root:initial_1xPBS_molarity
-DEBUG:root:initial_2xPBS_molarity
-DEBUG:root:initial_5xPBS_molarity
-DEBUG:root:initial_05xPBS_molarity
-DEBUG:root:initial_EG_Karlsson_molarity
-DEBUG:root:initial_PBS_Karlsson_molarity
-DEBUG:root:initial_DMSO_Karlsson_molarity
-DEBUG:root:initial_PROH_Karlsson_molarity
-DEBUG:root:fibre_degradation
-DEBUG:root:fibre_degradation_rate
-DEBUG:root:fibre_custom_degradation
-DEBUG:root:fibre_stuck_time
-DEBUG:root:fibre_stuck_threshold
-DEBUG:root:fibre_pressure_threshold
-DEBUG:root:color_cells_by_pressure
-DEBUG:root:fibre_pushing
-DEBUG:root:fibre_sticky
-DEBUG:root:fibre_rotation
-DEBUG:root:max_TZP_length
-DEBUG:root:vel_adhesion
-DEBUG:root:vel_contact
-DEBUG:root:cell_velocity_max
-DEBUG:root:average_hepg2_radius
-DEBUG:root:average_pocket_radius
-DEBUG:root:average_oocyte_radius
-DEBUG:root:average_granulosa_radius
-DEBUG:root:bm_spring_constant
-DEBUG:root:found 39
-DEBUG:root:----------- microenv_tab.py: fill_xml(): ----------
-DEBUG:root:microenv_tab.py: fill_xml(): num subtrates = 3
-DEBUG:root:substrates_in_tree =['NaCl', 'EG', 'contractility_signaling']
-DEBUG:root:microrenv_tab.py: key in param_d.keys() = NaCl
-DEBUG:root:matched! NaCl
-DEBUG:root:microrenv_tab.py: key in param_d.keys() = EG
-DEBUG:root:matched! EG
 DEBUG:root:microrenv_tab.py: key in param_d.keys() = gradients
 DEBUG:root:microrenv_tab.py: key in param_d.keys() = track_in_agents
-DEBUG:root:microrenv_tab.py: key in param_d.keys() = contractility_signaling
-DEBUG:root:matched! contractility_signaling
-DEBUG:root:
-
------------ cell_def_tab.py: fill_xml(): ----------
-DEBUG:root:num cell defs = 3
-DEBUG:root:cdefs_in_tree =['oocyte', 'granulosa', 'matrix']
-DEBUG:root:
---- key in param_d.keys() = oocyte
-DEBUG:root:matched! oocyte
-DEBUG:root:--- cell_adhesion_affinity= {'default': '1', 'oocyte': '1.0', 'matrix': '1.0'}
-DEBUG:root:default  --> 1
-DEBUG:root:oocyte  --> 1.0
-DEBUG:root:matrix  --> 1.0
-DEBUG:root:
-
- ====================> fill_xml_motility(): NaCl = NaCl 
-
-
-DEBUG:root:fill_xml_motility(): {'NaCl': '0.0', 'EG': '0.0', 'contractility_signaling': '0.0'}
-DEBUG:root:NaCl  --> 0.0
-DEBUG:root:EG  --> 0.0
-DEBUG:root:contractility_signaling  --> 0.0
-DEBUG:root:
-
- ====================> fill_xml_secretion()
-
-DEBUG:root:self.substrate_list = ['NaCl', 'EG', 'contractility_signaling']
-DEBUG:root:substrate = NaCl
-DEBUG:root:substrate = EG
-DEBUG:root:substrate = contractility_signaling
-DEBUG:root:------------------- fill_xml_interactions():  cdef= oocyte
-DEBUG:root:--- live_phagocytosis_rate= {'default': '0', 'matrix': '0.0', '': '0.0'}
-DEBUG:root:  key in live_phagocytosis_rate= default
-DEBUG:root:default  --> 0
-DEBUG:root:  key in live_phagocytosis_rate= matrix
-DEBUG:root:matrix  --> 0.0
-DEBUG:root:  key in live_phagocytosis_rate= 
-DEBUG:root:--- attack_rate= {'default': '0', 'matrix': '0.0', '': '0.0'}
-DEBUG:root:default  --> 0
-DEBUG:root:matrix  --> 0.0
-DEBUG:root:--- fusion_rate= {'default': '0', 'matrix': '0.0', '': '0.0'}
-DEBUG:root:default  --> 0
-DEBUG:root:matrix  --> 0.0
-DEBUG:root:default  --> 0
-DEBUG:root:matrix  --> 0.0
-DEBUG:root:------------------- cell_def_tab.py:  fill_xml_intracellular()
-DEBUG:root:------ ["intracellular"]: for oocyte
-DEBUG:root:None
-DEBUG:root:
-
-DEBUG:root:------ ["custom_data"]: for oocyte
-DEBUG:root:------ ["initial_parameter_distributions"]: for oocyte
-DEBUG:root:
---- key in param_d.keys() = granulosa
-DEBUG:root:matched! granulosa
-DEBUG:root:--- cell_adhesion_affinity= {'oocyte': '1.0', 'granulosa': '1.0', 'matrix': '1.0'}
-DEBUG:root:oocyte  --> 1.0
-DEBUG:root:granulosa  --> 1.0
-DEBUG:root:matrix  --> 1.0
-DEBUG:root:
-
- ====================> fill_xml_motility(): NaCl = NaCl 
-
-
-DEBUG:root:fill_xml_motility(): {'NaCl': '0.0', 'EG': '0.0', 'contractility_signaling': '0.0'}
-DEBUG:root:NaCl  --> 0.0
-DEBUG:root:EG  --> 0.0
-DEBUG:root:contractility_signaling  --> 0.0
-DEBUG:root:
-
- ====================> fill_xml_secretion()
-
-DEBUG:root:self.substrate_list = ['NaCl', 'EG', 'contractility_signaling']
-DEBUG:root:substrate = NaCl
-DEBUG:root:substrate = EG
-DEBUG:root:substrate = contractility_signaling
-DEBUG:root:------------------- fill_xml_interactions():  cdef= granulosa
-DEBUG:root:--- live_phagocytosis_rate= {'oocyte': '0.0', 'granulosa': '0.0', 'matrix': '0.0'}
-DEBUG:root:  key in live_phagocytosis_rate= oocyte
-DEBUG:root:oocyte  --> 0.0
-DEBUG:root:  key in live_phagocytosis_rate= granulosa
-DEBUG:root:granulosa  --> 0.0
-DEBUG:root:  key in live_phagocytosis_rate= matrix
-DEBUG:root:matrix  --> 0.0
-DEBUG:root:--- attack_rate= {'oocyte': '0.0', 'granulosa': '0.0', 'matrix': '0.0'}
-DEBUG:root:oocyte  --> 0.0
-DEBUG:root:granulosa  --> 0.0
-DEBUG:root:matrix  --> 0.0
-DEBUG:root:--- fusion_rate= {'oocyte': '0.0', 'granulosa': '0.0', 'matrix': '0.0'}
-DEBUG:root:oocyte  --> 0.0
-DEBUG:root:granulosa  --> 0.0
-DEBUG:root:matrix  --> 0.0
-DEBUG:root:oocyte  --> 0.0
-DEBUG:root:granulosa  --> 0.0
-DEBUG:root:matrix  --> 0.0
-DEBUG:root:------------------- cell_def_tab.py:  fill_xml_intracellular()
-DEBUG:root:------ ["intracellular"]: for granulosa
-DEBUG:root:None
-DEBUG:root:
-
-DEBUG:root:------ ["custom_data"]: for granulosa
-DEBUG:root:------ ["initial_parameter_distributions"]: for granulosa
-DEBUG:root:
---- key in param_d.keys() = matrix
-DEBUG:root:matched! matrix
-DEBUG:root:--- cell_adhesion_affinity= {'default': '1', 'oocyte': '1.0', 'granulosa': '2.0', 'matrix': '1.0'}
-DEBUG:root:default  --> 1
-DEBUG:root:oocyte  --> 1.0
-DEBUG:root:granulosa  --> 2.0
-DEBUG:root:matrix  --> 1.0
-DEBUG:root:
-
- ====================> fill_xml_motility(): contractility_signaling = contractility_signaling 
-
-
-DEBUG:root:fill_xml_motility(): {'NaCl': '0.0', 'EG': '0.0', 'contractility_signaling': '0.0'}
-DEBUG:root:NaCl  --> 0.0
-DEBUG:root:EG  --> 0.0
-DEBUG:root:contractility_signaling  --> 0.0
-DEBUG:root:
-
- ====================> fill_xml_secretion()
-
-DEBUG:root:self.substrate_list = ['NaCl', 'EG', 'contractility_signaling']
-DEBUG:root:substrate = NaCl
-DEBUG:root:substrate = EG
-DEBUG:root:substrate = contractility_signaling
-DEBUG:root:------------------- fill_xml_interactions():  cdef= matrix
-DEBUG:root:--- live_phagocytosis_rate= {'default': '0', 'oocyte': '0.0', 'granulosa': '0.0', 'matrix': '0.0'}
-DEBUG:root:  key in live_phagocytosis_rate= default
-DEBUG:root:default  --> 0
-DEBUG:root:  key in live_phagocytosis_rate= oocyte
-DEBUG:root:oocyte  --> 0.0
-DEBUG:root:  key in live_phagocytosis_rate= granulosa
-DEBUG:root:granulosa  --> 0.0
-DEBUG:root:  key in live_phagocytosis_rate= matrix
-DEBUG:root:matrix  --> 0.0
-DEBUG:root:--- attack_rate= {'default': '0', 'oocyte': '0.0', 'granulosa': '0.0', 'matrix': '0.0'}
-DEBUG:root:default  --> 0
-DEBUG:root:oocyte  --> 0.0
-DEBUG:root:granulosa  --> 0.0
-DEBUG:root:matrix  --> 0.0
-DEBUG:root:--- fusion_rate= {'default': '0', 'oocyte': '0.0', 'granulosa': '0.0', 'matrix': '0.0'}
-DEBUG:root:default  --> 0
-DEBUG:root:oocyte  --> 0.0
-DEBUG:root:granulosa  --> 0.0
-DEBUG:root:matrix  --> 0.0
-DEBUG:root:default  --> 0
-DEBUG:root:oocyte  --> 0.0
-DEBUG:root:granulosa  --> 0.0
-DEBUG:root:matrix  --> 0.0
-DEBUG:root:------------------- cell_def_tab.py:  fill_xml_intracellular()
-DEBUG:root:------ ["intracellular"]: for matrix
-DEBUG:root:None
-DEBUG:root:
-
-DEBUG:root:------ ["custom_data"]: for matrix
-DEBUG:root:------ ["initial_parameter_distributions"]: for matrix
-DEBUG:root:----------- end cell_def_tab.py: fill_xml(): ----------
-DEBUG:root:
---------- user_params_tab.py:  fill_xml(): self.count = 100
-DEBUG:root:--------- found //user_parameters
-DEBUG:root:random_seed
-DEBUG:root:number_of_solutes
-DEBUG:root:initial_molarity_0
-DEBUG:root:initial_molarity_1
-DEBUG:root:number_of_cells
-DEBUG:root:number_of_fibres
-DEBUG:root:anisotropic_fibres
-DEBUG:root:initial_EG_only_molarity
-DEBUG:root:initial_GLY_only_molarity
-DEBUG:root:initial_EG_mixed_molarity
-DEBUG:root:initial_GLY_mixed_molarity
-DEBUG:root:initial_HM_molarity
-DEBUG:root:initial_1xPBS_molarity
-DEBUG:root:initial_2xPBS_molarity
-DEBUG:root:initial_5xPBS_molarity
-DEBUG:root:initial_05xPBS_molarity
-DEBUG:root:initial_EG_Karlsson_molarity
-DEBUG:root:initial_PBS_Karlsson_molarity
-DEBUG:root:initial_DMSO_Karlsson_molarity
-DEBUG:root:initial_PROH_Karlsson_molarity
-DEBUG:root:fibre_degradation
-DEBUG:root:fibre_degradation_rate
-DEBUG:root:fibre_custom_degradation
-DEBUG:root:fibre_stuck_time
-DEBUG:root:fibre_stuck_threshold
-DEBUG:root:fibre_pressure_threshold
-DEBUG:root:color_cells_by_pressure
-DEBUG:root:fibre_pushing
-DEBUG:root:fibre_sticky
-DEBUG:root:fibre_rotation
-DEBUG:root:max_TZP_length
-DEBUG:root:vel_adhesion
-DEBUG:root:vel_contact
-DEBUG:root:cell_velocity_max
-DEBUG:root:average_hepg2_radius
-DEBUG:root:average_pocket_radius
-DEBUG:root:average_oocyte_radius
-DEBUG:root:average_granulosa_radius
-DEBUG:root:bm_spring_constant
-DEBUG:root:found 39
-DEBUG:root:===========  run_model_cb():  ============
-DEBUG:root:run_tab.py:  doing: mkdir output
-DEBUG:root:----------- microenv_tab.py: fill_xml(): ----------
-DEBUG:root:microenv_tab.py: fill_xml(): num subtrates = 3
-DEBUG:root:substrates_in_tree =['NaCl', 'EG', 'contractility_signaling']
-DEBUG:root:microrenv_tab.py: key in param_d.keys() = NaCl
-DEBUG:root:matched! NaCl
-DEBUG:root:microrenv_tab.py: key in param_d.keys() = EG
-DEBUG:root:matched! EG
-DEBUG:root:microrenv_tab.py: key in param_d.keys() = gradients
-DEBUG:root:microrenv_tab.py: key in param_d.keys() = track_in_agents
-DEBUG:root:microrenv_tab.py: key in param_d.keys() = contractility_signaling
-DEBUG:root:matched! contractility_signaling
 DEBUG:root:
 
 ----------- cell_def_tab.py: fill_xml(): ----------

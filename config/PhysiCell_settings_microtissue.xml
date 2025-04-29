@@ -345,8 +345,8 @@
                     <relative_rupture_volume units="dimensionless">10</relative_rupture_volume>
                 </volume>
                 <mechanics>
-                    <cell_cell_adhesion_strength units="micron/min">0.0</cell_cell_adhesion_strength>
-                    <cell_cell_repulsion_strength units="micron/min">0.0</cell_cell_repulsion_strength>
+                    <cell_cell_adhesion_strength units="micron/min">1.0</cell_cell_adhesion_strength>
+                    <cell_cell_repulsion_strength units="micron/min">1.0</cell_cell_repulsion_strength>
                     <relative_maximum_adhesion_distance units="dimensionless">20</relative_maximum_adhesion_distance>
                     <cell_adhesion_affinities>
                         <cell_adhesion_affinity name="oocyte">1.0</cell_adhesion_affinity>

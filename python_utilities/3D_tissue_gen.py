@@ -16,7 +16,7 @@ from skimage import filters, morphology, measure
 class Cell:
     def __init__(self, radius, position,cell_array):
         self.radius = radius
-        self.position = np.array([position[0],position[1], position[2]])
+        self.position = np.array([position[0],position[1]])
         self.overlap = False
         self.area=0
         self.cell_array=cell_array
@@ -42,22 +42,19 @@ class Cell:
         return self.cell_array
 
 class Fiber:
-    def __init__(self, radius, length, position, fiber_array,angle_1=0,angle_1=0):
+    def __init__(self, radius, length, position, fiber_array,angle=0):
         self.radius = radius
         self.length = length
         self.position = position
-        self.depth = radius
         self.overlap = False
         self.area=0
         self.fiber_array=fiber_array
 
         self.x = position[0]
         self.y = position[1]
-        self.z = position[2]
         self.width = 2*radius
         self.height = length
-        self.angle_1 = angle_1
-        self.angle_2 = angle_2
+        self.angle = angle
         self.volume=0
     def get_area(self):
         self.area=self.width*self.height
@@ -79,37 +76,30 @@ class Fiber:
         """
         Get the coordinates of the rectangle's corners after rotation.
         
-        :return: List of (x, y, z) tuples representing the corners
+        :return: List of (x, y) tuples representing the corners
         """
         half_width = self.width / 2
         half_height = self.height / 2
-        half_depth = self.depth / 2
         
         # Define the unrotated corners relative to the center
         corners = [
-            (-half_width, -half_height, -half_depth), # left bottom back
-            (-half_width, -half_height, half_depth ), # left bottom front 
-            (-half_width, half_height, -half_depth), # left top back
-            (-half_width, half_height, half_depth) # left top front
-            (half_width, -half_height, -half_depth), # right bottom back
-            (half_width, -half_height, half_depth) # right bottom front
-            (half_width, half_height, -half_depth), # right top back
-            (half_width, half_height, half_depth) # right top front
+            (-half_width, -half_height),
+            (half_width, -half_height),
+            (half_width, half_height),
+            (-half_width, half_height)
         ]
         
         # Rotate the corners
-        xy_angle_rad = math.radians(self.angle_1)
-        xz_angle_rad = math.radians(self.angle_2)
+        angle_rad = math.radians(self.angle)
         rotated_corners = []
-        for (dx, dy, dz) in corners:
-            x_rot = dx * math.cos(xy_angle_rad) - dy * math.sin(xy_angle_rad)
-            y_rot = dx * math.sin(xy_angle_rad) + dy * math.cos(xy_angle_rad)
-            z_rot = dz * math.sin(xz_angle_rad) 
-            rotated_corners.append((self.x + x_rot, self.y + y_rot, self.z+ z_rot))
+        for (dx, dy) in corners:
+            x_rot = dx * math.cos(angle_rad) - dy * math.sin(angle_rad)
+            y_rot = dx * math.sin(angle_rad) + dy * math.cos(angle_rad)
+            rotated_corners.append((self.x + x_rot, self.y + y_rot))
         
         return rotated_corners
 
-    def overlaps_rectangle(self, other): # assumes fiber is bounding box
+    def overlaps_rectangle(self, other):
         """
         Check if this rectangle overlaps with another rectangle.
         
@@ -131,8 +121,8 @@ class Fiber:
         # Define the axes to test (normals of the edges)
         axes = []
         for i in range(len(corners1)):
-            x1, y1, z1 = corners1[i]
-            x2, y2, z2 = corners1[(i + 1) % len(corners1)]
+            x1, y1 = corners1[i]
+            x2, y2 = corners1[(i + 1) % len(corners1)]
             edge = (x2 - x1, y2 - y1)
             normal = (-edge[1], edge[0])
             length = math.hypot(normal[0], normal[1])
