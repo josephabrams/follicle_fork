@@ -111,14 +111,14 @@ int main( int argc, char* argv[] )
       std::string k_oocyte_str= argv[2];
       std::string k_granulosa_str= argv[3];
       std::string k_basement_str=argv[4];
-      // run_num_str=argv[5];
+      run_num_str=argv[5];
       // load_k_oocyte= 0.1;
       // load_k_granulosa= 0.2;
       // load_k_basement= 0.3;
       load_k_oocyte= std::stod(k_oocyte_str);
       load_k_granulosa= std::stod(k_granulosa_str);
       load_k_basement= std::stod(k_basement_str);
-      run_num_str=argv[5];
+      // run_num_str=argv[5];
       // run_number=std::stoi(run_num_str);
       std::cout<<" FORCE PARAM: "<< k_oocyte_str<<", "<<k_granulosa_str<<", "<<k_basement_str<<"\n";
     }
@@ -273,7 +273,7 @@ int main( int argc, char* argv[] )
 			
 			// update the microenvironment
       microenvironment.simulate_diffusion_decay( diffusion_dt );
-      std::cout<<"force param: "<< load_k_oocyte<< load_k_basement <<load_k_granulosa<<"\n";	
+      // std::cout<<"force param: "<< load_k_oocyte<< load_k_basement <<load_k_granulosa<<"\n";	
 			// run PhysiCell 
 			((Cell_Container *)microenvironment.agent_container)->update_all_cells( PhysiCell_globals.current_time );
       //example of multistep loading

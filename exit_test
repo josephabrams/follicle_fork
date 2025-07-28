@@ -1,0 +1,22 @@
+diff --git a/main.cpp b/main.cpp
+index 3a522f08..53d7c3f0 100644
+--- a/main.cpp
++++ b/main.cpp
+@@ -118,7 +118,7 @@ int main( int argc, char* argv[] )
+       load_k_oocyte= std::stod(k_oocyte_str);
+       load_k_granulosa= std::stod(k_granulosa_str);
+       load_k_basement= std::stod(k_basement_str);
+-      run_num_str=argv[5];
++      // run_num_str=argv[5];
+       // run_number=std::stoi(run_num_str);
+       std::cout<<" FORCE PARAM: "<< k_oocyte_str<<", "<<k_granulosa_str<<", "<<k_basement_str<<"\n";
+     }
+@@ -273,7 +273,7 @@ int main( int argc, char* argv[] )
+ 			
+ 			// update the microenvironment
+       microenvironment.simulate_diffusion_decay( diffusion_dt );
+-      std::cout<<"force param: "<< load_k_oocyte<< load_k_basement <<load_k_granulosa<<"\n";	
++      // std::cout<<"force param: "<< load_k_oocyte<< load_k_basement <<load_k_granulosa<<"\n";	
+ 			// run PhysiCell 
+ 			((Cell_Container *)microenvironment.agent_container)->update_all_cells( PhysiCell_globals.current_time );
+       //example of multistep loading

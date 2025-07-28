@@ -68,7 +68,7 @@ void get_basement_membrane_voxels(std::vector <double> &center_point, double &in
     // {
   basement_voxels->assign(remaining.begin(), remaining.end());
   // basement_membrane_voxels=(*basement_voxels);
-  std::cout<<"BASEMENT MEMBRANE VOXELS: "<< basement_membrane_voxels<<"\n";
+  // std::cout<<"BASEMENT MEMBRANE VOXELS: "<< basement_membrane_voxels<<"\n";
   // }
   return;
 }
@@ -355,7 +355,7 @@ void advance_BM_springs(double outter_radius, double inner_radius)
     Cryocell* cCell=static_cast<Cryocell*>(pCell);
     if(norm(cCell->position)+cCell->phenotype.geometry.radius>= bm_midpoint )
     {
-      std::cout<< "BM CROSSED!!!\n";
+      // std::cout<< "BM CROSSED!!!\n";
       double spring_length= ((inner_radius+outter_radius)/2) - (norm(cCell->position)+cCell->phenotype.geometry.radius);
       double delta_x=std::fabs(spring_length); //force points from me to neighbor
       std::vector<double> unit_vec=(1/norm(cCell->position))*cCell->position;
